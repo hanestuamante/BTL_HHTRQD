@@ -1,0 +1,8 @@
+dataset,variable,expected_direction,n,rho,p_one_sided,sample,p_holm,conclusion
+king_county,sqft_living,positive,21435,0.6443930595803028,0.0,one_sale_per_property,0.0,supported
+king_county,house_age,negative,21435,-0.10125435827906408,2.921799044067944e-50,one_sale_per_property,2.921799044067944e-50,supported
+king_county,grade,positive,21435,0.6587486232322224,0.0,one_sale_per_property,0.0,supported
+king_county,distance_to_center_km,negative,21435,-0.35304951419896846,0.0,one_sale_per_property,0.0,supported
+ames,sqft_living,positive,2930,0.7233420361092494,0.0,one_sale_per_property,0.0,supported
+ames,house_age,negative,2930,-0.6789686392195001,0.0,one_sale_per_property,0.0,supported
+ames,overall_qual,positive,2930,0.808800483142651,0.0,one_sale_per_property,0.0,supported

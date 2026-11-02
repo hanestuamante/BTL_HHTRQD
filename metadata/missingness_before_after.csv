@@ -1,0 +1,104 @@
+dataset,raw_column,clean_column,missing_before,missing_after,rows_before,rows_after
+king_county,id,id,0,0,21613,21612
+king_county,date,date,0,0,21613,21612
+king_county,price,price,0,0,21613,21612
+king_county,bedrooms,bedrooms,0,0,21613,21612
+king_county,bathrooms,bathrooms,0,0,21613,21612
+king_county,sqft_living,sqft_living,0,0,21613,21612
+king_county,sqft_lot,sqft_lot,0,0,21613,21612
+king_county,floors,floors,0,0,21613,21612
+king_county,waterfront,waterfront,0,0,21613,21612
+king_county,view,view,0,0,21613,21612
+king_county,condition,condition,0,0,21613,21612
+king_county,grade,grade,0,0,21613,21612
+king_county,sqft_above,sqft_above,0,0,21613,21612
+king_county,sqft_basement,sqft_basement,0,0,21613,21612
+king_county,yr_built,yr_built,0,0,21613,21612
+king_county,yr_renovated,yr_renovated,0,0,21613,21612
+king_county,zipcode,zipcode,0,0,21613,21612
+king_county,lat,lat,0,0,21613,21612
+king_county,long,long,0,0,21613,21612
+king_county,sqft_living15,sqft_living15,0,0,21613,21612
+king_county,sqft_lot15,sqft_lot15,0,0,21613,21612
+ames,Order,order,0,0,2930,2930
+ames,PID,pid,0,0,2930,2930
+ames,MS SubClass,ms_subclass,0,0,2930,2930
+ames,MS Zoning,ms_zoning,0,0,2930,2930
+ames,Lot Frontage,lot_frontage,490,0,2930,2930
+ames,Lot Area,lot_area,0,0,2930,2930
+ames,Street,street,0,0,2930,2930
+ames,Alley,alley,2732,0,2930,2930
+ames,Lot Shape,lot_shape,0,0,2930,2930
+ames,Land Contour,land_contour,0,0,2930,2930
+ames,Utilities,utilities,0,0,2930,2930
+ames,Lot Config,lot_config,0,0,2930,2930
+ames,Land Slope,land_slope,0,0,2930,2930
+ames,Neighborhood,neighborhood,0,0,2930,2930
+ames,Condition 1,condition_1,0,0,2930,2930
+ames,Condition 2,condition_2,0,0,2930,2930
+ames,Bldg Type,bldg_type,0,0,2930,2930
+ames,House Style,house_style,0,0,2930,2930
+ames,Overall Qual,overall_qual,0,0,2930,2930
+ames,Overall Cond,overall_cond,0,0,2930,2930
+ames,Year Built,year_built,0,0,2930,2930
+ames,Year Remod/Add,year_remod_add,0,0,2930,2930
+ames,Roof Style,roof_style,0,0,2930,2930
+ames,Roof Matl,roof_matl,0,0,2930,2930
+ames,Exterior 1st,exterior_1st,0,0,2930,2930
+ames,Exterior 2nd,exterior_2nd,0,0,2930,2930
+ames,Mas Vnr Type,mas_vnr_type,23,0,2930,2930
+ames,Mas Vnr Area,mas_vnr_area,23,0,2930,2930
+ames,Exter Qual,exter_qual,0,0,2930,2930
+ames,Exter Cond,exter_cond,0,0,2930,2930
+ames,Foundation,foundation,0,0,2930,2930
+ames,Bsmt Qual,bsmt_qual,80,0,2930,2930
+ames,Bsmt Cond,bsmt_cond,80,0,2930,2930
+ames,Bsmt Exposure,bsmt_exposure,83,0,2930,2930
+ames,BsmtFin Type 1,bsmtfin_type_1,80,0,2930,2930
+ames,BsmtFin SF 1,bsmtfin_sf_1,1,0,2930,2930
+ames,BsmtFin Type 2,bsmtfin_type_2,81,0,2930,2930
+ames,BsmtFin SF 2,bsmtfin_sf_2,1,0,2930,2930
+ames,Bsmt Unf SF,bsmt_unf_sf,1,0,2930,2930
+ames,Total Bsmt SF,total_bsmt_sf,1,0,2930,2930
+ames,Heating,heating,0,0,2930,2930
+ames,Heating QC,heating_qc,0,0,2930,2930
+ames,Central Air,central_air,0,0,2930,2930
+ames,Electrical,electrical,1,0,2930,2930
+ames,1st Flr SF,1st_flr_sf,0,0,2930,2930
+ames,2nd Flr SF,2nd_flr_sf,0,0,2930,2930
+ames,Low Qual Fin SF,low_qual_fin_sf,0,0,2930,2930
+ames,Gr Liv Area,gr_liv_area,0,0,2930,2930
+ames,Bsmt Full Bath,bsmt_full_bath,2,0,2930,2930
+ames,Bsmt Half Bath,bsmt_half_bath,2,0,2930,2930
+ames,Full Bath,full_bath,0,0,2930,2930
+ames,Half Bath,half_bath,0,0,2930,2930
+ames,Bedroom AbvGr,bedroom_abvgr,0,0,2930,2930
+ames,Kitchen AbvGr,kitchen_abvgr,0,0,2930,2930
+ames,Kitchen Qual,kitchen_qual,0,0,2930,2930
+ames,TotRms AbvGrd,totrms_abvgrd,0,0,2930,2930
+ames,Functional,functional,0,0,2930,2930
+ames,Fireplaces,fireplaces,0,0,2930,2930
+ames,Fireplace Qu,fireplace_qu,1422,0,2930,2930
+ames,Garage Type,garage_type,157,0,2930,2930
+ames,Garage Yr Blt,garage_yr_blt,159,0,2930,2930
+ames,Garage Finish,garage_finish,159,0,2930,2930
+ames,Garage Cars,garage_cars,1,0,2930,2930
+ames,Garage Area,garage_area,1,0,2930,2930
+ames,Garage Qual,garage_qual,159,0,2930,2930
+ames,Garage Cond,garage_cond,159,0,2930,2930
+ames,Paved Drive,paved_drive,0,0,2930,2930
+ames,Wood Deck SF,wood_deck_sf,0,0,2930,2930
+ames,Open Porch SF,open_porch_sf,0,0,2930,2930
+ames,Enclosed Porch,enclosed_porch,0,0,2930,2930
+ames,3Ssn Porch,3ssn_porch,0,0,2930,2930
+ames,Screen Porch,screen_porch,0,0,2930,2930
+ames,Pool Area,pool_area,0,0,2930,2930
+ames,Pool QC,pool_qc,2917,0,2930,2930
+ames,Fence,fence,2358,0,2930,2930
+ames,Misc Feature,misc_feature,2824,0,2930,2930
+ames,Misc Val,misc_val,0,0,2930,2930
+ames,Mo Sold,mo_sold,0,0,2930,2930
+ames,Yr Sold,yr_sold,0,0,2930,2930
+ames,Sale Type,sale_type,0,0,2930,2930
+ames,Sale Condition,sale_condition,0,0,2930,2930
+ames,SalePrice,sale_price,0,0,2930,2930

@@ -1,0 +1,12 @@
+.deps/
+.venv/
+venv/
+.jupyter/
+.mplconfig/
+qa/
+__pycache__/
+*.py[cod]
+.DS_Store
+.ipynb_checkpoints/
+.env
+.env.*

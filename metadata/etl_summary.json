@@ -1,0 +1,83 @@
+{
+  "king_county": {
+    "raw_rows": 21613,
+    "raw_columns": 21,
+    "clean_rows": 21612,
+    "clean_columns": 34,
+    "quarantined_rows": 1,
+    "exact_duplicates_removed": 0,
+    "unique_properties": 21435,
+    "repeat_transaction_rows_beyond_first": 177,
+    "raw_date_min": "2014-05-02",
+    "raw_date_max": "2015-05-27",
+    "age_capped_zero": 12,
+    "zero_room_flag": 16,
+    "price_iqr_outliers": 1146,
+    "area_iqr_outliers": 572,
+    "iqr_limits": {
+      "price": {
+        "q1": 321837.5,
+        "q3": 645000.0,
+        "low": -162906.25,
+        "high": 1129743.75
+      },
+      "sqft_living": {
+        "q1": 1426.5,
+        "q3": 2550.0,
+        "low": -258.75,
+        "high": 4235.25
+      }
+    },
+    "center": {
+      "label": "Điểm đại diện trung tâm Seattle do nhóm quy ước",
+      "lat": 47.6062,
+      "long": -122.3321
+    },
+    "distance_formula": "Haversine; R=6371.0088 km; đường chim bay, không phải thời gian đi lại"
+  },
+  "ames": {
+    "raw_rows": 2930,
+    "raw_columns": 82,
+    "clean_rows": 2930,
+    "clean_columns": 123,
+    "quarantined_rows": 0,
+    "exact_duplicates_removed": 0,
+    "unique_properties": 2930,
+    "year_min": 2006,
+    "year_max": 2010,
+    "original_missing_cells": 13997,
+    "remaining_missing_cells_original_fields": 0,
+    "imputation_or_structural_fill_cells": 13998,
+    "rows_with_any_fill": 2930,
+    "true_imputation_cells": 563,
+    "rows_with_true_imputation": 515,
+    "invalid_garage_year_replaced": 1,
+    "age_capped_zero": 1,
+    "price_iqr_outliers": 137,
+    "area_iqr_outliers": 75,
+    "unusual_area_gt4000": 5,
+    "iqr_limits": {
+      "price": {
+        "q1": 129500.0,
+        "q3": 213500.0,
+        "low": 3500.0,
+        "high": 339500.0
+      },
+      "sqft_living": {
+        "q1": 1126.0,
+        "q3": 1742.75,
+        "low": 200.875,
+        "high": 2667.875
+      }
+    },
+    "distance_note": "Không có lat long hoặc zipcode trong raw Ames; distance_to_center_km để NA, không nội suy tọa độ từ neighborhood.",
+    "literal_None_preserved_mas_vnr_type": 1752
+  },
+  "rules": {
+    "outliers": "1.5IQR chỉ gắn cờ, giữ giá cao và diện tích lớn hợp lệ. King bedrooms>20 cách ly vì nghi nhập sai, không khẳng định đã xác minh.",
+    "missing": "NA cấu trúc dựa từ điển và counterpart; Unknown cho danh mục thiếu thực; trung vị neighborhood cho số thiếu thực. Giữ literal None của masonry.",
+    "age": "Tuổi tính tại năm bán, âm giữ raw_house_age và cờ, house_age đặt 0; không dùng năm hiện tại.",
+    "leakage": "price_per_sqft và mọi cờ chứa price chỉ cho EDA; khi modeling phải split trước rồi fit lại imputation/IQR/median/encoding trên train.",
+    "scope": "Hai thị trường và giai đoạn khác nhau, không ghép để suy diễn trực tiếp mức giá; sqft_living King bao gồm basement, Ames alias gr_liv_area chỉ trên mặt đất."
+  }
+}

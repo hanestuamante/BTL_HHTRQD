@@ -1,0 +1,24 @@
+NHẬT KÝ ETL BỐN BƯỚC
+
+1. EXTRACT THU THẬP
+King County: 21,613 dòng, 21 biến; giai đoạn 2014-05-02 đến 2015-05-27; lấy CSV mirror công khai, ghi cả nguồn Kaggle gốc.
+Ames: 2,930 dòng, 82 biến; năm 2006 đến 2010; lấy trực tiếp từ JSE, bài báo De Cock 2011.
+Raw bất biến ở data/raw. metadata/sources.json lưu URL, thời điểm tải UTC, kích thước byte và SHA256; chạy lại kiểm checksum, --refresh mới tải lại.
+
+2. TRANSFORM KIỂU DỮ LIỆU VÀ MISSING
+King: ID và zipcode là chuỗi; ngày bán chuyển ISO YYYY-MM-DD. Không có missing.
+Ames: chuẩn hóa tên snake_case, PID và MS SubClass là mã chuỗi. keep_default_na=False và na_values=['NA',''] tránh biến 1752 giá trị masonry None hợp lệ thành missing.
+Có 13,997 ô missing ban đầu. NA nghĩa không có tiện ích được điền nhãn cấu trúc theo từ điển; garage và basement đối chiếu diện tích/sức chứa trước khi kết luận không tồn tại. Thiếu thực danh mục là Unknown; số dùng trung vị neighborhood rồi fallback trung vị toàn bộ, không dùng giá bán. Năm gara sai miền được impute, không tự sửa 2207 thành 2007. Mỗi ô thay lưu before/after/rule và cờ _imputed.
+Lưu 13,998 lượt thay ô kể cả một năm gara sai; 2,930 hàng có ít nhất một ô thay. Trong đó 563 ô ở 515 hàng là missing thực hoặc năm gara sai miền; dùng has_true_imputation cho sensitivity thay vì loại toàn bộ hàng có NA cấu trúc. Không còn missing trong các trường gốc sau xử lý.
+
+3. TRANSFORM NGOẠI LỆ VÀ TẠO BIẾN
+Không loại đồng loạt giá đắt hoặc diện tích lớn. Gắn cờ 1.5IQR theo từng nguồn: King 1146 giá và 572 diện tích; Ames 137 giá và 75 diện tích. Ames 5 căn >4000sqft được giữ để sensitivity, theo cảnh báo của De Cock.
+King cách ly 1 dòng gồm nghi số phòng ngủ >20 (dòng có 33 phòng); không có duplicate nguyên dòng. Giữ giao dịch lặp: 21,435 tài sản, 177 giao dịch vượt lần đầu.
+house_age=max(năm bán-năm xây,0). Có King 12 và Ames 1 tuổi âm; giữ raw_house_age và age_capped_zero để kiểm tra do nhà bán trước hoàn thiện hoặc ghi nhận năm chưa rõ.
+price_per_sqft=price/sqft_living, USD/sqft. King sqft_living là sinh hoạt bên trong gồm basement; Ames dùng gr_liv_area trên mặt đất nên không so sánh trực tiếp đơn giá giữa hai nguồn.
+Haversine dùng bán kính Trái Đất 6371.0088km đến điểm đại diện Seattle 47.6062,-122.3321 do nhóm quy ước; không phải định nghĩa địa lý chính thức của CBD hoặc khoảng cách đường đi. Ames thiếu lat/long và zipcode nên distance_to_center_km là NA có chủ đích, distance_available=0.
+
+4. LOAD VÀ KIỂM TRA
+Xuất king_county_clean.csv 21,612 dòng 34 cột, ames_clean.csv 2,930 dòng 123 cột, hai quarantine CSV, dictionary đầy đủ 157 dòng và các audit CSV.
+Assertions: số dòng/cột raw đúng; giá và diện tích dương; tuổi sạch >=0; khoảng cách King trong 0..150km; ID Ames duy nhất; giữ resales King; không missing ngoài distance Ames; không tạo lat/long/zipcode Ames. Self-check Haversine cùng điểm bằng 0.
+Phục vụ EDA toàn bộ mẫu sạch. Khi dự báo nhiệm vụ 4 phải chia train/test trước và fit lại imputation, ngưỡng IQR và encoding chỉ trên train; không dùng price_per_sqft, price_iqr_outlier hoặc nhãn giá thấp làm X. ID King cần split theo nhóm tài sản hoặc thời gian để tránh một nhà xuất hiện cả train và test.

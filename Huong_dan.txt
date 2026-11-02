@@ -1,0 +1,67 @@
+NHIỆM VỤ 2 VÀ 3  CHỦ ĐỀ 14  ĐỊNH GIÁ BẤT ĐỘNG SẢN
+Hoàn thành ngày 02/11/2026 theo giờ Việt Nam
+
+ĐỌC NHANH
+reports/Bao_cao_Nhiem_vu_2_3.pdf: bản báo cáo để đọc và ghép vào báo cáo nhóm.
+reports/Bao_cao_Nhiem_vu_2_3.docx: bản Word chỉnh sửa được, phần 4 và phần 5 cấp 1, 2.
+notebooks/02_03_ETL_EDA.ipynb: notebook đã thực thi, có code và đầu ra.
+Phụ lục báo cáo có nội dung 6 slide và lời dẫn để ghép vào Canva.
+
+NHIỆM VỤ 2
+data/raw/: dữ liệu thật nguyên bản và từ điển Ames gốc.
+data/processed/: hai CSV sạch và hai CSV cách ly có lý do.
+dictionaries/data_dictionary.csv: 157 trường, tên gốc/sạch, kiểu, đơn vị,
+ý nghĩa, vai trò, rò rỉ mục tiêu và chính sách thiếu từng trường.
+docs/nhat_ky_etl_4_buoc.txt: nhật ký bốn bước Extract, Transform,
+Transform và tạo biến, Load và kiểm tra.
+metadata/: nguồn URL, SHA256, ngày tải, kiểm thiếu, audit thay ô và ngoại lệ.
+docs/data_handoff.txt: cách đọc CSV đúng kiểu và lưu ý cho người làm mô hình/dashboard.
+
+NHIỆM VỤ 3
+outputs/figures/: 10 biểu đồ, mỗi biểu đồ có PNG và SVG phóng to được.
+outputs/tables/summary_statistics.csv: thống kê mô tả.
+outputs/tables/geographic_summary.csv: đủ 70 zipcode King và 28 neighborhood Ames.
+outputs/tables/group_summary.csv: đặc điểm nhóm theo toàn bộ giao dịch sạch.
+outputs/tables/welch_tests.csv: 13 Welch t-test, cỡ mẫu, trung bình,
+chênh lệch, CI95%, t, df, p gốc, p Holm và Hedges g.
+outputs/tables/directional_tests.csv: 7 Spearman một phía theo giả thuyết đặt trước.
+outputs/tables/sensitivity.csv: đổi ngưỡng 10/20/30%, mốc địa phương và loại mẫu.
+outputs/tables/*_group_labels.csv: nhãn chính và nhãn địa phương theo source_row_id.
+docs/eda_interpretation.txt: diễn giải số liệu chi tiết.
+docs/kiem_tra_doc_lap.txt: kết quả kiểm tra chéo ETL, notebook và tính lại kiểm định.
+
+TÁI LẬP BẰNG PYTHON
+Giải nén toàn bộ thư mục, không chỉ lấy notebook. Dùng Python 3.12.
+Từ thư mục chứa Huong_dan.txt:
+
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python scripts/prepare_data.py
+python scripts/analyze.py
+python scripts/build_notebook.py
+
+Windows: thay lệnh source bằng .venv\Scripts\activate.
+build_notebook.py thực thi mọi cell và lưu notebook có đầu ra.
+Raw đã được đóng gói nên ETL mặc định không cần tải lại; checksum phải khớp.
+Chỉ chạy prepare_data.py --refresh nếu chủ ý cập nhật nguồn và phân tích lại.
+Để tạo lại Word sau khi EDA hoàn tất: python scripts/build_report.py.
+Xuất PDF từ Word hoặc LibreOffice nếu cần tạo lại bản PDF sau chỉnh sửa.
+
+GIỚI HẠN CẦN GIỮ KHI THUYẾT TRÌNH
+1. Nhóm undervalued = giá < 0,8 trung vị từng dataset là nhóm giá thấp,
+   chưa chứng minh bị định giá thấp so với giá trị hợp lý.
+2. Ames gốc không có lat/long/zipcode; khoảng cách để thiếu có chủ đích,
+   biểu đồ địa lý dùng neighborhood. Không tự điền tọa độ hoặc khoảng cách 0.
+3. Haversine King dùng mốc Seattle do nhóm quy ước, đo đường chim bay.
+4. Welch và Spearman King dùng 21.435 tài sản (lần bán sớm nhất),
+   bảng mô tả/biểu đồ dùng 21.612 giao dịch. Không trộn hai mẫu khi trích số.
+5. CSV sạch dùng EDA toàn mẫu. Khi dự báo, split trước rồi fit lại imputer,
+   encoding, IQR; loại price_per_sqft, target alias và nhãn từ giá khỏi X.
+6. Giá lịch sử USD, hai thị trường và định nghĩa diện tích khác nhau.
+
+PHẠM VI YÊU CẦU
+Đã làm theo bảng phân công trong Google Doc, bỏ qua liên kết Prompt.
+Liên kết Chủ đề đính kèm yêu cầu đăng nhập và chưa đọc được ở phiên này.
+Chưa tải lên Drive, quay video hay thực hiện nhiệm vụ 4–6.
+Mã nguồn và dữ liệu đã sẵn để người tổng hợp đưa vào kho và thư mục nhóm.

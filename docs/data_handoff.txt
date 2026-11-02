@@ -1,0 +1,57 @@
+HƯỚNG DẪN ĐỌC VÀ BÀN GIAO DỮ LIỆU CHO THÀNH VIÊN 4 VÀ 5
+
+Hai file chính
+data/processed/king_county_clean.csv: 21.612 giao dịch, 34 cột, 21.435 tài sản.
+data/processed/ames_clean.csv: 2.930 tài sản, 123 cột.
+Từ điển: dictionaries/data_dictionary.csv, 157 dòng, bao phủ mọi cột.
+
+Đọc bằng pandas
+king = pd.read_csv('data/processed/king_county_clean.csv',
+                   dtype={'id': 'string', 'zipcode': 'string'})
+ames = pd.read_csv('data/processed/ames_clean.csv',
+                   keep_default_na=False, na_values=[''],
+                   dtype={'pid': 'string', 'ms_subclass': 'string'})
+
+keep_default_na=False rất cần cho Ames: giá trị văn bản 'None' trong mas_vnr_type
+có nghĩa là không có lớp ốp xây; mặc định pandas sẽ đọc sai thành missing.
+Chỉ distance_to_center_km của Ames được để trống có chủ đích vì nguồn không có
+lat/long/zipcode. Không dùng mã neighborhood để bịa tọa độ hoặc zipcode.
+
+Các biến dùng cùng giao diện
+price, sqft_living, house_age, price_per_sqft, distance_to_center_km.
+King sqft_living bao gồm diện tích tầng hầm; Ames sqft_living là alias của
+gr_liv_area, chỉ diện tích sinh hoạt trên mặt đất. Không so trực tiếp đơn giá
+giữa hai bộ dữ liệu và không gộp hai thị trường thành một tập đồng nhất.
+
+Khóa và dấu vết
+source_row_id xác định số dòng raw, bắt đầu từ 1 không kể tiêu đề.
+King id là mã tài sản, không phải khóa giao dịch: 177 giao dịch vượt lần đầu
+được giữ vì có thể là giao dịch mua bán lại thật. Ames pid là mã thửa đất duy nhất.
+King một dòng có 33 phòng ngủ được cách ly như nghi nhập sai, chưa xác minh;
+xem king_county_quarantine.csv để phục hồi và kiểm tra độ nhạy khi cần.
+Tuổi âm ở raw_house_age được giữ, house_age đặt 0 và age_capped_zero=1.
+Các cực trị theo 1.5IQR được giữ cùng cờ price_iqr_outlier/area_iqr_outlier;
+5 căn Ames trên 4000sqft cũng được giữ với unusual_area_gt4000.
+
+Missing và kiểm tra độ nhạy
+has_any_imputation gồm cả việc diễn giải NA cấu trúc thành 'không có tiện ích',
+nên bằng 1 cho toàn bộ Ames. Để đánh giá tác động missing thực, dùng
+has_true_imputation: 515 hàng có thiếu thực hoặc năm gara sai miền; 2.415 hàng
+còn lại không có phép thay missing thực. Cờ từng cột *_imputed cho biết ô nào
+đã thay. metadata/imputation_audit.csv lưu 13.998 lượt thay ô và quy tắc cụ thể.
+
+Lưu ý cho mô hình dự báo
+Các file sạch phục vụ EDA toàn mẫu. Trước mô hình, chia train/test rồi fit lại
+imputation, encoding, IQR và mọi trung vị theo khu vực chỉ trên train.
+King cần chia theo id hoặc theo thời gian để tránh một tài sản ở cả train/test.
+price và sale_price là target/target_alias. price_per_sqft và price_iqr_outlier
+chứa giá mục tiêu, phải loại khỏi X; nhãn 'giá thấp hơn 20% trung vị' cũng vậy.
+ID/source_row_id/order chỉ dùng truy vết, không coi là biến số liên tục.
+Các trường sale_type/sale_condition cần xét có sẵn trước quyết định hay không.
+
+Tái lập ETL
+python scripts/prepare_data.py dùng raw đã lưu và kiểm SHA256.
+python scripts/prepare_data.py --refresh tải lại qua mạng và cập nhật manifest.
+Các bước, số đếm và ngưỡng nằm ở docs/nhat_ky_etl_4_buoc.txt và
+metadata/etl_summary.json. Nguồn, checksum và thời điểm tải UTC/Việt Nam nằm
+trong metadata/sources.json. Không tự tải lại hoặc thay raw khi chỉ chạy EDA.

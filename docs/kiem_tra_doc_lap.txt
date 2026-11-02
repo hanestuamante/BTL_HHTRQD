@@ -1,0 +1,34 @@
+KIỂM TRA ĐỘC LẬP NHIỆM VỤ 2 VÀ 3
+
+Phạm vi kiểm tra: dữ liệu sạch, từ điển, công thức biến, audit, notebook và các bảng kết quả. Báo cáo Word/PDF được kiểm tra bố cục riêng trong quá trình xuất.
+
+1. DỮ LIỆU VÀ ETL
+King County: 21612 giao dịch sạch, 21435 tài sản; 177 giao dịch vượt lần đầu được giữ cho mô tả. Một dòng 33 phòng ngủ được cách ly theo quy tắc nghi sai nhập, chưa khẳng định là lỗi đã xác minh.
+Ames: 2930 tài sản; 82 trường gốc vẫn được giữ qua tên snake_case. Không có tọa độ hoặc zipcode trong raw. distance_to_center_km thiếu có chủ đích ở toàn bộ Ames; không nội suy tọa độ.
+Kiểm tra độc lập: khóa source_row_id duy nhất; công thức price_per_sqft chính xác; alias price và sqft_living Ames khớp trường gốc; tuổi sạch bằng max tuổi gốc và 0; các cờ tuổi âm phù hợp; từ điển 157 dòng phủ đủ 34 trường King và 123 trường Ames, không trùng và có mô tả.
+Giá trị gara 2207 ở dòng gốc 2261 được đổi theo trung vị hợp lệ Timber thành 2002, có audit before/after/rule. 157 quan sát không gara được mã hóa No_garage và năm sentinel 0. 79 quan sát không tầng hầm được mã hóa No_basement.
+Cờ has_true_imputation phân biệt việc thay thiếu thực/sai miền với mã hóa thiếu cấu trúc: Ames 515 hàng có thiếu thực, còn 2415 hàng không có thiếu thực được thay. Literal None của masonry là mức hợp lệ, không bị coi missing.
+
+2. SỐ LIỆU EDA VÀ KIỂM ĐỊNH
+Kiểm lại bằng phép tính độc lập từ CSV: King trung vị 450000 USD, nhóm giá < 360000 USD gồm 7130 giao dịch; Ames trung vị 160000 USD, nhóm giá < 128000 USD gồm 682 tài sản.
+Tái tính 13 kiểm định Welch bằng scipy.stats.ttest_ind(equal_var=False), so khớp số mẫu, trung bình, chênh lệch, t, bậc tự do, CI95 và p thô. Tái tính 7 kiểm định Spearman một phía theo chiều giả thuyết, so khớp rho và p. Kết quả phù hợp các bảng xuất.
+Bảng kiểm định King dùng một giao dịch sớm nhất mỗi tài sản để giảm phụ thuộc do bán lại. Bảng mô tả và biểu đồ dùng toàn giao dịch; không trộn hai loại trung bình/số mẫu.
+Các kịch bản độ nhạy đủ kết quả: toàn giao dịch, một giao dịch mỗi tài sản, bỏ cờ IQR, bỏ thiếu thực được thay; Ames thêm bỏ 5 căn > 4000 sqft. Các chênh lệch vẫn cùng dấu và có p Holm < 0.05 trong các kịch bản này.
+Bảng địa lý bao phủ 70 mã ZIP King và 28 khu dân cư Ames; tổng số quan sát trong từng bảng bằng tổng dữ liệu sạch.
+Notebook có 17 cell gồm 9 cell code, toàn bộ đã thực thi có thứ tự 1..9, không chứa error output và nhúng 10 biểu đồ PNG.
+
+3. GIỚI HẠN CẦN GIỮ TRONG DIỄN GIẢI
+Nhãn giá thấp theo trung vị là proxy mô tả, không chứng minh bị định giá thấp hơn giá trị thị trường. Giá trị p rất nhỏ có thể phản ánh cỡ mẫu lớn; luôn đọc effect size và CI. Ví dụ tuổi nhà King có g xấp xỉ 0.094, mức chênh lệch nhỏ dù có ý nghĩa thống kê. Không suy ra quan hệ nhân quả.
+Chất lượng là thang thứ bậc; việc so trung bình bằng t-test cần đọc cùng tương quan hạng. Dữ liệu còn phụ thuộc không gian; chọn một sale/property không loại hết phụ thuộc đó.
+Các trường chứa giá (price_per_sqft, cờ outlier giá, nhãn nhóm giá) không được làm đầu vào dự báo giá. Khi chuyển nhiệm vụ 4 phải tách train/test trước và fit lại imputer/ngưỡng/encoding trên train.
+King và Ames khác thời gian, thị trường và phạm vi diện tích; không so trực tiếp đơn giá giữa hai nguồn.
+
+4. NGUỒN ĐỐI CHIẾU
+Ames De Cock 2011: https://jse.amstat.org/v19n3/decock.pdf
+Ames dictionary gốc: https://jse.amstat.org/v19n3/decock/DataDocumentation.txt
+Bài báo De Cock trang 4 mô tả 5 căn > 4000 sqft gồm 3 Partial Sales có thể không đại diện giá thị trường và 2 căn lớn giá tương đối phù hợp. Không coi tất cả 5 là lỗi.
+King nguồn gốc: https://www.kaggle.com/datasets/harlfoxem/housesalesprediction
+King grade official GIS: https://www5.kingcounty.gov/sdc?Layer=resbldg_extr
+Mô tả hậu tố 15 có mâu thuẫn ở các nguồn thứ cấp; từ điển không diễn giải chắc chắn là năm 2015 hay 15 nhà lân cận và không dùng các trường này để đưa ra kết luận chính.
+Welch SciPy: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html
+Spearman SciPy: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.spearmanr.html

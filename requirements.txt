@@ -1,0 +1,10 @@
+# Môi trường đã chạy: Python 3.12. Các thư viện trực tiếp được ghim phiên bản.
+numpy==2.5.4
+pandas==3.1.0
+scipy==1.18.1
+matplotlib==3.11.2
+seaborn==0.13.2
+nbformat==5.11.1
+nbclient==0.11.0
+ipykernel==7.4.0
+python-docx==1.2.0

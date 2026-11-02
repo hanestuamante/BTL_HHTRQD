@@ -1,0 +1,39 @@
+Phụ lục nội dung slide và thuyết trình
+
+Nội dung dưới đây có thể ghép vào Canva của nhóm. Mỗi slide trình bày khoảng 25 đến 40 giây, tổng phần hai nhiệm vụ khoảng 3 đến 4 phút, tùy thời lượng chung của video.
+
+1 Dữ liệu được chọn
+
+King County: 21,612 giao dịch sạch, 2014 đến 2015. Ames: 2,930 căn, 2006 đến 2010. Hai thị trường phân tích riêng. Dùng bảng tổng quan đầu báo cáo.
+
+Lời dẫn: Giới thiệu đơn vị quan sát và lý do giữ hai nguồn riêng; nhấn mạnh đây là dữ liệu lịch sử.
+
+2 Làm sạch và tạo biến
+
+ETL bốn bước; cách ly một dòng 33 phòng ngủ; giữ ngoại lệ hợp lệ; phân biệt thiếu thực và vắng tiện ích. Biến mới: đơn giá, tuổi tại năm bán và Haversine cho King.
+
+Lời dẫn: Ames không có lat/long hoặc zipcode nên không bịa tọa độ; năm xây sau năm bán được giữ cờ.
+
+3 Phân phối và địa lý
+
+Dùng Hình 1 đến 4; giá lệch phải, khác biệt giữa các khu. Nêu trung vị thay vì chỉ dùng trung bình.
+
+Lời dẫn: Giải thích hộp Q1 đến Q3, trung vị và việc ẩn điểm ngoại lệ chỉ để đọc hình.
+
+4 Nhóm giá thấp
+
+Định nghĩa price nhỏ hơn 0,8 trung vị. King 7,130 (32.99%); Ames 682 (23.28%). Dùng Hình 5 và 6.
+
+Lời dẫn: Nói rõ giá thấp không đồng nghĩa bị định giá thấp. Nhóm có thể gồm nhiều căn nhỏ hoặc ở khu giá thấp.
+
+5 Kiểm định và giả thuyết
+
+Welch hai phía, CI95%, Hedges g và Holm. Spearman một phía kiểm chiều diện tích, chất lượng, tuổi và khoảng cách.
+
+Lời dẫn: Trình bày một chênh lệch diện tích cùng CI và một hệ số tương quan từ bảng; không đọc hết p-value hoặc gọi tương quan là nguyên nhân.
+
+6 Độ nhạy và bàn giao
+
+So ngưỡng 10%, 20%, 30% và mốc toàn thị trường với địa phương. Bàn giao CSV, dictionary, ETL, notebook, bảng và biểu đồ.
+
+Lời dẫn: Chuyển sang thành viên làm mô hình; nhắc chống rò rỉ price_per_sqft và chia theo tài sản hoặc thời gian.

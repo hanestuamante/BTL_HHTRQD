@@ -1,0 +1,35 @@
+{
+  "king_county": {
+    "file": "kc_house_data.csv",
+    "url": "https://raw.githubusercontent.com/jmatth11/King-County-House-Data-Set/master/kc_house_data.csv",
+    "origin": "https://www.kaggle.com/datasets/harlfoxem/housesalesprediction",
+    "note": "Bản sao CSV công khai của dữ liệu Kaggle; không phải tải trực tiếp từ Kaggle.",
+    "sha256": "d0875baa0251b21d4bdc9d2ae940a4fe0bb6009824f23dd0e2a5b2bf04557b7e",
+    "bytes": 2515206,
+    "downloaded_at_utc": "2026-11-02T15:54:12.268075+00:00",
+    "local_path": "data/raw/kc_house_data.csv",
+    "downloaded_at_vietnam": "2026-11-02T22:54:12.268075+07:00"
+  },
+  "ames": {
+    "file": "AmesHousing.txt",
+    "url": "https://jse.amstat.org/v19n3/decock/AmesHousing.txt",
+    "origin": "https://jse.amstat.org/v19n3/decock.pdf",
+    "note": "Dữ liệu gốc kèm bài báo De Cock 2011.",
+    "sha256": "6cfe6cb525ba437de428653a1040e2aed7d696640bf75203786a6d7a0e67cfcc",
+    "bytes": 960807,
+    "downloaded_at_utc": "2026-11-02T15:54:13.516423+00:00",
+    "local_path": "data/raw/AmesHousing.txt",
+    "downloaded_at_vietnam": "2026-11-02T22:54:13.516423+07:00"
+  },
+  "ames_documentation": {
+    "file": "Ames_DataDocumentation.txt",
+    "url": "https://jse.amstat.org/v19n3/decock/DataDocumentation.txt",
+    "origin": "https://jse.amstat.org/v19n3/decock/DataDocumentation.txt",
+    "note": "Từ điển gốc gồm mã danh mục và ý nghĩa NA.",
+    "sha256": "93d741d17422cca39584c6f03fd3f45194501101790bd8241e33d21c991e3eed",
+    "bytes": 19653,
+    "downloaded_at_utc": "2026-11-02T15:54:13.919800+00:00",
+    "local_path": "data/raw/Ames_DataDocumentation.txt",
+    "downloaded_at_vietnam": "2026-11-02T22:54:13.919800+07:00"
+  }
+}

@@ -1,0 +1,31 @@
+NHIỆM VỤ 3  PHÂN TÍCH MÔ TẢ VÀ CHẨN ĐOÁN
+
+price < 0.8 * median(price) trong từng bộ dữ liệu sạch; strict <
+Nhãn low-price proxy, không chứng minh nhà bị định giá thấp so với giá trị thị trường.
+King County dùng giao dịch sớm nhất mỗi id; Ames mỗi PID một quan sát. Ngưỡng nhóm giữ theo toàn bộ dữ liệu sạch.
+Holm điều chỉnh riêng từng dataset và từng họ Welch hoặc Spearman; CI95% Welch riêng từng biến, không đồng thời.
+
+King County: n=21,612; suy luận n=21,435; trung vị 450,000 USD; ngưỡng 360,000 USD; nhóm thấp 7,130 (32.99%); nhóm thấp theo địa phương 4,834 (22.37%).
+Welch sqft_living: mean thấp=1532.880; còn lại=2352.887; chênh lệch=-820.007; CI95% [-839.636,-800.377]; p Holm=0; Hedges g=-0.983.
+Welch house_age: mean thấp=45.076; còn lại=42.308; chênh lệch=2.768; CI95% [1.984,3.552]; p Holm=4.602e-12; Hedges g=0.094.
+Welch sqft_lot: mean thấp=10715.883; còn lại=17307.867; chênh lệch=-6591.984; CI95% [-7562.487,-5621.480]; p Holm=5.597e-40; Hedges g=-0.159.
+Welch grade: mean thấp=6.902; còn lại=8.035; chênh lệch=-1.133; CI95% [-1.159,-1.107]; p Holm=0; Hedges g=-1.082.
+Welch bathrooms: mean thấp=1.730; còn lại=2.308; chênh lệch=-0.578; CI95% [-0.598,-0.559]; p Holm=0; Hedges g=-0.803.
+Welch bedrooms: mean thấp=3.077; còn lại=3.514; chênh lệch=-0.437; CI95% [-0.461,-0.412]; p Holm=8.525e-261; Hedges g=-0.494.
+Welch distance_to_center_km: mean thấp=23.526; còn lại=15.975; chênh lệch=7.552; CI95% [7.247,7.856]; p Holm=0; Hedges g=0.752.
+Spearman sqft_living kỳ vọng positive: rho=0.6444; p Holm một phía=0; kết luận=supported.
+Spearman house_age kỳ vọng negative: rho=-0.1013; p Holm một phía=2.922e-50; kết luận=supported.
+Spearman grade kỳ vọng positive: rho=0.6587; p Holm một phía=0; kết luận=supported.
+Spearman distance_to_center_km kỳ vọng negative: rho=-0.3530; p Holm một phía=0; kết luận=supported.
+Ames: n=2,930; suy luận n=2,930; trung vị 160,000 USD; ngưỡng 128,000 USD; nhóm thấp 682 (23.28%); nhóm thấp theo địa phương 497 (16.96%).
+Welch sqft_living: mean thấp=1111.021; còn lại=1617.605; chênh lệch=-506.585; CI95% [-538.010,-475.160]; p Holm=2.686e-173; Hedges g=-1.106.
+Welch house_age: mean thấp=63.603; còn lại=28.192; chênh lệch=35.410; CI95% [33.308,37.513]; p Holm=8.875e-173; Hedges g=1.344.
+Welch lot_area: mean thấp=7797.831; còn lại=10860.894; chênh lệch=-3063.063; CI95% [-3529.275,-2596.850]; p Holm=1.694e-36; Hedges g=-0.394.
+Welch overall_qual: mean thấp=4.764; còn lại=6.499; chênh lệch=-1.735; CI95% [-1.825,-1.645]; p Holm=4.843e-217; Hedges g=-1.438.
+Welch bathrooms_total: mean thấp=1.229; còn lại=1.916; chênh lệch=-0.687; CI95% [-0.726,-0.647]; p Holm=3.11e-196; Hedges g=-1.197.
+Welch bedroom_abvgr: mean thấp=2.607; còn lại=2.929; chênh lệch=-0.322; CI95% [-0.393,-0.252]; p Holm=1.112e-18; Hedges g=-0.395.
+Spearman sqft_living kỳ vọng positive: rho=0.7233; p Holm một phía=0; kết luận=supported.
+Spearman house_age kỳ vọng negative: rho=-0.6790; p Holm một phía=0; kết luận=supported.
+Spearman overall_qual kỳ vọng positive: rho=0.8088; p Holm một phía=0; kết luận=supported.
+
+Giới hạn: t-test coi chất lượng thứ bậc như số để so trung bình; cần đọc kèm tương quan hạng. Dữ liệu quan sát lịch sử, chưa điều chỉnh đầy đủ vị trí/thời gian/chất lượng nên không diễn dịch nhân quả. Phụ thuộc không gian có thể còn lại dù bỏ bán lặp. P-value có thể rất nhỏ do cỡ mẫu lớn, phải đọc CI và effect size. Ames nguyên bản không có tọa độ hoặc zipcode; không tính khoảng cách và dùng neighborhood thay thế phân nhóm địa lý. Các giao dịch giá cao hợp lệ được giữ; loại điểm IQR chỉ là sensitivity. Median nhóm tính toàn mẫu phục vụ EDA; khi mô hình hóa phải fit ngưỡng/imputation trên train để tránh leakage. Không dùng price_per_sqft hoặc nhãn undervalued làm predictor giá.
