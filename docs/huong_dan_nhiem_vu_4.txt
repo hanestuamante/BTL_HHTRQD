@@ -1,0 +1,48 @@
+NHIỆM VỤ 4  CHỦ ĐỀ 14  MÔ HÌNH DỰ BÁO GIÁ VÀ 20 CĂN BỊ ĐỊNH GIÁ THẤP
+
+ĐỌC NHANH
+reports/Bao_cao_Nhiem_vu_4.docx: Phần 5, phân tích cấp 3 (dự báo) và cấp 4 (đề xuất), có hình và bảng.
+outputs/task4/Top20_can_dinh_gia_thap.xlsx: 20 căn khuyến nghị, 20 căn thô, căn cần xác minh, báo cáo MAPE.
+notebooks/04_Modeling.ipynb: notebook đã chạy, có code và đầu ra.
+models/model.pkl: mô hình XGBoost tốt nhất (King County), đã fit trên toàn bộ dữ liệu.
+
+KẾT QUẢ CHÍNH (tập test King County, chia theo id)
+Mốc thô đơn giá zipcode x diện tích  MAPE 18,8%
+Linear Regression (baseline)         MAPE 13,3%  RMSE 126.926 USD
+Random Forest                        MAPE 12,4%  RMSE 128.796 USD
+XGBoost (tuned)                      MAPE 11,2%  RMSE 106.477 USD  R2 0,918
+Ames (kiểm chứng): XGBoost MAPE 7,5%, Linear Regression 8,0%.
+
+BÀN GIAO CHO THÀNH VIÊN 5 (DASHBOARD)
+Nguồn dữ liệu chính: outputs/task4/tables/king_oof_predictions.csv (21.612 dòng)
+  price               giá giao dịch thật
+  predicted_price     giá mô hình (out-of-fold, mô hình chưa thấy căn đó)
+  residual            price - predicted_price (USD)
+  residual_pct        price / predicted_price - 1 (âm = rẻ hơn giá trị mô hình)
+  residual_pct_conservative  residual "ít âm nhất" trong 3 mô hình
+  is_latest_sale      1 = giao dịch gần nhất của tài sản (lọc =1 để không trùng căn)
+  zero_room_flag, condition  dùng để lọc như báo cáo (zero_room_flag=0, condition>=3)
+Tham số What-if gợi ý: thanh trượt Ngưỡng từ 5% đến 50%,
+  bộ lọc: residual_pct <= -Ngưỡng/100  -> đếm số căn, tỷ lệ, tổng vốn.
+  Kiểm tra đối chiếu với outputs/task4/tables/sensitivity_threshold.csv
+  (ngưỡng 20% -> 1.193 căn, 5,62%, sau khi lọc is_latest_sale=1,
+  zero_room_flag=0, condition>=3).
+Bản đồ: lat, long trong cùng file; 20 căn ở top20_undervalued_king.csv.
+Hình cho báo cáo: outputs/task4/figures/*.png (bản SVG để phóng to).
+
+DÙNG LẠI model.pkl
+import joblib
+b = joblib.load('models/model.pkl')
+b['model'].predict(df[b['features']])
+df cần thêm 3 biến: is_renovated, years_since_update, month_index (công thức trong b['engineered_features']).
+Phải dùng cùng phiên bản thư viện (requirements_task4.txt).
+
+TÁI LẬP
+python -m venv .venv
+.venv\Scripts\activate          (Windows)   hoặc   source .venv/bin/activate
+pip install -r requirements_task4.txt
+python scripts/task4_modeling.py                      (khoảng 5 phút)
+python scripts/build_task4_notebook.py                tạo lại notebook từ script
+jupyter nbconvert --to notebook --execute --inplace notebooks/04_Modeling.ipynb
+python scripts/build_task4_report.py                  tạo lại .docx và .xlsx
+Trên Windows đặt PYTHONUTF8=1 nếu terminal báo lỗi mã hóa tiếng Việt.

@@ -1,0 +1,11 @@
+Bien_the,Trung_voi_ds_chinh,Ty_le_%
+"Danh sách chính (XGBoost TB 4 seed, xếp theo mức giảm thận trọng)",20,100.0
+Chỉ dùng XGBoost 1 seed chia fold = 42,18,90.0
+Chỉ dùng XGBoost 1 seed chia fold = 1,15,75.0
+Chỉ dùng XGBoost 1 seed chia fold = 7,16,80.0
+Chỉ dùng XGBoost 1 seed chia fold = 2024,17,85.0
+Xếp theo residual của riêng XGBoost (không thận trọng),11,55.0
+XGBoost 1 seed 1 + xếp theo riêng XGBoost,10,50.0
+XGBoost 1 seed 7 + xếp theo riêng XGBoost,9,45.0
+Xếp theo residual USD thay vì %,1,5.0
+Danh sách thô (không lọc bất thường),0,0.0
