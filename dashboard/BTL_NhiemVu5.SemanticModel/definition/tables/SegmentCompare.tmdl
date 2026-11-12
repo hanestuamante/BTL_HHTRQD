@@ -1,20 +1,20 @@
 table SegmentCompare
-	lineageTag: 3c307a35-4d75-4aa6-bff9-37d7c6f7f19d
+	lineageTag: 55774956-6e33-47d5-a5f1-cec96cab5d2f
 
 	column segment
 		dataType: string
 		sourceColumn: segment
-		lineageTag: 3f20072e-be83-4167-9b1b-14e726d80a17
+		lineageTag: 27776ee9-9033-443c-831a-b87f7b54bf8d
 	column mape_lr
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: mape_lr
-		lineageTag: c892cf9f-8bb1-4ff8-becf-5ded662c3598
+		lineageTag: 14c171a8-0727-4014-b635-73acb45e9abd
 	column mape_xgb
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: mape_xgb
-		lineageTag: 559c93ff-5f3d-48f0-803a-4afbe574b177
+		lineageTag: 0ee10f8e-5b46-4d07-8881-c296ad142624
 
 	partition SegmentCompare = m
 		mode: import

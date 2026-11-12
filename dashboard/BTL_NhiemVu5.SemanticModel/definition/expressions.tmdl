@@ -1,5 +1,5 @@
 /// Thư mục chứa CSV của dashboard. Đổi đường dẫn tại đây nếu chuyển máy.
 expression DataFolder = "C:\Users\admin\Documents\BTL_HHTRQD\dashboard\data" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
-	lineageTag: aae719cb-125f-49eb-b533-524490adf28e
+	lineageTag: ed56e38c-8439-4d7d-ab50-36a4155caf6c
 
 	annotation PBI_ResultType = Text

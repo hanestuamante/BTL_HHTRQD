@@ -245,21 +245,97 @@ def write_model():
 
 
 # ---------------------------------------------------------------- report
+DISPLAY = {
+    "King Transactions": "Số giao dịch",
+    "King Median Price": "Giá trung vị",
+    "King OOF MAPE": "MAPE OOF",
+    "Candidates": "Ứng viên",
+    "Candidate Share": "Tỷ lệ ứng viên",
+    "Candidate Upside": "Chênh lệch (USD)",
+    "Candidate Median Price": "Giá trung vị",
+    "Candidate All3": "Đồng thuận 3 mô hình",
+    "Top20 Capital": "Vốn (USD)",
+    "Top20 Upside": "Chênh lệch (USD)",
+    "Top20 Median Discount": "Giảm (%)",
+    "Top20 All3": "Đồng thuận",
+    "Ames Properties": "Số tài sản",
+    "Ames Median Price": "Giá trung vị",
+    "Ames OOF MAPE": "MAPE OOF",
+    "Ames Candidates": "Ứng viên",
+    "Selected Threshold": "Ngưỡng",
+    "zip_top": "Mã ZIP",
+    "price_band": "Khúc giá",
+    "zipcode": "ZIP",
+    "price": "Giá bán",
+    "predicted_price": "Giá mô hình",
+    "upside_usd": "Chênh lệch",
+    "discount_pct": "Giảm (%)",
+    "sqft_living": "Diện tích (sqft)",
+    "grade": "Hạng chất lượng",
+    "condition": "Tình trạng",
+    "distance_to_center_km": "Cách trung tâm (km)",
+    "Hang": "Hạng",
+    "id": "ID",
+    "segment": "Khúc giá",
+    "mape_lr": "MAPE Linear",
+    "mape_xgb": "MAPE XGBoost",
+    "variant": "Kịch bản",
+    "overlap_20": "Trùng 20 căn",
+    "share_pct": "Tỷ lệ (%)",
+    "feature": "Biến",
+    "scenario": "Kịch bản",
+    "threshold_pct": "Ngưỡng (%)",
+    "candidates": "Số ứng viên",
+    "mape_increase_pp": "MAPE tăng (điểm %)",
+    "median_change_pct": "Thay đổi (%)",
+}
+
+
 def col(entity, prop, native=None):
     return {"field": {"Column": {"Expression": {"SourceRef": {"Entity": entity}},
                                  "Property": prop}},
-            "queryRef": f"{entity}.{prop}", "nativeQueryRef": native or prop}
+            "queryRef": f"{entity}.{prop}",
+            "nativeQueryRef": native or DISPLAY.get(prop, prop)}
 
 
 def meas(entity, prop, native=None):
     return {"field": {"Measure": {"Expression": {"SourceRef": {"Entity": entity}},
                                   "Property": prop}},
-            "queryRef": f"{entity}.{prop}", "nativeQueryRef": native or prop}
+            "queryRef": f"{entity}.{prop}",
+            "nativeQueryRef": native or DISPLAY.get(prop, prop)}
 
 
 def visual(name, kind, x, y, w, h, roles, title, extra_objects=None):
     query_state = {role: {"projections": projs} for role, projs in roles.items()}
     objects = extra_objects or {}
+    container = {
+        "background": [{"properties": {
+            "show": {"expr": {"Literal": {"Value": "true"}}},
+            "color": {"solid": {"color": {"expr": {"Literal": {"Value": "'#FFFFFF'"}}}}},
+            "transparency": {"expr": {"Literal": {"Value": "0D"}}},
+        }}],
+        "border": [{"properties": {
+            "show": {"expr": {"Literal": {"Value": "true"}}},
+            "color": {"solid": {"color": {"expr": {"Literal": {"Value": "'#DCE6F0'"}}}}},
+            "radius": {"expr": {"Literal": {"Value": "8D"}}},
+        }}],
+        "padding": [{"properties": {
+            "top": {"expr": {"Literal": {"Value": "8D"}}},
+            "bottom": {"expr": {"Literal": {"Value": "8D"}}},
+            "left": {"expr": {"Literal": {"Value": "10D"}}},
+            "right": {"expr": {"Literal": {"Value": "10D"}}},
+        }}],
+        "title": [{"properties": {
+            "text": {"expr": {"Literal": {"Value": f"'{title}'"}}},
+            "show": {"expr": {"Literal": {"Value": "true"}}},
+            "fontSize": {"expr": {"Literal": {"Value": "11D"}}},
+            "bold": {"expr": {"Literal": {"Value": "true"}}},
+            "fontColor": {"solid": {"color": {"expr": {"Literal": {"Value": "'#12324F'"}}}}},
+        }}],
+        "visualHeader": [{"properties": {
+            "show": {"expr": {"Literal": {"Value": "false"}}},
+        }}],
+    }
     return {
         "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
         "name": name,
@@ -268,9 +344,7 @@ def visual(name, kind, x, y, w, h, roles, title, extra_objects=None):
                    "query": {"queryState": query_state,
                              "sortDefinition": {"sort": [], "isDefaultSort": True}},
                    "drillFilterOtherVisuals": True,
-                   "visualContainerObjects": {"title": [{"properties": {
-                       "text": {"expr": {"Literal": {"Value": f"'{title}'"}}},
-                       "show": {"expr": {"Literal": {"Value": "true"}}}}}]},
+                   "visualContainerObjects": container,
                    "objects": objects},
     }
 
@@ -294,6 +368,46 @@ def build_report():
         "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
         "metadata": {"type": "Report", "displayName": PROJECT},
         "config": {"version": "2.0", "logicalId": uid()}}, indent=2))
+    theme = {
+        "name": "NhiemVu5",
+        "dataColors": ["#1F6FB2", "#E4572E", "#2A9D8F", "#E9C46A", "#7B61A8", "#6C757D",
+                       "#457B9D", "#F4A261"],
+        "foreground": "#1B2A3A",
+        "foregroundNeutralSecondary": "#5A6B7B",
+        "background": "#FFFFFF",
+        "backgroundLight": "#F4F7FB",
+        "tableAccent": "#1F6FB2",
+        "good": "#2A9D8F", "neutral": "#E9C46A", "bad": "#E4572E",
+        "textClasses": {
+            "callout": {"fontSize": 34, "fontFace": "Segoe UI Semibold", "color": "#12324F"},
+            "title": {"fontSize": 12, "fontFace": "Segoe UI Semibold", "color": "#12324F"},
+            "header": {"fontSize": 11, "fontFace": "Segoe UI Semibold", "color": "#12324F"},
+            "label": {"fontSize": 9, "fontFace": "Segoe UI", "color": "#4A5A6A"},
+        },
+        "visualStyles": {
+            "card": {"*": {
+                "labels": [{"fontSize": 28, "bold": True,
+                            "color": {"solid": {"color": "#12324F"}}}],
+                "categoryLabels": [{"fontSize": 10,
+                                    "color": {"solid": {"color": "#5A6B7B"}}}]}},
+            "barChart": {"*": {
+                "labels": [{"show": True, "fontSize": 8}],
+                "categoryAxis": [{"fontSize": 8}],
+                "valueAxis": [{"fontSize": 8}]}},
+            "clusteredColumnChart": {"*": {
+                "labels": [{"show": True, "fontSize": 8}],
+                "categoryAxis": [{"fontSize": 8}],
+                "valueAxis": [{"fontSize": 8}]}},
+            "tableEx": {"*": {
+                "columnHeaders": [{"fontSize": 9, "bold": True,
+                                   "fontColor": {"solid": {"color": "#FFFFFF"}},
+                                   "backColor": {"solid": {"color": "#1F6FB2"}}}],
+                "values": [{"fontSize": 9}]}},
+            "slicer": {"*": {"items": [{"fontSize": 9}], "header": [{"fontSize": 9}]}},
+        },
+    }
+    write(REPORT_DIR / "StaticResources" / "RegisteredResources" / "ThemeNhiemVu5.json",
+          json.dumps(theme, ensure_ascii=False, indent=2))
     write(REPORT_DIR / "definition.pbir", json.dumps({
         "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definitionProperties/2.0.0/schema.json",
         "version": "4.0",
@@ -304,9 +418,15 @@ def build_report():
     write(REPORT_DIR / "definition" / "report.json", json.dumps({
         "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/1.3.0/schema.json",
         "layoutOptimization": "None",
-        "themeCollection": {"baseTheme": {
-            "name": "CY24SU06", "reportVersionAtImport": "5.55",
-            "type": "SharedResources"}},
+        "themeCollection": {
+            "baseTheme": {"name": "CY24SU06", "reportVersionAtImport": "5.55",
+                          "type": "SharedResources"},
+            "customTheme": {"name": "ThemeNhiemVu5.json", "reportVersionAtImport": "5.64",
+                            "type": "RegisteredResources"}},
+        "resourcePackages": [{
+            "name": "RegisteredResources", "type": "RegisteredResources",
+            "items": [{"name": "ThemeNhiemVu5.json", "path": "ThemeNhiemVu5.json",
+                       "type": "CustomTheme"}]}],
         "settings": {"useStylableVisualContainerHeader": True}}, indent=2))
     write(REPORT_DIR / "definition" / "pages" / "pages.json", json.dumps({
         "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.1.0/schema.json",
@@ -315,12 +435,17 @@ def build_report():
         write(REPORT_DIR / "definition" / "pages" / name / "page.json", json.dumps({
             "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/1.4.0/schema.json",
             "name": name, "displayName": display, "displayOption": "FitToPage",
-            "height": 720, "width": 1280}, ensure_ascii=False, indent=2))
+            "height": 720, "width": 1280,
+            "objects": {"background": [{"properties": {
+                "color": {"solid": {"color": {"expr": {"Literal": {"Value": "'#F4F7FB'"}}}}}}}]}},
+            ensure_ascii=False, indent=2))
     return REPORT_DIR / "definition" / "pages"
 
 
 def card(name, x, y, w, h, entity, measure, title):
     v = visual(name, "card", x, y, w, h, {"Values": [meas(entity, measure)]}, title)
+    v["visual"]["objects"]["categoryLabels"] = [{"properties": {
+        "show": {"expr": {"Literal": {"Value": "false"}}}}}]
     v["visual"]["objects"]["labels"] = [{"properties": {
         "labelDisplayUnits": {"expr": {"Literal": {"Value": "0D"}}}}}]
     return v
@@ -339,10 +464,13 @@ def build_pages():
                   {"Category": [col("KingSales", "price_band")],
                    "Y": [meas(KPI_TABLE, "King Transactions")]},
                   "Số giao dịch theo khúc giá"))
-    add(p, visual("b_zip", "barChart", 648, 132, 616, 260,
-                  {"Category": [col("KingSales", "zip_top")],
-                   "Y": [meas(KPI_TABLE, "King Transactions")]},
-                  "Top 12 ZIP theo số giao dịch"))
+    bz = visual("b_zip", "barChart", 648, 132, 616, 260,
+                {"Category": [col("KingSales", "zip_top")],
+                 "Y": [meas(KPI_TABLE, "King Transactions")]},
+                "Top 12 ZIP theo số giao dịch")
+    bz["visual"]["objects"]["labels"] = [{"properties": {
+        "show": {"expr": {"Literal": {"Value": "false"}}}}}]
+    add(p, bz)
     add(p, visual("t_zip", "tableEx", 16, 408, 1248, 296,
                   {"Values": [col("KingSales", "zip_top"),
                               meas(KPI_TABLE, "King Transactions"),

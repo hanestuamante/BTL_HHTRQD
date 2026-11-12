@@ -6,8 +6,26 @@
       "name": "CY24SU06",
       "reportVersionAtImport": "5.55",
       "type": "SharedResources"
+    },
+    "customTheme": {
+      "name": "ThemeNhiemVu5.json",
+      "reportVersionAtImport": "5.64",
+      "type": "RegisteredResources"
     }
   },
+  "resourcePackages": [
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "ThemeNhiemVu5.json",
+          "path": "ThemeNhiemVu5.json",
+          "type": "CustomTheme"
+        }
+      ]
+    }
+  ],
   "settings": {
     "useStylableVisualContainerHeader": true
   }

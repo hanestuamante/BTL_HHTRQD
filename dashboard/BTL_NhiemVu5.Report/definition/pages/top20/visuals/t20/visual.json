@@ -27,7 +27,7 @@
                 }
               },
               "queryRef": "Top20.Hang",
-              "nativeQueryRef": "Hang"
+              "nativeQueryRef": "Hạng"
             },
             {
               "field": {
@@ -41,7 +41,7 @@
                 }
               },
               "queryRef": "Top20.id",
-              "nativeQueryRef": "id"
+              "nativeQueryRef": "ID"
             },
             {
               "field": {
@@ -55,7 +55,7 @@
                 }
               },
               "queryRef": "Top20.zipcode",
-              "nativeQueryRef": "zipcode"
+              "nativeQueryRef": "ZIP"
             },
             {
               "field": {
@@ -69,7 +69,7 @@
                 }
               },
               "queryRef": "Top20.price",
-              "nativeQueryRef": "price"
+              "nativeQueryRef": "Giá bán"
             },
             {
               "field": {
@@ -83,7 +83,7 @@
                 }
               },
               "queryRef": "Top20.predicted_price",
-              "nativeQueryRef": "predicted_price"
+              "nativeQueryRef": "Giá mô hình"
             },
             {
               "field": {
@@ -97,7 +97,7 @@
                 }
               },
               "queryRef": "Top20.upside_usd",
-              "nativeQueryRef": "upside_usd"
+              "nativeQueryRef": "Chênh lệch"
             },
             {
               "field": {
@@ -111,7 +111,7 @@
                 }
               },
               "queryRef": "Top20.discount_pct",
-              "nativeQueryRef": "discount_pct"
+              "nativeQueryRef": "Giảm (%)"
             },
             {
               "field": {
@@ -125,7 +125,7 @@
                 }
               },
               "queryRef": "Top20.sqft_living",
-              "nativeQueryRef": "sqft_living"
+              "nativeQueryRef": "Diện tích (sqft)"
             },
             {
               "field": {
@@ -139,7 +139,7 @@
                 }
               },
               "queryRef": "Top20.grade",
-              "nativeQueryRef": "grade"
+              "nativeQueryRef": "Hạng chất lượng"
             },
             {
               "field": {
@@ -153,7 +153,7 @@
                 }
               },
               "queryRef": "Top20.condition",
-              "nativeQueryRef": "condition"
+              "nativeQueryRef": "Tình trạng"
             },
             {
               "field": {
@@ -167,7 +167,7 @@
                 }
               },
               "queryRef": "Top20.distance_to_center_km",
-              "nativeQueryRef": "distance_to_center_km"
+              "nativeQueryRef": "Cách trung tâm (km)"
             }
           ]
         }
@@ -179,6 +179,102 @@
     },
     "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#DCE6F0'"
+                    }
+                  }
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ],
       "title": [
         {
           "properties": {
@@ -193,6 +289,44 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#12324F'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

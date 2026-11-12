@@ -1,30 +1,30 @@
 table WhatIfScenarios
-	lineageTag: 61d14b6e-1d4c-4cee-ab05-6aa5ea2145ae
+	lineageTag: 66d37309-2ae5-4fc8-96d6-d89cb81b78a0
 
 	column scenario
 		dataType: string
 		sourceColumn: scenario
-		lineageTag: c06d99bb-1cf9-49f4-a18f-7d62f0c0f79b
+		lineageTag: 77c65591-a992-4f1a-be60-cab2f56fecb9
 	column median_change_pct
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: median_change_pct
-		lineageTag: dc9fb5ea-0bda-4027-9626-4f25c099edc0
+		lineageTag: 865ef8ca-bed9-4170-8211-dacdb35486f9
 	column mean_change_pct
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: mean_change_pct
-		lineageTag: b001baac-fdf1-42e2-ab07-d00e995228df
+		lineageTag: 3c68d15f-1b0a-4ccf-befa-1c4de74331de
 	column p10
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: p10
-		lineageTag: 494ec6ab-6c64-46f8-8b83-1a84efa42d67
+		lineageTag: 9ce2957d-4395-4936-b183-9c3f76f3ee26
 	column p90
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: p90
-		lineageTag: 80d0c912-a143-4cf2-9a2f-c750ce0b5127
+		lineageTag: 5fd89bc2-8917-4a83-b9e4-493ca38a5401
 
 	partition WhatIfScenarios = m
 		mode: import
