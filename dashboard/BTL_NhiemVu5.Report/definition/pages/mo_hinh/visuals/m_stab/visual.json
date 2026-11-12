@@ -1,0 +1,93 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "m_stab",
+  "position": {
+    "x": 648,
+    "y": 372,
+    "z": 1,
+    "width": 616,
+    "height": 332,
+    "tabOrder": 1
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Stability"
+                    }
+                  },
+                  "Property": "variant"
+                }
+              },
+              "queryRef": "Stability.variant",
+              "nativeQueryRef": "variant"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Stability"
+                    }
+                  },
+                  "Property": "overlap_20"
+                }
+              },
+              "queryRef": "Stability.overlap_20",
+              "nativeQueryRef": "overlap_20"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Stability"
+                    }
+                  },
+                  "Property": "share_pct"
+                }
+              },
+              "queryRef": "Stability.share_pct",
+              "nativeQueryRef": "share_pct"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [],
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Độ ổn định của danh sách 20 căn'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "objects": {}
+  }
+}

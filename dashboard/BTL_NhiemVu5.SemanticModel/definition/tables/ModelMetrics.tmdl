@@ -1,0 +1,68 @@
+table ModelMetrics
+	lineageTag: 0635fa50-19ee-489c-a375-a4724b0ef6fc
+
+	column market
+		dataType: string
+		sourceColumn: market
+		lineageTag: 1729e629-4f5b-4626-ad4e-98bac51e1ee8
+	column model
+		dataType: string
+		sourceColumn: model
+		lineageTag: 1b0475b2-6504-4b4a-892d-c6a782a5a077
+	column mape
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: mape
+		lineageTag: 90b799cb-9311-4b4b-b309-cab8d8166f78
+	column mdape
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: mdape
+		lineageTag: bd0a50a7-26ee-4b3c-b763-a05ecaa41f4a
+	column rmse
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: rmse
+		lineageTag: 00e24729-cf68-4d89-80c4-c4dacb76ebde
+	column mae
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: mae
+		lineageTag: 564e3cb6-dd16-4de5-b00f-4041bd967080
+	column r2
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: r2
+		lineageTag: 2402f0fc-0b7e-42cf-b523-a90cd07dbc57
+	column acc10
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: acc10
+		lineageTag: 0309bd2f-1e74-4e6a-bb7a-a1ceed3876c0
+	column acc20
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: acc20
+		lineageTag: d4e06fc9-f6d5-4dd0-ab46-6233f426c446
+
+	partition ModelMetrics = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\model_metrics.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted,
+					{
+					{"market", type text},
+					{"model", type text},
+					{"mape", type number},
+					{"mdape", type number},
+					{"rmse", type number},
+					{"mae", type number},
+					{"r2", type number},
+					{"acc10", type number},
+					{"acc20", type number}
+					}),
+				Result = Typed
+			in
+				Result

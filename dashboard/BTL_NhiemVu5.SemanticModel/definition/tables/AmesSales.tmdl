@@ -1,0 +1,126 @@
+table AmesSales
+	lineageTag: 2362096e-423a-44d9-9131-504e732bb03e
+
+	column pid
+		dataType: string
+		sourceColumn: pid
+		lineageTag: 0c57f4db-b905-4cbd-b499-d574407e4d71
+	column neighborhood
+		dataType: string
+		sourceColumn: neighborhood
+		lineageTag: 87c22355-c877-46f0-9eb5-a8be93781221
+	column price
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: price
+		lineageTag: d360e87e-4035-4bc1-913f-24917b61ebe0
+	column gr_liv_area
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: gr_liv_area
+		lineageTag: c376b8a5-80fa-42d5-97bf-e71e2826ab1a
+	column overall_qual
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: overall_qual
+		lineageTag: 2c0f9bc9-7097-42d8-93c9-effc2d96b35f
+	column year_built
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: year_built
+		lineageTag: 5919fdc5-6a41-4b38-bd1a-ec07d0f0b5a0
+	column house_age
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: house_age
+		lineageTag: 46406965-8657-4f2e-85d0-c69a39e65571
+	column bedroom_abvgr
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: bedroom_abvgr
+		lineageTag: 7fffef86-dac6-4393-b623-e3524c01aa79
+	column garage_cars
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: garage_cars
+		lineageTag: 2d2848ef-1e3d-4be6-8cb3-fee1fcae7945
+	column lot_area
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: lot_area
+		lineageTag: 2728ac17-2b06-41cc-ad64-dac9f084a13d
+	column yr_sold
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: yr_sold
+		lineageTag: 132329aa-16e0-44b2-884c-5faafd54e10b
+	column bathrooms_total
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: bathrooms_total
+		lineageTag: e64e5d3f-4a53-44a6-aa32-d984ce278a82
+	column predicted_price
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: predicted_price
+		lineageTag: 6977646c-1327-49ce-8937-f7e7ff41b19b
+	column residual_pct
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: residual_pct
+		lineageTag: 932d90e7-792c-4aa7-a4ef-7c1a04b88960
+	column discount_pct
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: discount_pct
+		lineageTag: 0fc5efd2-2d56-4c52-a422-7ba403ba2a86
+	column upside_usd
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: upside_usd
+		lineageTag: fe1af8cf-4282-451e-8eb0-7d3136a7c888
+	column price_band
+		dataType: string
+		sourceColumn: price_band
+		lineageTag: 1a81be2e-aaca-4fd3-8b56-82a796c058bb
+	column is_undervalued_20pct
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: is_undervalued_20pct
+		lineageTag: 91f6d515-d818-4751-8a6e-bbd99e812074
+	column neighborhood_top
+		dataType: string
+		sourceColumn: neighborhood_top
+		lineageTag: bf69972d-279f-4cb8-9228-c4756e57f326
+
+	partition AmesSales = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\fact_ames.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted,
+					{
+					{"pid", type text},
+					{"neighborhood", type text},
+					{"price", Int64.Type},
+					{"gr_liv_area", Int64.Type},
+					{"overall_qual", Int64.Type},
+					{"year_built", Int64.Type},
+					{"house_age", Int64.Type},
+					{"bedroom_abvgr", Int64.Type},
+					{"garage_cars", type number},
+					{"lot_area", Int64.Type},
+					{"yr_sold", Int64.Type},
+					{"bathrooms_total", type number},
+					{"predicted_price", type number},
+					{"residual_pct", type number},
+					{"discount_pct", type number},
+					{"upside_usd", type number},
+					{"price_band", type text},
+					{"is_undervalued_20pct", Int64.Type},
+					{"neighborhood_top", type text}
+					}),
+				Result = Typed
+			in
+				Result

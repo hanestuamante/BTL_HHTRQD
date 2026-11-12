@@ -1,0 +1,53 @@
+NHIỆM VỤ 5  DASHBOARD POWER BI VÀ PHẦN 6 KẾT QUẢ
+
+SẢN PHẨM
+dashboard/BTL_NhiemVu5.pbip              Project Power BI (mở bằng Power BI Desktop).
+dashboard/BTL_NhiemVu5.SemanticModel/    Model TMDL + measure DAX.
+dashboard/BTL_NhiemVu5.Report/           Ảnh báo cáo PBIR (5 trang, thanh trượt What-if).
+dashboard/data/                          CSV nguồn cho dashboard (sinh từ output Nhiệm vụ 4).
+outputs/task5/figures/                   Hình cho báo cáo (2 ảnh dashboard + 4 biểu đồ).
+reports/Bao_cao_Nhiem_vu_5.docx          Phần 6 (Kết quả) bản Word.
+docs/phan_6_ket_qua.txt                  Nội dung phần 6 dạng text để ghép báo cáo nhóm.
+
+MỞ DASHBOARD
+1. Mở dashboard/BTL_NhiemVu5.pbip bằng Power BI Desktop (bản 2.159 trở lên).
+2. Model đã có cache dữ liệu; nếu trang trống, vào Home > Làm mới (Refresh) một lần.
+3. File > Save as > chọn .pbix nếu cần nộp kèm bản nhị phân:
+   dashboard/BTL_NhiemVu5_Dashboard.pbix
+
+5 TRANG
+1. Tổng quan King County: 21.612 giao dịch, giá trung vị 450.000 USD, MAPE OOF 10,7%,
+   số ứng viên ở ngưỡng 20%, phân bố theo khúc giá và top 12 ZIP.
+2. What-if ngưỡng undervalued: thanh trượt 2 đầu 5%–50% (bước 1%); card "Ngưỡng đang áp dụng";
+   số căn, tỷ lệ, tổng chênh lệch, giá trung vị; ứng viên theo ZIP/khúc giá; bảng tổng hợp.
+3. 20 căn đề xuất: vốn 4.534.822 USD, chênh lệch kỳ vọng 3.986.894 USD, mức giảm trung vị 46,1%,
+   cả 3 mô hình đồng ý 20/20; bảng chi tiết và chênh lệch theo ZIP.
+4. So sánh Ames: MAPE King vs Ames theo mô hình, giá trung vị theo khu dân cư,
+   số tài sản theo khúc giá, MAPE theo khúc giá King.
+5. Mô hình và độ nhạy: permutation importance, what-if từng biến, số ứng viên theo ngưỡng,
+   độ ổn định của danh sách 20 căn.
+
+THAM SỐ WHAT-IF
+- Bảng Nguong = GENERATESERIES(0.05, 0.50, 0.01); cột Value.
+- Measure Selected Threshold: nếu slicer chưa chọn thì mặc định 0,20; khi kéo thì lấy đầu dưới.
+- Measure Candidates lọc residual_pct <= -ngưỡng trên đúng phạm vi Nhiệm vụ 4:
+  is_latest_sale = 1, zero_room_flag = 0, condition >= 3.
+- Kéo đầu trái của thanh trượt để đổi ngưỡng; đầu phải để 50% (toàn bộ dải trên).
+- Đối chiếu: ngưỡng 20% phải ra 1.193 căn (5,62%). Ames cùng ngưỡng: 91 tài sản (3,11%).
+
+TÁI LẬP
+python scripts/prepare_dashboard_data.py   sinh dashboard/data + OOF Ames
+python scripts/build_task5_pbip.py         sinh lại project PBIP
+python scripts/validate_pbip.py            kiểm JSON schema + tham chiếu field
+python scripts/build_task5_report.py       sinh lại hình và file Word phần 6
+Dùng Python 3.12 với requirements_task4.txt (pandas, scikit-learn, xgboost, python-docx, matplotlib).
+
+ĐỔI MÁY
+Model dùng tham số DataFolder trong dashboard/BTL_NhiemVu5.SemanticModel/definition/expressions.tmdl.
+Sửa đường dẫn tại đó (hoặc Transform data > Manage parameters) rồi Refresh.
+
+GIỚI HẠN
+- Undervalued là proxy theo residual mô hình (sai số OOF ~11%), không chứng minh định giá sai.
+- 36 giao dịch giảm quá 50% tách sang danh sách cần xác minh, không vào top 20.
+- Ames chỉ là kiểm chứng, khác thị trường và định nghĩa diện tích.
+- Dashboard dùng dữ liệu lịch sử 2014–2015 (King) và 2006–2010 (Ames), không phải giá hiện tại.

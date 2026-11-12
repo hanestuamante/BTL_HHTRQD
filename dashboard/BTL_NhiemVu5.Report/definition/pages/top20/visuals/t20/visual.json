@@ -1,0 +1,205 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "t20",
+  "position": {
+    "x": 16,
+    "y": 132,
+    "z": 1,
+    "width": 1248,
+    "height": 384,
+    "tabOrder": 1
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Top20"
+                    }
+                  },
+                  "Property": "Hang"
+                }
+              },
+              "queryRef": "Top20.Hang",
+              "nativeQueryRef": "Hang"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Top20"
+                    }
+                  },
+                  "Property": "id"
+                }
+              },
+              "queryRef": "Top20.id",
+              "nativeQueryRef": "id"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Top20"
+                    }
+                  },
+                  "Property": "zipcode"
+                }
+              },
+              "queryRef": "Top20.zipcode",
+              "nativeQueryRef": "zipcode"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Top20"
+                    }
+                  },
+                  "Property": "price"
+                }
+              },
+              "queryRef": "Top20.price",
+              "nativeQueryRef": "price"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Top20"
+                    }
+                  },
+                  "Property": "predicted_price"
+                }
+              },
+              "queryRef": "Top20.predicted_price",
+              "nativeQueryRef": "predicted_price"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Top20"
+                    }
+                  },
+                  "Property": "upside_usd"
+                }
+              },
+              "queryRef": "Top20.upside_usd",
+              "nativeQueryRef": "upside_usd"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Top20"
+                    }
+                  },
+                  "Property": "discount_pct"
+                }
+              },
+              "queryRef": "Top20.discount_pct",
+              "nativeQueryRef": "discount_pct"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Top20"
+                    }
+                  },
+                  "Property": "sqft_living"
+                }
+              },
+              "queryRef": "Top20.sqft_living",
+              "nativeQueryRef": "sqft_living"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Top20"
+                    }
+                  },
+                  "Property": "grade"
+                }
+              },
+              "queryRef": "Top20.grade",
+              "nativeQueryRef": "grade"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Top20"
+                    }
+                  },
+                  "Property": "condition"
+                }
+              },
+              "queryRef": "Top20.condition",
+              "nativeQueryRef": "condition"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Top20"
+                    }
+                  },
+                  "Property": "distance_to_center_km"
+                }
+              },
+              "queryRef": "Top20.distance_to_center_km",
+              "nativeQueryRef": "distance_to_center_km"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [],
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'20 căn đề xuất (xếp theo mức giảm thận trọng)'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "objects": {}
+  }
+}

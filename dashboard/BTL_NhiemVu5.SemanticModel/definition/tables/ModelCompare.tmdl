@@ -1,0 +1,32 @@
+table ModelCompare
+	lineageTag: 288d7e5d-8e18-414d-9145-77eee96f4aab
+
+	column model
+		dataType: string
+		sourceColumn: model
+		lineageTag: bbecf2bf-aaee-4221-bd21-fb589d1fdf06
+	column market
+		dataType: string
+		sourceColumn: market
+		lineageTag: 52800960-7748-460c-82c8-e4e4bbe33f13
+	column mape
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: mape
+		lineageTag: de22c1c1-4ae3-477a-b086-c4fe7a311193
+
+	partition ModelCompare = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\model_compare_long.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted,
+					{
+					{"model", type text},
+					{"market", type text},
+					{"mape", type number}
+					}),
+				Result = Typed
+			in
+				Result

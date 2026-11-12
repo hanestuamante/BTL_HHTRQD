@@ -1,0 +1,221 @@
+table KingSales
+	lineageTag: b47e4ed8-82d6-46af-b325-e2cf62015d27
+
+	column source_row_id
+		dataType: int64
+		summarizeBy: none
+		isHidden
+		sourceColumn: source_row_id
+		lineageTag: cf1f0a26-2641-4621-aca1-f5d22b5226b5
+	column id
+		dataType: string
+		sourceColumn: id
+		lineageTag: 18cfe823-3adc-49d5-8cbe-df3b35ebdbb4
+	column date
+		dataType: dateTime
+		sourceColumn: date
+		lineageTag: dc768815-13a8-4c55-b716-0413143026c7
+	column price
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: price
+		lineageTag: c651db71-c9c9-455a-96e5-593bb2850fbc
+	column zipcode
+		dataType: string
+		sourceColumn: zipcode
+		lineageTag: a3b90f91-ff32-4793-b543-55c115d73a48
+	column lat
+		dataType: double
+		summarizeBy: none
+		sourceColumn: lat
+		lineageTag: 24b6a3b9-82f0-4d99-9881-e2af532c8788
+	column long
+		dataType: double
+		summarizeBy: none
+		sourceColumn: long
+		lineageTag: 303c3d52-ef37-4dca-9888-e5e0b5e74a20
+	column bedrooms
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: bedrooms
+		lineageTag: a63bdef6-ede4-4010-961b-d014f109f6ec
+	column bathrooms
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: bathrooms
+		lineageTag: 594943e4-ddbe-44aa-9474-62d913c39676
+	column sqft_living
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: sqft_living
+		lineageTag: 28f8d6b7-17c4-44ec-a945-f1f136ebbb3d
+	column sqft_lot
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: sqft_lot
+		lineageTag: d1c36c7d-f5d2-48ba-8607-016d1523ee96
+	column grade
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: grade
+		lineageTag: cf6bce26-8171-4bbb-a3e7-2358a6784a49
+	column condition
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: condition
+		lineageTag: 306e0b38-3010-4f2c-ae92-14523d0f77ed
+	column view
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: view
+		lineageTag: bbade1a5-8e8b-46e1-9d26-aa66788440fe
+	column waterfront
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: waterfront
+		lineageTag: 63430941-a130-4d32-9025-1840e5e069fb
+	column house_age
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: house_age
+		lineageTag: 1038a340-4df9-4045-b1a5-5f9422ecb6be
+	column is_renovated
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: is_renovated
+		lineageTag: 59eb8da1-5ab8-4e81-b15a-cbfb4bd6dc84
+	column distance_to_center_km
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: distance_to_center_km
+		lineageTag: 14c4cc68-0ff9-4c0f-9936-bf7f16e234b2
+	column zero_room_flag
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: zero_room_flag
+		lineageTag: 9c4a7eb4-0d64-4c20-913d-f34cec1cc6cd
+	column predicted_price
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: predicted_price
+		lineageTag: 9430dd6d-472e-46d1-86cd-f45579c53e05
+	column residual
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: residual
+		lineageTag: 83755baf-f6b4-4186-9642-ad6607fbc98c
+	column residual_pct
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: residual_pct
+		lineageTag: 768f419a-1131-402d-b297-9a0a2729d84c
+	column residual_pct_rf
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: residual_pct_rf
+		lineageTag: 37ff618d-2376-4db2-b29a-86ba8edf4ebd
+	column residual_pct_lr
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: residual_pct_lr
+		lineageTag: 9882daf8-17bd-4fd6-959a-ccf873f8d054
+	column residual_pct_conservative
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: residual_pct_conservative
+		lineageTag: 303f2556-c1de-40d1-ab79-43e8698c7215
+	column undervalued_20pct
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: undervalued_20pct
+		lineageTag: 3e3282f1-0d34-48e3-a7c1-29358e7035b1
+	column models_agree_undervalued
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: models_agree_undervalued
+		lineageTag: 220024a0-51b4-4268-a1c5-adaa92bb8558
+	column is_latest_sale
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: is_latest_sale
+		lineageTag: e7ac1385-77e0-42a9-9e32-69be88b10cdc
+	column sale_year
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: sale_year
+		lineageTag: 4f301011-ef62-422a-96b6-211a188fe029
+	column sale_month
+		dataType: string
+		sourceColumn: sale_month
+		lineageTag: 89e4e354-9b1a-471b-a1e7-487a92c1a9e2
+	column price_band
+		dataType: string
+		sourceColumn: price_band
+		lineageTag: 3a9e4b23-8526-4ceb-afc1-2d2d9e79c24d
+	column discount_pct
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: discount_pct
+		lineageTag: d52f51d5-c03c-4d0d-96b6-46cc0d4477c2
+	column discount_conservative_pct
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: discount_conservative_pct
+		lineageTag: b3c0c92f-eaef-4a1f-9e41-0c8064b5b1d9
+	column upside_usd
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: upside_usd
+		lineageTag: f8659091-9f38-4e80-b82c-90fe76557fde
+	column zip_top
+		dataType: string
+		sourceColumn: zip_top
+		lineageTag: fa28a4f4-d6da-4d64-9ed2-ae0c69439ac1
+
+	partition KingSales = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\fact_king.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted,
+					{
+					{"source_row_id", Int64.Type},
+					{"id", type text},
+					{"date", type date},
+					{"price", type number},
+					{"zipcode", type text},
+					{"lat", type number},
+					{"long", type number},
+					{"bedrooms", Int64.Type},
+					{"bathrooms", type number},
+					{"sqft_living", Int64.Type},
+					{"sqft_lot", Int64.Type},
+					{"grade", Int64.Type},
+					{"condition", Int64.Type},
+					{"view", Int64.Type},
+					{"waterfront", Int64.Type},
+					{"house_age", Int64.Type},
+					{"is_renovated", Int64.Type},
+					{"distance_to_center_km", type number},
+					{"zero_room_flag", Int64.Type},
+					{"predicted_price", type number},
+					{"residual", type number},
+					{"residual_pct", type number},
+					{"residual_pct_rf", type number},
+					{"residual_pct_lr", type number},
+					{"residual_pct_conservative", type number},
+					{"undervalued_20pct", Int64.Type},
+					{"models_agree_undervalued", Int64.Type},
+					{"is_latest_sale", Int64.Type},
+					{"sale_year", Int64.Type},
+					{"sale_month", type text},
+					{"price_band", type text},
+					{"discount_pct", type number},
+					{"discount_conservative_pct", type number},
+					{"upside_usd", type number},
+					{"zip_top", type text}
+					}),
+				Result = Typed
+			in
+				Result

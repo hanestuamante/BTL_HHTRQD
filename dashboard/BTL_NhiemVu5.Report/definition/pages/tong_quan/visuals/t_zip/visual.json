@@ -1,0 +1,107 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "t_zip",
+  "position": {
+    "x": 16,
+    "y": 408,
+    "z": 1,
+    "width": 1248,
+    "height": 296,
+    "tabOrder": 1
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "KingSales"
+                    }
+                  },
+                  "Property": "zip_top"
+                }
+              },
+              "queryRef": "KingSales.zip_top",
+              "nativeQueryRef": "zip_top"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "KPI"
+                    }
+                  },
+                  "Property": "King Transactions"
+                }
+              },
+              "queryRef": "KPI.King Transactions",
+              "nativeQueryRef": "King Transactions"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "KPI"
+                    }
+                  },
+                  "Property": "King Median Price"
+                }
+              },
+              "queryRef": "KPI.King Median Price",
+              "nativeQueryRef": "King Median Price"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "KPI"
+                    }
+                  },
+                  "Property": "Candidate Share"
+                }
+              },
+              "queryRef": "KPI.Candidate Share",
+              "nativeQueryRef": "Candidate Share"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [],
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'ZIP: quy mô và tỷ lệ ứng viên'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "objects": {}
+  }
+}

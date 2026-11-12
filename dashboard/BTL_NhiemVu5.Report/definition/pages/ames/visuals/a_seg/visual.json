@@ -1,0 +1,93 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "a_seg",
+  "position": {
+    "x": 648,
+    "y": 408,
+    "z": 1,
+    "width": 616,
+    "height": 296,
+    "tabOrder": 1
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SegmentCompare"
+                    }
+                  },
+                  "Property": "segment"
+                }
+              },
+              "queryRef": "SegmentCompare.segment",
+              "nativeQueryRef": "segment"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SegmentCompare"
+                    }
+                  },
+                  "Property": "mape_lr"
+                }
+              },
+              "queryRef": "SegmentCompare.mape_lr",
+              "nativeQueryRef": "mape_lr"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SegmentCompare"
+                    }
+                  },
+                  "Property": "mape_xgb"
+                }
+              },
+              "queryRef": "SegmentCompare.mape_xgb",
+              "nativeQueryRef": "mape_xgb"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [],
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'MAPE theo khúc giá King: Linear vs XGBoost'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "objects": {}
+  }
+}

@@ -1,0 +1,48 @@
+PHẦN 6. KẾT QUẢ
+
+6.1. Mục tiêu và phạm vi
+Phần 6 trình bày kết quả của dashboard Power BI được thiết kế cho bài toán định giá bất động sản tự động (Chủ đề 14). Dashboard kế thừa dữ liệu sạch của Nhiệm vụ 2, kết quả EDA của Nhiệm vụ 3 và mô hình dự báo của Nhiệm vụ 4. Toàn bộ số liệu trên dashboard lấy từ dự báo out-of-fold (OOF) của mô hình XGBoost trên King County: mỗi giao dịch được định giá bởi mô hình chưa từng thấy tài sản đó, nên residual phản ánh sai số ngoài mẫu chứ không phải sai số huấn luyện.
+
+Dashboard gồm 5 trang: (1) Tổng quan King County, (2) What-if ngưỡng undervalued, (3) 20 căn đề xuất, (4) So sánh Ames, (5) Mô hình và độ nhạy. Trang 2 chứa tham số What-if dạng thanh trượt từ 5% đến 50%, cho phép người dùng thay đổi ngưỡng "giá bán thấp hơn giá mô hình" và quan sát ngay số căn, tỷ lệ, tổng chênh lệch và phân bố theo ZIP/khúc giá.
+
+6.2. Kết quả trang Tổng quan King County
+Bộ dữ liệu sạch có 21.612 giao dịch của 21.435 tài sản trong giai đoạn 05/2014–05/2015, thuộc 70 mã ZIP. Giá bán trung vị là 450.000 USD, trung bình 540.084 USD; phân phối lệch phải mạnh (skewness 4,02) do một số giao dịch rất cao vẫn được giữ hợp lệ. Sau khi lọc đúng phạm vi của Nhiệm vụ 4 (chỉ giao dịch gần nhất của mỗi tài sản, loại cờ zero_room_flag, condition ≥ 3), còn 21.229 giao dịch đại diện cho 21.229 tài sản.
+
+Trang Tổng quan cho thấy phần lớn giao dịch tập trung ở khúc 250.000–550.000 USD. Các ZIP có quy mô giao dịch lớn nhất gồm 98118, 98106, 98168, 98103, 98146 và 98198; đây cũng là những khu vực đóng góp nhiều ứng viên nhất ở ngưỡng 20%.
+
+6.3. Kết quả tham số What-if
+Tham số ngưỡng được xây dựng bằng bảng tính GENERATESERIES từ 0,05 đến 0,50 (bước 0,01). Một giao dịch được coi là ứng viên khi residual_pct = giá bán / giá mô hình − 1 ≤ −ngưỡng. Kết quả theo từng ngưỡng:
+
+Ngưỡng 5%: 6.248 căn (29,43% pool), cả 3 mô hình đồng ý 4.275 căn.
+Ngưỡng 10%: 3.672 căn (17,30%), cả 3 mô hình đồng ý 2.472 căn.
+Ngưỡng 15%: 2.132 căn (10,04%), cả 3 mô hình đồng ý 1.437 căn.
+Ngưỡng 20%: 1.193 căn (5,62%), cả 3 mô hình đồng ý 839 căn, giá trung vị 285.000 USD.
+Ngưỡng 25%: 677 căn (3,19%), cả 3 mô hình đồng ý 477 căn.
+Ngưỡng 30%: 411 căn (1,94%), cả 3 mô hình đồng ý 292 căn.
+
+Ở ngưỡng 20%, 486 căn (40,7%) nằm dưới 250.000 USD, 342 căn (28,7%) trong khoảng 250.000–400.000 USD; phần còn lại trải từ 400.000 USD đến trên 1 triệu USD. Điều này cho thấy "bị định giá thấp" không chỉ là hiện tượng của phân khúc giá rẻ. Theo ZIP, 98118 dẫn đầu với 60 căn, tiếp theo là 98106 (41), 98168 (34), 98103 (33), 98146 và 98198 (cùng 32).
+
+Có 36 trường hợp giảm sâu hơn 50% ở mọi ngưỡng. Đây là đuôi bất thường, thường là giao dịch không theo thị trường (bán cho người thân, thừa kế, bán tháo) hoặc lỗi dữ liệu, nên được tách sang danh sách cần xác minh thay vì đưa vào danh sách khuyến nghị.
+
+6.4. Kết quả danh sách 20 căn đề xuất
+Danh sách 20 căn giữ đúng ràng buộc của Giám đốc đầu tư: mỗi tài sản chỉ chọn một lần, loại căn thiếu phòng/condition thấp, loại giao dịch giảm quá 50%, yêu cầu cả ba mô hình (XGBoost, Random Forest, Linear Regression) cùng đồng ý mức giảm ≥ 20%, và xếp theo mức giảm thận trọng nhất.
+
+Tổng vốn mua 20 căn là 4.534.822 USD; tổng giá trị theo mô hình là 8.521.716 USD; chênh lệch kỳ vọng 3.986.894 USD. Mức giảm trung vị là 46,1% và cả 20/20 căn đều được cả ba mô hình đồng ý. 20 căn nằm rải ở 16 mã ZIP, nhiều nhất là 98144, 98155, 98146 và 98125 (mỗi ZIP 2 căn); trung vị diện tích 1.560 sqft, grade 7 và cách điểm đại diện trung tâm Seattle 14,2 km.
+
+6.5. Kết quả so sánh Ames
+Ames là thị trường kiểm chứng, không dùng để chọn 20 căn. Trên 2.930 tài sản (2006–2010), mô hình XGBoost đạt MAPE 7,49% và R² 0,935 trên tập test, tốt hơn King County (MAPE 11,20%, R² 0,918). Khi tính out-of-fold cho toàn bộ Ames, MAPE là 7,90%; áp cùng ngưỡng 20% có 91 tài sản (3,11%) được xem là ứng viên. Chênh lệch chủ yếu do Ames có quan hệ giá–chất lượng mạnh hơn và ít giao dịch cực đoan hơn, không phải do mô hình tốt hơn về bản chất.
+
+6.6. Chất lượng mô hình và độ nhạy
+Trên tập test King County, XGBoost đạt MAPE 11,20%, RMSE 106.477 USD, R² 0,918; Linear Regression 13,34% và Random Forest 12,36%; mốc thô đơn giá ZIP × diện tích là 18,84%. Chia theo thời gian (huấn luyện trước 01/02/2015), XGBoost còn MAPE 12,46%, cho thấy mô hình không phụ thuộc quá mức vào việc chia ngẫu nhiên.
+
+Permutation importance cho thấy vĩ độ (lat) quan trọng nhất (làm MAPE tăng 16,24 điểm % khi xáo trộn), sau đó diện tích ở (7,11), khoảng cách tới trung tâm (6,70) và grade (5,35). Phân tích what-if một biến cho thấy cải tạo mới làm giá dự báo tăng trung vị 10,17%, grade +1 tăng 8,58%, view +1 tăng 6,65%, condition +1 tăng 4,31%, diện tích +10% tăng 3,64%; tuổi nhà +10 năm làm giảm 1,52%.
+
+Độ ổn định của danh sách 20 căn: khi đổi seed chia fold, danh sách giữ được 15–18/20 căn; xếp theo residual USD chỉ giữ 1/20; danh sách thô không lọc bất thường trùng 0/20. Vì vậy quy tắc lọc bất thường và xếp theo mức giảm thận trọng là cần thiết, không phải tùy chọn.
+
+6.7. Khuyến nghị và giới hạn
+Khuyến nghị chọn ngưỡng 20% làm mặc định: còn 1.193 ứng viên (5,62%), đủ rộng để lọc ra 20 căn nhưng vẫn giữ được tỷ lệ đồng thuận cao (839 căn cả ba mô hình). Ngưỡng 10% quá rộng (3.672 căn) và ngưỡng 30% chỉ còn 411 căn, dễ bỏ sót cơ hội.
+
+Giới hạn cần giữ khi trình bày: (1) "Undervalued" ở đây là proxy theo residual mô hình, không chứng minh nhà bị định giá sai so với giá trị thị trường; (2) residual OOF vẫn có sai số ~11%, nên 20 căn phải được xác minh thực địa trước khi xuống tiền; (3) quan hệ là tương quan, không phải nhân quả; (4) Ames chỉ là kiểm chứng, khác thị trường và định nghĩa diện tích; (5) dashboard phản ánh dữ liệu lịch sử 2014–2015 và 2006–2010, không phải giá hiện tại; (6) khi dùng cho dự báo mới phải chia train/test trước và fit lại imputation/encoding/ngưỡng trên train.
+
+6.8. Kết luận
+Dashboard đã trả lời được câu hỏi quyết định của Giám đốc đầu tư: với ngân sách khoảng 4,53 triệu USD, chọn 20 căn có mức giảm thận trọng lớn nhất, tập trung ở các ZIP 98118, 98106, 98168 và 98144. Tham số What-if giúp điều chỉnh ngưỡng theo khẩu vị rủi ro và quan sát ngay quy mô cơ hội, thay vì phải chạy lại mô hình.

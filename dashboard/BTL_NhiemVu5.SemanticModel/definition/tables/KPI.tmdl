@@ -1,0 +1,215 @@
+table KPI
+	lineageTag: 6cd38307-c52b-4139-9dd6-2d99a6054408
+
+	measure 'King Transactions' =
+			COUNTROWS('KingSales')
+		formatString: #,0
+		lineageTag: 767a3269-9cf4-416b-b52b-5abb4a3bb1e9
+
+	measure 'King Properties' =
+			DISTINCTCOUNT('KingSales'[id])
+		formatString: #,0
+		lineageTag: c2e42813-7dc2-4906-8df6-7188c25e4d65
+
+	measure 'King Median Price' =
+			MEDIAN('KingSales'[price])
+		formatString: #,0
+		lineageTag: 86311bf7-c9ab-4490-97f5-c7c066a5e7bc
+
+	measure 'King OOF MAPE' =
+			AVERAGEX('KingSales', ABS('KingSales'[residual_pct]))
+		formatString: 0.0%
+		lineageTag: c84214e3-3369-48f7-9713-fea4afbadd05
+
+	measure 'Selected Threshold' =
+			IF(ISFILTERED('Nguong'[Value]), MIN('Nguong'[Value]), 0.20)
+		formatString: 0%
+		lineageTag: 14fad22a-185b-4ecb-8ce5-40d0bf23bcca
+
+	measure 'Candidate Base' =
+			CALCULATE(COUNTROWS('KingSales'), 'KingSales'[is_latest_sale] = 1, 'KingSales'[zero_room_flag] = 0, 'KingSales'[condition] >= 3)
+		formatString: #,0
+		lineageTag: 4f915613-4e9a-416e-9cfd-e356622af813
+
+	measure 'Candidates' =
+			VAR t = -[Selected Threshold]
+			RETURN CALCULATE([Candidate Base], 'KingSales'[residual_pct] <= t)
+		formatString: #,0
+		lineageTag: 9a28db0d-4ee7-4dcc-8c16-9fb25176bd19
+
+	measure 'Candidate Share' =
+			DIVIDE([Candidates], [Candidate Base])
+		formatString: 0.00%
+		lineageTag: 87d723d9-66dd-43e1-9d39-14b629f0588c
+
+	measure 'Candidate Upside' =
+			VAR t = -[Selected Threshold]
+			RETURN CALCULATE(SUM('KingSales'[upside_usd]), 'KingSales'[is_latest_sale] = 1, 'KingSales'[zero_room_flag] = 0, 'KingSales'[condition] >= 3, 'KingSales'[residual_pct] <= t)
+		formatString: #,0
+		lineageTag: c9021d98-6cfc-49a6-83a2-507d4b10dc98
+
+	measure 'Candidate Median Price' =
+			VAR t = -[Selected Threshold]
+			RETURN CALCULATE(MEDIAN('KingSales'[price]), 'KingSales'[is_latest_sale] = 1, 'KingSales'[zero_room_flag] = 0, 'KingSales'[condition] >= 3, 'KingSales'[residual_pct] <= t)
+		formatString: #,0
+		lineageTag: cfd5eb98-f7d7-4a98-96fc-e60df8ab7a73
+
+	measure 'Candidate All3' =
+			VAR t = -[Selected Threshold]
+			RETURN CALCULATE(COUNTROWS('KingSales'), 'KingSales'[is_latest_sale] = 1, 'KingSales'[zero_room_flag] = 0, 'KingSales'[condition] >= 3, 'KingSales'[models_agree_undervalued] = 3, 'KingSales'[residual_pct] <= t)
+		formatString: #,0
+		lineageTag: f5bbd3a5-3287-4ff8-b04b-88fca56dffa8
+
+	measure 'Top20 Count' =
+			COUNTROWS('Top20')
+		formatString: #,0
+		lineageTag: 6e4185ff-5ecc-468c-b9ac-4b840f14d5a2
+
+	measure 'Top20 Capital' =
+			SUM('Top20'[price])
+		formatString: #,0
+		lineageTag: f037cc79-a14f-425b-afe7-356cf58bad92
+
+	measure 'Top20 Upside' =
+			SUM('Top20'[upside_usd])
+		formatString: #,0
+		lineageTag: b4bc6cb9-35e2-42fc-a8ac-746ea4ed1ecc
+
+	measure 'Top20 Median Discount' =
+			MEDIAN('Top20'[discount_pct])
+		formatString: 0.0
+		lineageTag: f9c80768-4c66-4869-975f-fab8c3870a2a
+
+	measure 'Top20 All3' =
+			COUNTROWS(FILTER('Top20', 'Top20'[models_agree_undervalued] = 3))
+		formatString: #,0
+		lineageTag: 0ffbac59-41c7-4d68-9d78-30999a5fa360
+
+	measure 'Importance Increase' =
+			SUM('ImportanceTop'[mape_increase_pp])
+		formatString: 0.00
+		lineageTag: ed621290-d7c7-49f4-abc9-41318eebde21
+
+	measure 'Scenario Change' =
+			SUM('WhatIfScenarios'[median_change_pct])
+		formatString: 0.00
+		lineageTag: e2a37658-2024-4d71-9a0e-969bcc1670e6
+
+	measure 'Sensitivity Candidates' =
+			SUM('Sensitivity'[candidates])
+		formatString: #,0
+		lineageTag: 3fd41b14-e48d-4216-a057-09bf53d81517
+
+	measure 'Model MAPE' =
+			SUM('ModelCompare'[mape])
+		formatString: 0.0
+		lineageTag: 00b83e21-a96d-40cd-a4ec-727b91b76142
+
+	measure 'KingTx Text' =
+			FORMAT([King Transactions], "#,##0")
+		lineageTag: bd3443c0-19a6-4153-98a5-3ba4b2517688
+
+	measure 'KingMedian Text' =
+			FORMAT([King Median Price], "#,##0")
+		lineageTag: 6ee27602-1235-45a6-8c3d-f0e2cdc9d79e
+
+	measure 'Candidates Text' =
+			FORMAT([Candidates], "#,##0")
+		lineageTag: 7fd1739b-3c6d-4950-9008-1b8f6b0f1266
+
+	measure 'CandidateUpside Text' =
+			FORMAT([Candidate Upside], "#,##0")
+		lineageTag: 83268e29-1964-4055-a93b-e09a101722ac
+
+	measure 'CandidateMedian Text' =
+			FORMAT([Candidate Median Price], "#,##0")
+		lineageTag: 5db062f7-3f8e-4d49-85dd-05ae870dbca6
+
+	measure 'Top20Capital Text' =
+			FORMAT([Top20 Capital], "#,##0")
+		lineageTag: 8d9eeb1a-1380-497a-ac93-8d45d842ce25
+
+	measure 'Top20Upside Text' =
+			FORMAT([Top20 Upside], "#,##0")
+		lineageTag: f3812ff7-705e-4278-abe8-4f54caf8766b
+
+	measure 'Top20All3 Text' =
+			FORMAT([Top20 All3], "#,##0")
+		lineageTag: f6c8ab22-8869-4ae8-b762-fa50a72fcd4a
+
+	measure 'AmesProperties Text' =
+			FORMAT([Ames Properties], "#,##0")
+		lineageTag: 8e2bcd61-f903-4e16-9c11-b3675cae4a4a
+
+	measure 'AmesMedian Text' =
+			FORMAT([Ames Median Price], "#,##0")
+		lineageTag: 7045a68f-429c-4bf1-bbdb-bd7703adf6df
+
+	measure 'AmesCandidates Text' =
+			FORMAT([Ames Candidates], "#,##0")
+		lineageTag: 69dda00f-f6bb-42ca-91ce-50ae8b0add4e
+
+	measure 'Ames Properties' =
+			COUNTROWS('AmesSales')
+		formatString: #,0
+		lineageTag: 55aec264-2b5f-432c-95d0-10293db0f548
+
+	measure 'Ames Median Price' =
+			MEDIAN('AmesSales'[price])
+		formatString: #,0
+		lineageTag: 3d472e81-7260-4740-8e9e-e7f999a9c791
+
+	measure 'Ames OOF MAPE' =
+			AVERAGEX('AmesSales', ABS('AmesSales'[residual_pct]))
+		formatString: 0.0%
+		lineageTag: 4b507e83-8f9f-428a-82b9-91c136e5c56f
+
+	measure 'Ames Candidates' =
+			VAR t = -[Selected Threshold]
+			RETURN CALCULATE(COUNTROWS('AmesSales'), 'AmesSales'[residual_pct] <= t)
+		formatString: #,0
+		lineageTag: a993bef0-e4f8-4390-a31b-e2d0a9e8f0ab
+
+	measure 'Ames Candidate Share' =
+			DIVIDE([Ames Candidates], [Ames Properties])
+		formatString: 0.00%
+		lineageTag: a4333cf4-c86c-401f-b71a-0fe3ad6cedce
+
+	measure 'MAPE King XGB' =
+			CALCULATE(MAX('ModelMetrics'[mape]), 'ModelMetrics'[market] = "King County", 'ModelMetrics'[model] = "XGBoost (tuned)")
+		formatString: 0.0
+		lineageTag: 3ebde2e7-beba-466a-ae0a-5c1217f93dee
+
+	measure 'MAPE Ames XGB' =
+			CALCULATE(MAX('ModelMetrics'[mape]), 'ModelMetrics'[market] = "Ames", 'ModelMetrics'[model] = "XGBoost")
+		formatString: 0.0
+		lineageTag: f0d1988e-3678-4b47-82b3-8656b5c90aee
+
+	measure 'R2 King XGB' =
+			CALCULATE(MAX('ModelMetrics'[r2]), 'ModelMetrics'[market] = "King County", 'ModelMetrics'[model] = "XGBoost (tuned)")
+		formatString: 0.000
+		lineageTag: f6c8fd0c-d65b-4edc-90bb-d94360454ed5
+
+	measure 'R2 Ames XGB' =
+			CALCULATE(MAX('ModelMetrics'[r2]), 'ModelMetrics'[market] = "Ames", 'ModelMetrics'[model] = "XGBoost")
+		formatString: 0.000
+		lineageTag: 287e077f-23e5-4820-abcb-5bf9f03b44a4
+
+	measure 'MAPE King Time XGB' =
+			CALCULATE(MAX('ModelMetrics'[mape]), 'ModelMetrics'[market] = "King County (chia theo thời gian)", 'ModelMetrics'[model] = "XGBoost (tuned)")
+		formatString: 0.0
+		lineageTag: 540cc357-8580-4b5c-b8b2-31d277253d76
+
+	column Placeholder
+		dataType: string
+		isHidden
+		sourceColumn: Placeholder
+		lineageTag: 5fb06822-1bdf-494d-8972-efc4eea05ec4
+
+	partition KPI = m
+		mode: import
+		source =
+			let
+				Source = #table(type table [Placeholder = text], {{""}})
+			in
+				Source

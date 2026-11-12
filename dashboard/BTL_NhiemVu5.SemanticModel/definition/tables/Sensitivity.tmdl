@@ -1,0 +1,57 @@
+table Sensitivity
+	lineageTag: bd62645f-81ae-4a16-bb8a-791014aa73c9
+
+	column threshold_pct
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: threshold_pct
+		lineageTag: e8278dfa-7643-4571-b361-a257374d8f0b
+	column candidates
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: candidates
+		lineageTag: ea96ac5a-a202-474a-908e-6f0570acfce9
+	column share_pct
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: share_pct
+		lineageTag: fed1e92c-e15a-4ee9-8c5c-0aa96dd2c164
+	column all3
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: all3
+		lineageTag: 9f32d209-ab8d-40da-a8a6-7ffeefdff61f
+	column over_50pct
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: over_50pct
+		lineageTag: dfb5f048-fa08-4ad7-b879-0f081c579db2
+	column median_price
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: median_price
+		lineageTag: 73a8dd4a-eab3-45d9-b790-20b2a79d4692
+	column enough_20
+		dataType: boolean
+		sourceColumn: enough_20
+		lineageTag: 5cb4d5ab-136f-4722-b0d3-69a33d7c4aca
+
+	partition Sensitivity = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\sensitivity.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted,
+					{
+					{"threshold_pct", Int64.Type},
+					{"candidates", Int64.Type},
+					{"share_pct", type number},
+					{"all3", Int64.Type},
+					{"over_50pct", Int64.Type},
+					{"median_price", type number},
+					{"enough_20", type logical}
+					}),
+				Result = Typed
+			in
+				Result

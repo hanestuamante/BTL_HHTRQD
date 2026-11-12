@@ -1,0 +1,7 @@
+model,market,mape
+Linear Regression,King,13.344
+Random Forest,King,12.361
+XGBoost,King,11.204
+Linear Regression,Ames,7.964
+Random Forest,Ames,8.222
+XGBoost,Ames,7.491

@@ -18,3 +18,9 @@ chứng minh bị định giá thấp so với giá trị hợp lý. Ames gốc 
 tọa độ, nên không tính khoảng cách hoặc tự gán zipcode.
 
 Môi trường phân tích đã chạy: Python 3.12, phiên bản thư viện trong requirements.txt.
+
+NHIỆM VỤ 5  DASHBOARD VÀ PHẦN 6
+Dashboard Power BI: dashboard/BTL_NhiemVu5.pbip (5 trang, thanh trượt What-if 5-50%).
+Phần 6 (Kết quả): reports/Bao_cao_Nhiem_vu_5.docx và docs/phan_6_ket_qua.txt.
+Hình: outputs/task5/figures/ (2 ảnh dashboard + 4 biểu đồ minh họa).
+Hướng dẫn mở, refresh, lưu .pbix và tái lập: docs/huong_dan_nhiem_vu_5.txt.

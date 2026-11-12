@@ -1,0 +1,157 @@
+table Top20
+	lineageTag: b501d91d-01c5-4afd-994f-de8a70bec75b
+
+	column Hang
+		dataType: int64
+		summarizeBy: none
+		isHidden
+		sourceColumn: Hang
+		lineageTag: f3290789-c52b-4911-85a4-ae5eb44ab992
+	column id
+		dataType: string
+		sourceColumn: id
+		lineageTag: 0f7ae431-05e4-4d41-9487-dc5995272644
+	column date
+		dataType: dateTime
+		sourceColumn: date
+		lineageTag: 547852c6-4af3-4ae8-a380-4249248300c2
+	column zipcode
+		dataType: string
+		sourceColumn: zipcode
+		lineageTag: be2a261b-8a77-479f-8d77-24f1ca17dcd2
+	column price
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: price
+		lineageTag: 2b15994b-afe4-42eb-ad14-8329405df528
+	column predicted_price
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: predicted_price
+		lineageTag: facb50c2-0813-40ef-8dcd-4978aea63703
+	column upside_usd
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: upside_usd
+		lineageTag: 2fbd81b8-98bb-450e-b523-5f39b7041eaa
+	column discount_pct
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: discount_pct
+		lineageTag: 05c6214b-dbee-4f4b-b862-7b0470ba3cd2
+	column discount_conservative_pct
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: discount_conservative_pct
+		lineageTag: f2a66535-9ad6-428a-8a40-8a96354ff063
+	column residual
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: residual
+		lineageTag: 88d91d2e-32e6-48f9-bc69-3ef95df7f6a8
+	column models_agree_undervalued
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: models_agree_undervalued
+		lineageTag: 03d389f0-caa7-467d-a7ae-ec6182c865c1
+	column sqft_living
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: sqft_living
+		lineageTag: e466a082-14a2-48ab-8a1e-bcf1e52da4e8
+	column bedrooms
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: bedrooms
+		lineageTag: 86861ece-39e4-40c8-9f1b-11b800d3330b
+	column bathrooms
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: bathrooms
+		lineageTag: 044bad46-d068-4cd5-a8b8-6b4bcd587ce2
+	column grade
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: grade
+		lineageTag: 3fb0c543-adba-41ea-a4ff-e57678f6df10
+	column condition
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: condition
+		lineageTag: a5a5d149-a23a-4ea9-80c8-bc37c97e45a8
+	column view
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: view
+		lineageTag: 0655ec33-69af-434c-9410-5f4cd61a8b61
+	column waterfront
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: waterfront
+		lineageTag: 98a36eab-5153-4278-9b0e-e5349883ff61
+	column house_age
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: house_age
+		lineageTag: 06e5a939-4284-400c-b6a1-ae457121c3ba
+	column distance_to_center_km
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: distance_to_center_km
+		lineageTag: 3fd58eb4-9de4-4418-9ff3-8e9f2d8ed4f9
+	column lat
+		dataType: double
+		summarizeBy: none
+		sourceColumn: lat
+		lineageTag: 236ec958-5d84-4359-bff6-4923825b5b12
+	column long
+		dataType: double
+		summarizeBy: none
+		sourceColumn: long
+		lineageTag: e27b83fd-1d1b-4a35-9e0d-b51b656e2023
+	column cumulative_cost_usd
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: cumulative_cost_usd
+		lineageTag: db2f2877-afbc-4d5b-b5a7-b6b83f90665f
+	column price_band
+		dataType: string
+		sourceColumn: price_band
+		lineageTag: d8eb64ee-0517-45ed-ae7c-89191b4bd0be
+
+	partition Top20 = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\top20.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted,
+					{
+					{"Hang", Int64.Type},
+					{"id", type text},
+					{"date", type date},
+					{"zipcode", type text},
+					{"price", type number},
+					{"predicted_price", type number},
+					{"upside_usd", type number},
+					{"discount_pct", type number},
+					{"discount_conservative_pct", type number},
+					{"residual", type number},
+					{"models_agree_undervalued", Int64.Type},
+					{"sqft_living", Int64.Type},
+					{"bedrooms", Int64.Type},
+					{"bathrooms", type number},
+					{"grade", Int64.Type},
+					{"condition", Int64.Type},
+					{"view", Int64.Type},
+					{"waterfront", Int64.Type},
+					{"house_age", Int64.Type},
+					{"distance_to_center_km", type number},
+					{"lat", type number},
+					{"long", type number},
+					{"cumulative_cost_usd", type number},
+					{"price_band", type text}
+					}),
+				Result = Typed
+			in
+				Result

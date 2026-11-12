@@ -1,0 +1,33 @@
+table ImportanceTop
+	lineageTag: d3cba575-7e3d-4303-b9c4-6c051368a07f
+
+	column feature
+		dataType: string
+		sourceColumn: feature
+		lineageTag: 363a048e-d290-4d40-a8f9-fcc6b7f59167
+	column mape_increase_pp
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: mape_increase_pp
+		lineageTag: 9e1085f6-cf12-49d2-af0a-e70b40b0a595
+	column std_pp
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: std_pp
+		lineageTag: 9e81a3b8-f8ff-4c1c-a0a9-e5e9204d89ff
+
+	partition ImportanceTop = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\importance_top.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted,
+					{
+					{"feature", type text},
+					{"mape_increase_pp", type number},
+					{"std_pp", type number}
+					}),
+				Result = Typed
+			in
+				Result

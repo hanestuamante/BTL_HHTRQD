@@ -1,0 +1,33 @@
+table Stability
+	lineageTag: e1ab6b3b-5629-4d21-8a5c-fa1d9f0c09bc
+
+	column variant
+		dataType: string
+		sourceColumn: variant
+		lineageTag: 7cca38c7-769d-4da4-b850-29253294b866
+	column overlap_20
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: overlap_20
+		lineageTag: 901a7d06-0668-4e9f-be9f-3146aa8f6e1e
+	column share_pct
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: share_pct
+		lineageTag: 2cf5e6f8-4ef5-4c80-ad0e-32a34362a950
+
+	partition Stability = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\stability.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted,
+					{
+					{"variant", type text},
+					{"overlap_20", Int64.Type},
+					{"share_pct", type number}
+					}),
+				Result = Typed
+			in
+				Result

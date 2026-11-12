@@ -1,0 +1,33 @@
+table SegmentCompare
+	lineageTag: 3c307a35-4d75-4aa6-bff9-37d7c6f7f19d
+
+	column segment
+		dataType: string
+		sourceColumn: segment
+		lineageTag: 3f20072e-be83-4167-9b1b-14e726d80a17
+	column mape_lr
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: mape_lr
+		lineageTag: c892cf9f-8bb1-4ff8-becf-5ded662c3598
+	column mape_xgb
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: mape_xgb
+		lineageTag: 559c93ff-5f3d-48f0-803a-4afbe574b177
+
+	partition SegmentCompare = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\segment_compare.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted,
+					{
+					{"segment", type text},
+					{"mape_lr", type number},
+					{"mape_xgb", type number}
+					}),
+				Result = Typed
+			in
+				Result

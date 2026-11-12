@@ -1,0 +1,11 @@
+model,segment,n,price_range,mape
+Linear Regression (baseline),Q1 rẻ nhất,873,"78,000 – 299,000",18.09901847049494
+Linear Regression (baseline),Q2,858,"299,500 – 398,000",12.752913250183951
+Linear Regression (baseline),Q3,863,"398,500 – 519,000",10.74975810597331
+Linear Regression (baseline),Q4,864,"520,000 – 710,000",11.210509914897042
+Linear Regression (baseline),Q5 đắt nhất,863,"710,500 – 5,110,800",13.852625457463008
+XGBoost (tuned),Q1 rẻ nhất,873,"78,000 – 299,000",15.992854923566247
+XGBoost (tuned),Q2,858,"299,500 – 398,000",10.685233594882963
+XGBoost (tuned),Q3,863,"398,500 – 519,000",8.773904195695998
+XGBoost (tuned),Q4,864,"520,000 – 710,000",9.012378752684489
+XGBoost (tuned),Q5 đắt nhất,863,"710,500 – 5,110,800",11.500747344248627
