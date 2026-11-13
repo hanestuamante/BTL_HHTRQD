@@ -1,40 +1,40 @@
 table Sensitivity
-	lineageTag: 03edf331-32f8-40ff-a1c8-ae5e6f15b714
+	lineageTag: c52c4c16-93ce-47d1-a633-cc624ed50ac6
 
 	column 'Ngưỡng (%)'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: threshold_pct
-		lineageTag: 721546e5-fb00-4e69-b7d3-8cb16fa7b35b
+		lineageTag: e0c164b9-b147-48ac-83be-b787a90e23c8
 	column 'Số ứng viên'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: candidates
-		lineageTag: 0a3b2af1-952d-4675-9e86-18a4742a266d
+		lineageTag: 6fbc08c4-f399-4c52-999f-ec2e64e68204
 	column 'Tỷ lệ (%)'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: share_pct
-		lineageTag: 55199cd9-3ec0-4075-b571-8e21118cfa9f
+		lineageTag: 3a23c74f-7129-4170-8071-ea32700a80e5
 	column 'all3'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: all3
-		lineageTag: 0678787a-5a32-49b1-b966-6302405585ff
+		lineageTag: 7d35cd3b-8d5f-4292-ba6b-12b07c0af7ac
 	column 'over_50pct'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: over_50pct
-		lineageTag: 2171a9d4-9ce0-4958-87c3-39ac61801534
+		lineageTag: 20503efa-1307-4f4f-a21d-ad2273f8e564
 	column 'Giá trung vị (USD)'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: median_price
-		lineageTag: 2774255a-1417-422b-ae08-2091e82612d9
+		lineageTag: 015dc420-41dd-4312-9bf8-300d45ebf04d
 	column 'enough_20'
 		dataType: boolean
 		sourceColumn: enough_20
-		lineageTag: 9141e09f-6941-443f-8651-fb16b0217319
+		lineageTag: d41f169c-78b6-4211-9601-6d37d32734a3
 
 	partition Sensitivity = m
 		mode: import

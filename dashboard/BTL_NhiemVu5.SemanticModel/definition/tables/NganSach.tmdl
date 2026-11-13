@@ -1,5 +1,5 @@
 table NganSach
-	lineageTag: acf2176f-29da-4898-ac23-0153e744b3dd
+	lineageTag: 31e5f532-a416-4403-b0ad-fc013f9bb9a1
 
 	column Value
 		dataType: double
@@ -7,7 +7,7 @@ table NganSach
 		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Value]
-		lineageTag: 06d81449-6b32-4082-973f-1fec0dcd7d02
+		lineageTag: 34bc2544-dd3e-4ad5-83e1-38f0accfd148
 
 	partition NganSach = calculated
 		mode: import

@@ -238,8 +238,6 @@ MEASURES = {
         "CALCULATE(MAX('ModelMetrics'[mape]), "
         "'ModelMetrics'[market] = \"King County (chia theo thời gian)\", "
         "'ModelMetrics'[model] = \"XGBoost (tuned)\")", "0.0"),
-    "Vĩ độ": ("AVERAGE('KingSales'[lat])", "0.0000"),
-    "Kinh độ": ("AVERAGE('KingSales'[long])", "0.0000"),
     "Selected Budget": (
         "IF(ISFILTERED('NganSach'[Value]), MAX('NganSach'[Value]), 2000000)", "#,0"),
     "Budget Bought": (
@@ -514,8 +512,6 @@ PAGES = [
     ("top20", "4. 20 căn đề xuất"),
     ("ames", "5. So sánh Ames"),
     ("mo_hinh", "6. Mô hình và độ nhạy"),
-    ("ban_do", "7. Bản đồ ứng viên"),
-    ("yeu_to", "8. Yếu tố ảnh hưởng"),
 ]
 
 
@@ -811,61 +807,6 @@ def build_pages():
                               col("Stability", "share_pct")]},
                   "Độ ổn định của danh sách 20 căn"))
 
-    # ---- Trang 7: bản đồ
-    # Azure Maps cần đăng nhập tài khoản Microsoft trong Power BI Desktop; sau khi
-    # đăng nhập sẽ có nền bản đồ thật, còn tọa độ vẫn lấy từ dữ liệu.
-    p = pages / "ban_do"
-    mp = visual("map_cand", "azureMap", 16, 16, 1248, 452,
-                {"Latitude": [meas(KPI_TABLE, "Vĩ độ")],
-                 "Longitude": [meas(KPI_TABLE, "Kinh độ")],
-                 "Category": [col("KingSales", "zipcode")],
-                 "Size": [meas(KPI_TABLE, "Candidates")],
-                 "Tooltips": [meas(KPI_TABLE, "Candidate Median Price")]},
-                "Ứng viên theo vị trí (mỗi điểm = 1 ZIP, kích thước = số ứng viên)")
-    add(p, mp)
-    add(p, textbox("map_note", 16, 480, 1248, 224, [
-        ("Đọc bản đồ", 15, True, "#12324F"),
-        ("Mỗi bong bóng là một mã ZIP; kích thước theo số căn ứng viên ở ngưỡng đang chọn "
-         "(mặc định 20%: 1.193 căn trên phạm vi 21.229 giao dịch). Di chuột lên bong bóng để xem "
-         "giá trung vị của nhóm ứng viên trong ZIP đó.", 12, False, "#1B2A3A"),
-        ("Kết quả 20%: 98118 dẫn đầu với 60 căn, tiếp theo 98106 (41), 98168 (34), 98103 (33), "
-         "98146 (32), 98198 (32). Sáu ZIP này chiếm 19,4% tổng số ứng viên; phần còn lại rải trên "
-         "64 ZIP khác, mỗi ZIP dưới 30 căn.", 12, False, "#1B2A3A"),
-        ("Vì sao quan trọng: cùng một ngưỡng nhưng mật độ ứng viên lệch hẳn giữa các khu — "
-         "gợi ý rằng cơ hội tập trung theo khu vực chứ không rải đều, nên khảo sát thực địa theo cụm "
-         "sẽ hiệu quả hơn đi từng căn lẻ.", 12, False, "#1B2A3A"),
-    ]))
-
-    # ---- Trang 8: yếu tố ảnh hưởng
-    # (Key Influencers là visual đóng gói riêng, PBIP không có resource .pbiviz nên
-    #  dùng tỷ lệ ứng viên theo phân khúc — cùng nội dung, tự tính, chạy mọi máy.)
-    p = pages / "yeu_to"
-    tree = visual("dtree", "decompositionTreeVisual", 16, 16, 616, 560,
-                  {"Analyze": [meas(KPI_TABLE, "Candidates")],
-                   "ExplainBy": [dict(col("KingSales", f), active=True) for f in
-                                 ("zip_top", "price_band", "grade", "waterfront",
-                                  "view", "condition", "is_renovated", "sqft_living")]},
-                  "Ứng viên theo Mã ZIP và thuộc tính")
-    tree["visual"]["query"]["sortDefinition"] = {
-        "sort": [{"field": meas(KPI_TABLE, "Candidates")["field"],
-                  "direction": "Descending"}],
-        "isDefaultSort": False}
-    add(p, tree)
-    add(p, textbox("tree_note", 16, 584, 616, 120, [
-        ("Cách đọc cây", 13, True, "#12324F"),
-        ("Cấp 1 là Mã ZIP: 12 ZIP nhiều giao dịch nhất và nhóm “Khác” (58 ZIP còn lại). "
-         "Bấm dấu + dưới một ZIP rồi chọn thuộc tính (khúc giá, hạng chất lượng, hướng nhìn, "
-         "tình trạng…) để tách tiếp và xem thuộc tính nào đóng góp nhiều ứng viên nhất.", 11, False, "#1B2A3A"),
-    ]))
-    add(p, visual("yt_grade", "barChart", 648, 16, 616, 330,
-                  {"Category": [col("KingSales", "grade")],
-                   "Y": [meas(KPI_TABLE, "Candidate Share")]},
-                  "Tỷ lệ ứng viên theo hạng chất lượng (%)"))
-    add(p, visual("yt_view", "barChart", 648, 358, 616, 346,
-                  {"Category": [col("KingSales", "view")],
-                   "Y": [meas(KPI_TABLE, "Candidate Share")]},
-                  "Tỷ lệ ứng viên theo hướng nhìn (%)"))
-
 
 KIND_LABEL = {
     "card": "Thẻ số liệu",
@@ -875,8 +816,6 @@ KIND_LABEL = {
     "columnChart": "Biểu đồ cột",
     "tableEx": "Bảng dữ liệu",
     "slicer": "Bộ lọc",
-    "scatterChart": "Biểu đồ phân tán theo tọa độ",
-    "decompositionTreeVisual": "Cây phân rã",
     "pageNavigator": "Điều hướng trang",
     "textbox": "Hộp văn bản",
 }

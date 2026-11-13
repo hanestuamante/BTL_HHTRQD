@@ -3,7 +3,7 @@ PHẦN 6. KẾT QUẢ
 6.1. Mục tiêu và phạm vi
 Phần 6 trình bày kết quả của dashboard Power BI được thiết kế cho bài toán định giá bất động sản tự động (Chủ đề 14). Dashboard kế thừa dữ liệu sạch của Nhiệm vụ 2, kết quả EDA của Nhiệm vụ 3 và mô hình dự báo của Nhiệm vụ 4. Toàn bộ số liệu trên dashboard lấy từ dự báo out-of-fold (OOF) của mô hình XGBoost trên King County: mỗi giao dịch được định giá bởi mô hình chưa từng thấy tài sản đó, nên residual phản ánh sai số ngoài mẫu chứ không phải sai số huấn luyện.
 
-Dashboard gồm 8 trang: (1) Tổng quan King County, (2) What-if ngưỡng undervalued, (3) Ngân sách và kế hoạch mua, (4) 20 căn đề xuất, (5) So sánh Ames, (6) Mô hình và độ nhạy, (7) Bản đồ ứng viên, (8) Yếu tố ảnh hưởng. Trang 2 có hộp chọn ngưỡng 5%–50%, trang 3 có hộp chọn ngân sách 0,5–10 triệu USD; cả hai là tham số What-if nên chỉ cần đổi một giá trị là toàn bộ số liệu liên quan cập nhật ngay.
+Dashboard gồm 6 trang: (1) Tổng quan King County, (2) What-if ngưỡng undervalued, (3) Ngân sách và kế hoạch mua, (4) 20 căn đề xuất, (5) So sánh Ames, (6) Mô hình và độ nhạy. Trang 2 có hộp chọn ngưỡng 5%–50%, trang 3 có hộp chọn ngân sách 0,5–10 triệu USD; cả hai là tham số What-if nên chỉ cần đổi một giá trị là toàn bộ số liệu liên quan cập nhật ngay.
 
 6.2. Kết quả trang Tổng quan King County
 Bộ dữ liệu sạch có 21.612 giao dịch của 21.435 tài sản trong giai đoạn 05/2014–05/2015, thuộc 70 mã ZIP. Giá bán trung vị là 450.000 USD, trung bình 540.084 USD; phân phối lệch phải mạnh (skewness 4,02) do một số giao dịch rất cao vẫn được giữ hợp lệ. Sau khi lọc đúng phạm vi của Nhiệm vụ 4 (chỉ giao dịch gần nhất của mỗi tài sản, loại cờ zero_room_flag, condition ≥ 3), còn 21.229 giao dịch đại diện cho 21.229 tài sản.
