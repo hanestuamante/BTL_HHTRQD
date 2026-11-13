@@ -1,97 +1,97 @@
 table AmesSales
-	lineageTag: 8a365cfb-2a83-4396-9ce4-5b9797be6fc3
+	lineageTag: a65c5b51-0f2e-4c00-a810-d095112fbaa1
 
 	column 'pid'
 		dataType: string
 		sourceColumn: pid
-		lineageTag: c7e4e23c-2812-4fb5-951f-9f3f85c33060
+		lineageTag: 3140e5c3-3a91-4f7b-a1d6-e688190daab4
 	column 'Khu dân cư'
 		dataType: string
 		sourceColumn: neighborhood
-		lineageTag: 66419c7f-d43e-4f70-b89b-498adc3ab1da
+		lineageTag: d566fcf1-93bc-48a9-b3c5-f0f32b55a163
 	column 'Giá bán'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: price
-		lineageTag: 7cc0f9ef-75ce-40f6-b9a6-52d633de7a19
+		lineageTag: 5341521d-551d-4746-a8e3-8d7c69e77f65
 	column 'gr_liv_area'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: gr_liv_area
-		lineageTag: 76bc08c6-d7cd-4d02-b537-0c83a2ebd2b9
+		lineageTag: 43020b00-dd12-4d02-8a0d-f5c6e9cd7899
 	column 'overall_qual'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: overall_qual
-		lineageTag: 70f840a9-ba48-4e37-8d18-6d4e1e93754d
+		lineageTag: d592aeec-0113-4c34-8168-4368e73a52aa
 	column 'year_built'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: year_built
-		lineageTag: 7bcb5715-90e4-41ab-9231-3416d7cea9d4
+		lineageTag: 55109483-9e21-429e-8991-17a81a3922d8
 	column 'Tuổi nhà'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: house_age
-		lineageTag: b1631e0d-aac5-474b-9901-b35e6bb20094
+		lineageTag: f06a8912-7521-4aad-981a-733cb779937c
 	column 'bedroom_abvgr'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: bedroom_abvgr
-		lineageTag: 3a791c0d-cf49-4daa-9a46-1d5cd438b718
+		lineageTag: ea28e57e-4d14-49b3-bb21-364360d4f647
 	column 'garage_cars'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: garage_cars
-		lineageTag: d5867b30-11bf-48bb-ae98-e299ee0284e7
+		lineageTag: de2c384c-f680-4fed-9454-d96a751954a5
 	column 'lot_area'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: lot_area
-		lineageTag: 2a49389e-1181-4131-815d-490ebf2d6b14
+		lineageTag: e0809b05-6d7a-4f5e-82a1-3cc0d0aa9b35
 	column 'yr_sold'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: yr_sold
-		lineageTag: c2c84089-c628-46c8-a5b1-d4b912831d2e
+		lineageTag: 0122d5ad-fee7-4363-80cd-a6f736c4413f
 	column 'bathrooms_total'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: bathrooms_total
-		lineageTag: fd377f21-949c-4811-b632-fade5e2dfd41
+		lineageTag: 2746ee0f-4d9a-40b2-8c4e-3fe009c8c3a3
 	column 'Giá mô hình'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: predicted_price
-		lineageTag: e4a72ef0-67b5-4ce9-9e59-5d1ae8093536
+		lineageTag: e758e532-12e8-4a14-9c67-1e191d017f88
 	column 'Sai số (%)'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: residual_pct
-		lineageTag: ed79839a-0234-4129-b3a6-fe9248be0ad4
+		lineageTag: 0dfc0d0d-1448-4425-a860-2de895d472af
 	column 'Mức giảm (%)'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: discount_pct
-		lineageTag: 0a64cc5d-d5d6-4ad3-ae57-eb0303914de4
+		lineageTag: 72948dd1-4020-4d60-8444-ebe532c9dee6
 	column 'Chênh lệch (USD)'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: upside_usd
-		lineageTag: 080cd470-c66a-4c6e-b142-1a3e332fbb91
+		lineageTag: 58030ce1-0d15-4446-b0f0-639514220a6a
 	column 'Khúc giá'
 		dataType: string
 		sourceColumn: price_band
-		lineageTag: ae9b745d-6fba-4134-8541-5bec389280ce
+		lineageTag: e281df2e-ef7c-4f9e-827f-09ba46872439
 	column 'is_undervalued_20pct'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: is_undervalued_20pct
-		lineageTag: 8439570f-2cb1-4b61-810b-e3a96bd7107b
+		lineageTag: d6d1d992-b9c2-436c-85b7-1e747dee1f9c
 	column 'Khu dân cư tiêu biểu'
 		dataType: string
 		sourceColumn: neighborhood_top
-		lineageTag: d2df875a-5d9a-40aa-9a08-f29c0a4a06c5
+		lineageTag: 92ddf3de-8716-4395-aa9a-b396b4dc8bba
 
 	partition AmesSales = m
 		mode: import

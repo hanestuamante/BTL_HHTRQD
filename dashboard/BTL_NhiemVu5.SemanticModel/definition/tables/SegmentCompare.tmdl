@@ -1,20 +1,20 @@
 table SegmentCompare
-	lineageTag: 3fcff99a-0efb-4491-90d8-ff95dccc8e3d
+	lineageTag: 82649af3-3b2b-4c94-9ea8-07708be56d3d
 
 	column 'Khúc giá'
 		dataType: string
 		sourceColumn: segment
-		lineageTag: 63214de4-6bec-4a0a-95e3-0ffd7aed8cba
+		lineageTag: 29c04a19-7ce3-444b-b15e-ef1e9b7c5b78
 	column 'MAPE Linear'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: mape_lr
-		lineageTag: 1bf95b2b-3a2e-446c-adc4-604ce3ab5efe
+		lineageTag: 7d11a1fa-e9aa-4cbd-9f24-a3542b59133e
 	column 'MAPE XGBoost'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: mape_xgb
-		lineageTag: ad124e04-1d95-49cd-b0ac-325ed0488115
+		lineageTag: 809dbf4b-7aa4-4ec6-9c4e-13521363463d
 
 	partition SegmentCompare = m
 		mode: import

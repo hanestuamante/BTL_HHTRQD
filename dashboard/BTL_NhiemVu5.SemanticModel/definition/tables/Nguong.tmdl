@@ -1,5 +1,5 @@
 table Nguong
-	lineageTag: 3ff43044-268c-420b-bccf-3c258b1833ed
+	lineageTag: aaf2d8e0-a34f-438b-ba21-0f2dff24b23d
 
 	column Value
 		dataType: int64
@@ -7,7 +7,7 @@ table Nguong
 		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Value]
-		lineageTag: a15efd63-3629-4a30-97c1-ad3d7ef41dc1
+		lineageTag: 6d3276d5-d363-47d3-a1a3-d5cbdb43641c
 
 	partition Nguong = calculated
 		mode: import

@@ -59,7 +59,7 @@ THAM SỐ WHAT-IF
   chỉ có ở trang 2; nhãn không đổi theo hộp chọn (đã chọn cách ghi rõ thay vì đồng bộ slicer).
 
 ĐIỀU HƯỚNG VÀ TRỢ NĂNG
-- Trang 1 có dải điều hướng trang (page navigator) tự liệt kê cả 6 trang. Trong Power BI Desktop
+- Cả 6 trang đều có dải điều hướng 6 trang ở cuối (visual page navigator). Trong Power BI Desktop
   ở chế độ chỉnh sửa phải Ctrl+click (hoặc View > Reading view); bản PDF là ảnh tĩnh nên không bấm được.
 - Bookmark "Chế độ nhà đầu tư: ngân sách và danh mục" mở trang 3; bookmark
   "Chế độ học thuật: mô hình và độ nhạy" mở trang 6 (menu View > Bookmarks).

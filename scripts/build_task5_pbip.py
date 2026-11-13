@@ -668,13 +668,14 @@ def build_pages():
                   {"Category": [col("KingSales", "price_band")],
                    "Y": [meas(KPI_TABLE, "Candidates")]},
                   "Ứng viên theo khúc giá"))
-    add(p, visual("w_tbl", "tableEx", 16, 496, 1248, 208,
+    add(p, visual("w_tbl", "tableEx", 16, 496, 1248, 152,
                   {"Values": [col("KingSales", "zip_top"),
                               meas(KPI_TABLE, "Candidates"),
                               meas(KPI_TABLE, "Candidate Share"),
                               meas(KPI_TABLE, "Candidate Upside"),
                               meas(KPI_TABLE, "Candidate All3")]},
                   "Tổng hợp ứng viên theo ZIP"))
+    add(p, page_nav("nav_what_if"))
 
     # ---- Trang 3: ngân sách (what-if thứ 2)
     p = pages / "ngan_sach"
@@ -722,7 +723,7 @@ def build_pages():
                    "Y": [meas(KPI_TABLE, "Chỉ số đang chọn")]},
                   "Ứng viên theo ZIP (chỉ số do người dùng chọn)"))
 
-    add(p, textbox("b_note", 16, 348, 372, 356, [
+    add(p, textbox("b_note", 16, 348, 372, 300, [
         ("Cách tính kế hoạch mua", 15, True, "#12324F"),
         ("Ngân sách là tổng vốn, không phải giá một căn. Ứng viên được xếp theo mức giảm "
          "sâu nhất rồi mua lần lượt đến khi hết ngân sách; chỉ xét giao dịch giảm ≤ 50% "
@@ -732,7 +733,7 @@ def build_pages():
         ("Đổi ngân sách ở hộp chọn phía trên: số căn và vốn cập nhật ngay. ROI giảm dần khi "
          "mua nhiều vì danh sách phải lùi xuống các căn giảm ít hơn.", 12, False, "#1B2A3A"),
     ]))
-    add(p, textbox("b_insight", 400, 490, 864, 214, [
+    add(p, textbox("b_insight", 400, 490, 864, 158, [
         ("Ngân sách so với kết quả", 15, True, "#12324F"),
         ("1.000.000 USD → 4 căn · ROI 99,0%. 5.000.000 USD → 23 căn · ROI 92,0%. "
          "10.000.000 USD → 43 căn · ROI 84,8%.", 12, False, "#1B2A3A"),
@@ -742,6 +743,7 @@ def build_pages():
         ("Nút “Chọn chỉ số” đổi biểu đồ giữa số ứng viên, tỷ lệ ứng viên và giá trung vị "
          "theo từng ZIP, giúp chọn khu vực trước khi khảo sát.", 12, False, "#1B2A3A"),
     ]))
+    add(p, page_nav("nav_ngan_sach"))
 
     # ---- Trang 4
     p = pages / "top20"
@@ -749,7 +751,7 @@ def build_pages():
     add(p, card("t_up", 332, 16, 300, 100, KPI_TABLE, "Top20Upside Text", "Chênh lệch kỳ vọng (USD)"))
     add(p, card("t_disc", 648, 16, 300, 100, KPI_TABLE, "Top20 Median Discount", "Mức giảm trung vị (%)"))
     add(p, card("t_all", 964, 16, 300, 100, KPI_TABLE, "Top20All3 Text", "Cả 3 mô hình đồng ý"))
-    add(p, visual("t20", "tableEx", 16, 132, 1248, 384,
+    add(p, visual("t20", "tableEx", 16, 132, 1248, 328,
                   {"Values": [col("Top20", "Hang"), col("Top20", "id"),
                               col("Top20", "zipcode"), col("Top20", "price"),
                               col("Top20", "predicted_price"), col("Top20", "upside_usd"),
@@ -757,10 +759,11 @@ def build_pages():
                               col("Top20", "grade"), col("Top20", "condition"),
                               col("Top20", "distance_to_center_km")]},
                   "20 căn đề xuất (xếp theo mức giảm thận trọng)"))
-    add(p, visual("t3_zip", "barChart", 16, 528, 1248, 176,
+    add(p, visual("t3_zip", "barChart", 16, 476, 1248, 172,
                   {"Category": [col("Top20", "zipcode")],
                    "Y": [meas(KPI_TABLE, "Top20 Upside")]},
                   "Chênh lệch kỳ vọng theo ZIP"))
+    add(p, page_nav("nav_top20"))
 
     # ---- Trang 5
     p = pages / "ames"
@@ -777,15 +780,16 @@ def build_pages():
                   {"Category": [col("AmesSales", "neighborhood_top")],
                    "Y": [meas(KPI_TABLE, "Ames Median Price")]},
                   "Giá trung vị theo khu dân cư Ames"))
-    add(p, visual("a_band", "clusteredColumnChart", 16, 408, 624, 296,
+    add(p, visual("a_band", "clusteredColumnChart", 16, 408, 624, 240,
                   {"Category": [col("AmesSales", "price_band")],
                    "Y": [meas(KPI_TABLE, "Ames Properties")]},
                   "Số tài sản Ames theo khúc giá"))
-    add(p, visual("a_seg", "tableEx", 648, 408, 616, 296,
+    add(p, visual("a_seg", "tableEx", 648, 408, 616, 240,
                   {"Values": [col("SegmentCompare", "segment"),
                               col("SegmentCompare", "mape_lr"),
                               col("SegmentCompare", "mape_xgb")]},
                   "MAPE theo khúc giá King: Linear vs XGBoost"))
+    add(p, page_nav("nav_ames"))
 
     # ---- Trang 6
     p = pages / "mo_hinh"
@@ -797,15 +801,16 @@ def build_pages():
                   {"Category": [col("WhatIfScenarios", "scenario")],
                    "Y": [meas(KPI_TABLE, "Scenario Change")]},
                   "What-if: đổi một đặc điểm, giá đổi bao nhiêu %"))
-    add(p, visual("m_thr", "clusteredColumnChart", 16, 372, 612, 332,
+    add(p, visual("m_thr", "clusteredColumnChart", 16, 372, 612, 276,
                   {"Category": [col("Sensitivity", "threshold_pct")],
                    "Y": [meas(KPI_TABLE, "Sensitivity Candidates")]},
                   "Số ứng viên theo ngưỡng (%)"))
-    add(p, visual("m_stab", "tableEx", 648, 372, 616, 332,
+    add(p, visual("m_stab", "tableEx", 648, 372, 616, 276,
                   {"Values": [col("Stability", "variant"),
                               col("Stability", "overlap_20"),
                               col("Stability", "share_pct")]},
                   "Độ ổn định của danh sách 20 căn"))
+    add(p, page_nav("nav_mo_hinh"))
 
 
 KIND_LABEL = {

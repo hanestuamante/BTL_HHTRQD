@@ -1,26 +1,26 @@
 table BudgetPlan
-	lineageTag: 691f5b47-3550-4e37-8831-5a442c66701f
+	lineageTag: 211ce863-c45c-4eb0-bd45-f04dfe7b6018
 
 	column 'Hạng'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: rank
-		lineageTag: 84ecd66d-c028-4ab6-baee-53dd14a9fc78
+		lineageTag: 3161af20-1237-4b18-bd19-e969e07e4c1c
 	column 'Giá bán'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: price
-		lineageTag: f1466b3b-d434-4541-81ab-51d46549c3ef
+		lineageTag: bf0d6a93-d71b-41fe-aaf6-cd24dbf36790
 	column 'Lũy kế (USD)'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: cum_price
-		lineageTag: 0b38e139-50e4-454b-91b9-aefac0c29c20
+		lineageTag: dc28054b-63aa-490a-8b11-fe6b92197cf0
 	column 'Chênh lệch (USD)'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: upside_usd
-		lineageTag: 06169c70-a604-4ab1-ae4c-4f27c0f62a3a
+		lineageTag: 733fec7e-edc9-43ca-97ce-60f1896d45a1
 
 	partition BudgetPlan = m
 		mode: import

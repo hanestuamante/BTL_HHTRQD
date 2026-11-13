@@ -5,13 +5,21 @@ Phần 6 trình bày kết quả của dashboard Power BI được thiết kế 
 
 Dashboard gồm 6 trang: (1) Tổng quan King County, (2) What-if ngưỡng undervalued, (3) Ngân sách và kế hoạch mua, (4) 20 căn đề xuất, (5) Kiểm chứng bằng Ames, (6) Mô hình và độ nhạy. Trang 2 có hộp chọn ngưỡng 5%–50%, trang 3 có hộp chọn ngân sách 0,5–10 triệu USD; cả hai là tham số What-if nên chỉ cần đổi một giá trị là toàn bộ số liệu liên quan cập nhật ngay.
 
+Toàn bộ 6 trang dùng chung một mô hình dữ liệu và cùng định nghĩa ứng viên, nhờ vậy số liệu giữa các trang luôn khớp nhau. Ngoài phần nội dung, dashboard có các thành phần hỗ trợ đọc: dải 6 nút điều hướng ở cuối mỗi trang (page navigator, đang mở trang nào thì nút đó được tô đậm), hai bookmark "Chế độ nhà đầu tư" (mở trang Ngân sách) và "Chế độ học thuật" (mở trang Mô hình và độ nhạy), hộp chọn chỉ số ở trang Ngân sách để đổi nhanh chỉ số của biểu đồ theo ZIP, tooltip khi di chuột lên từng điểm dữ liệu, cùng alt text và thứ tự tab cho trình đọc màn hình.
+
 6.2. Kết quả trang Tổng quan King County
 Bộ dữ liệu sạch có 21.612 giao dịch của 21.435 tài sản trong giai đoạn 05/2014–05/2015, thuộc 70 mã ZIP. Giá bán trung vị là 450.000 USD, trung bình 540.084 USD; phân phối lệch phải mạnh (skewness 4,02) do một số giao dịch rất cao vẫn được giữ hợp lệ. Sau khi lọc đúng phạm vi của Nhiệm vụ 4 (chỉ giao dịch gần nhất của mỗi tài sản, loại cờ zero_room_flag, condition ≥ 3), còn 21.229 giao dịch đại diện cho 21.229 tài sản.
 
 Trang Tổng quan cho thấy phần lớn giao dịch tập trung ở khúc 250.000–550.000 USD. Các ZIP có quy mô giao dịch lớn nhất gồm 98118, 98106, 98168, 98103, 98146 và 98198; đây cũng là những khu vực đóng góp nhiều ứng viên nhất ở ngưỡng 20%.
 
-6.3. Kết quả tham số What-if
-Tham số ngưỡng được xây dựng bằng bảng tính GENERATESERIES từ 0,05 đến 0,50 (bước 0,01). Một giao dịch được coi là ứng viên khi residual_pct = giá bán / giá mô hình − 1 ≤ −ngưỡng. Kết quả theo từng ngưỡng:
+6.3. Hai tham số What-if và kết quả theo ngưỡng
+Dashboard có hai tham số What-if độc lập, xây dựng theo cùng một cách: một bảng tính chỉ chứa dải giá trị (không sửa dữ liệu gốc), một hộp chọn để người dùng chọn đúng một giá trị, và các measure DAX đọc giá trị đang chọn rồi tính lại số liệu. Nhờ vậy người xem thử nhiều kịch bản mà không phải huấn luyện lại mô hình hay sửa dữ liệu.
+
+Tham số thứ nhất – ngưỡng undervalued: bảng Nguong = GENERATESERIES(5, 50, 1), hiển thị 5%–50% theo bước 1%, mặc định 20%. Một giao dịch là ứng viên khi residual_pct = giá bán / giá mô hình − 1 ≤ −ngưỡng, nghĩa là bán thấp hơn giá mô hình ít nhất bằng ngưỡng đó. Khi đổi ngưỡng, các measure Số ứng viên, Tỷ lệ ứng viên, Tổng chênh lệch, Giá trung vị nhóm, Đồng thuận 3 mô hình cùng hai biểu đồ theo ZIP và theo khúc giá cập nhật ngay; card "Ngưỡng đang áp dụng" luôn hiển thị đúng giá trị đang chọn để tránh đọc nhầm.
+
+Tham số thứ hai – ngân sách mua: bảng NganSach = GENERATESERIES(500.000, 10.000.000, 250.000), mặc định 2.000.000 USD. Ngân sách được hiểu là tổng vốn chứ không phải giá một căn: các ứng viên ở ngưỡng 20% được xếp theo mức giảm sâu nhất rồi mua lần lượt đến khi hết ngân sách (chỉ xét giao dịch giảm ≤ 50%). Các measure Số căn mua được, Vốn sử dụng, Chênh lệch kỳ vọng, % ngân sách đã dùng và ROI kỳ vọng tính trực tiếp từ danh sách đó, nên đổi ngân sách là thấy ngay hiệu quả đầu tư.
+
+Cách thao tác: mở trang 2 hoặc trang 3, bấm vào hộp chọn và chọn một giá trị, không cần bấm Làm mới. Hai tham số giữ nguyên giá trị khi chuyển trang; nếu muốn quay lại đúng trang theo vai trò thì dùng bookmark ở góc trên. Kết quả theo từng ngưỡng (mặc định 20%):
 
 Ngưỡng 5%: 6.248 căn (29,43% pool), cả 3 mô hình đồng ý 4.275 căn.
 Ngưỡng 10%: 3.672 căn (17,30%), cả 3 mô hình đồng ý 2.472 căn.
@@ -23,6 +31,8 @@ Ngưỡng 30%: 411 căn (1,94%), cả 3 mô hình đồng ý 292 căn.
 Ở ngưỡng 20%, 486 căn (40,7%) nằm dưới 250.000 USD, 342 căn (28,7%) trong khoảng 250.000–400.000 USD; phần còn lại trải từ 400.000 USD đến trên 1 triệu USD. Điều này cho thấy "bị định giá thấp" không chỉ là hiện tượng của phân khúc giá rẻ. Theo ZIP, 98118 dẫn đầu với 60 căn, tiếp theo là 98106 (41), 98168 (34), 98103 (33), 98146 và 98198 (cùng 32).
 
 Có 36 trường hợp giảm sâu hơn 50% ở mọi ngưỡng. Đây là đuôi bất thường, thường là giao dịch không theo thị trường (bán cho người thân, thừa kế, bán tháo) hoặc lỗi dữ liệu, nên được tách sang danh sách cần xác minh thay vì đưa vào danh sách khuyến nghị.
+
+Với kế hoạch mua ở ngân sách 2.000.000 USD: mua được 8 căn, vốn 1.809.500 USD, chênh lệch kỳ vọng 1.758.645 USD, dùng 90,5% ngân sách và ROI kỳ vọng 97,2%. Tăng ngân sách thì số căn tăng nhưng ROI giảm dần: 1.000.000 USD → 4 căn, ROI 99,0%; 5.000.000 USD → 23 căn, ROI 92,0%; 10.000.000 USD → 43 căn, ROI 84,8%. Nguyên nhân là danh sách ứng viên không đủ dày: giá trung vị nhóm khoảng 285.000 USD nên mỗi 1 triệu USD chỉ mua thêm 3–5 căn, và càng mua nhiều càng phải lùi xuống các căn giảm ít hơn. Đây chính là điểm cần cân nhắc khi chọn ngân sách: 2 triệu USD là mức còn giữ được ROI cao mà vẫn đa dạng khu vực.
 
 6.4. Kết quả danh sách 20 căn đề xuất
 Danh sách 20 căn giữ đúng ràng buộc của Giám đốc đầu tư: mỗi tài sản chỉ chọn một lần, loại căn thiếu phòng/condition thấp, loại giao dịch giảm quá 50%, yêu cầu cả ba mô hình (XGBoost, Random Forest, Linear Regression) cùng đồng ý mức giảm ≥ 20%, và xếp theo mức giảm thận trọng nhất.
