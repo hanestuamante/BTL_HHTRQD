@@ -1,0 +1,195 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "map_note",
+  "position": {
+    "x": 16,
+    "y": 480,
+    "z": 1,
+    "width": 1248,
+    "height": 224,
+    "tabOrder": 1
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Đọc bản đồ",
+                    "textStyle": {
+                      "fontSize": "15pt",
+                      "color": "#12324F",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Mỗi bong bóng là một mã ZIP; kích thước theo số căn ứng viên ở ngưỡng đang chọn (mặc định 20%: 1.193 căn trên phạm vi 21.229 giao dịch). Di chuột lên bong bóng để xem giá trung vị của nhóm ứng viên trong ZIP đó.",
+                    "textStyle": {
+                      "fontSize": "12pt",
+                      "color": "#1B2A3A"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Kết quả 20%: 98118 dẫn đầu với 60 căn, tiếp theo 98106 (41), 98168 (34), 98103 (33), 98146 (32), 98198 (32). Sáu ZIP này chiếm 19,4% tổng số ứng viên; phần còn lại rải trên 64 ZIP khác, mỗi ZIP dưới 30 căn.",
+                    "textStyle": {
+                      "fontSize": "12pt",
+                      "color": "#1B2A3A"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Vì sao quan trọng: cùng một ngưỡng nhưng mật độ ứng viên lệch hẳn giữa các khu — gợi ý rằng cơ hội tập trung theo khu vực chứ không rải đều, nên khảo sát thực địa theo cụm sẽ hiệu quả hơn đi từng căn lẻ.",
+                    "textStyle": {
+                      "fontSize": "12pt",
+                      "color": "#1B2A3A"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#DCE6F0'"
+                    }
+                  }
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Hộp văn bản: Đọc bản đồ'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

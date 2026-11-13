@@ -179,12 +179,17 @@ for head, body in sections:
         add_table(df, "Bảng 6.1. Kết quả tham số What-if theo ngưỡng")
         add_picture("whatif_curve.png", "Hình 6.2. Số ứng viên và tỷ lệ theo ngưỡng.")
         add_picture("dashboard_page2.png", "Hình 6.3. Trang What-if với thanh trượt ngưỡng 5%–50%.")
+        add_picture("dashboard_page3.png",
+                    "Hình 6.4. Trang Ngân sách: what-if thứ hai, ngân sách 2.000.000 USD mua được "
+                    "8 căn (dùng 90,5% ngân sách, ROI kỳ vọng 97,2%).")
     elif head.startswith("6.4"):
-        add_picture("top20_upside.png", "Hình 6.4. Chênh lệch kỳ vọng của 20 căn đề xuất.")
+        add_picture("top20_upside.png", "Hình 6.5. Chênh lệch kỳ vọng của 20 căn đề xuất.")
+        add_picture("dashboard_page7.png",
+                    "Hình 6.6. Trang Bản đồ ứng viên: mỗi điểm là một ZIP, kích thước theo số ứng viên.")
     elif head.startswith("6.5"):
-        add_picture("model_compare.png", "Hình 6.5. So sánh MAPE King County và Ames; sai số theo khúc giá.")
+        add_picture("model_compare.png", "Hình 6.7. So sánh MAPE King County và Ames; sai số theo khúc giá.")
     elif head.startswith("6.6"):
-        add_picture("importance.png", "Hình 6.6. Các biến quan trọng nhất của mô hình.")
+        add_picture("importance.png", "Hình 6.8. Các biến quan trọng nhất của mô hình.")
 
 doc.core_properties.title = "Phần 6 - Kết quả dashboard định giá bất động sản"
 out = REPORT / "Bao_cao_Nhiem_vu_5.docx"

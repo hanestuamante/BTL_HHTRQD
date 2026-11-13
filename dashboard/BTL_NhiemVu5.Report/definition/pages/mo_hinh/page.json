@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/1.4.0/schema.json",
   "name": "mo_hinh",
-  "displayName": "5. Mô hình và độ nhạy",
+  "displayName": "6. Mô hình và độ nhạy",
   "displayOption": "FitToPage",
   "height": 720,
   "width": 1280,

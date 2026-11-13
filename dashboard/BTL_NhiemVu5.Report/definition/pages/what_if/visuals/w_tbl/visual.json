@@ -7,7 +7,7 @@
     "z": 1,
     "width": 1248,
     "height": 208,
-    "tabOrder": 1
+    "tabOrder": 8
   },
   "visual": {
     "visualType": "tableEx",
@@ -191,6 +191,19 @@
           }
         }
       ],
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
       "title": [
         {
           "properties": {
@@ -236,13 +249,13 @@
           }
         }
       ],
-      "visualHeader": [
+      "general": [
         {
           "properties": {
-            "show": {
+            "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "'Bảng dữ liệu: Tổng hợp ứng viên theo ZIP'"
                 }
               }
             }

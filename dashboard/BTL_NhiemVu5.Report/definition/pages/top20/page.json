@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/1.4.0/schema.json",
   "name": "top20",
-  "displayName": "3. 20 căn đề xuất",
+  "displayName": "4. 20 căn đề xuất",
   "displayOption": "FitToPage",
   "height": 720,
   "width": 1280,

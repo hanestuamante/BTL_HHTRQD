@@ -46,7 +46,8 @@ def model_objects():
             continue
         table = name.group(1) or name.group(2)
         tables[table] = f
-        columns[table] = set(re.findall(r"^\tcolumn\s+([^\n]+)", text, re.M))
+        columns[table] = {c.split(" =")[0].strip().strip("'")
+                          for c in re.findall(r"^\tcolumn\s+([^\n]+)", text, re.M)}
         measures[table] = set(re.findall(r"^\tmeasure\s+'([^']+)'", text, re.M))
     return tables, columns, measures
 

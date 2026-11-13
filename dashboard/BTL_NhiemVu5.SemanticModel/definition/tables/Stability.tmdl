@@ -1,20 +1,20 @@
 table Stability
-	lineageTag: c50d0ba5-fc6b-4edf-bd57-3645b5396ce2
+	lineageTag: 213e9d45-b81f-4a47-9787-118da9ff4555
 
 	column variant
 		dataType: string
 		sourceColumn: variant
-		lineageTag: 1a50c6ee-ce79-4ea8-9ef5-0ef4bb298f12
+		lineageTag: 5fe02f90-5f47-452b-98ea-4c9e3e509d7b
 	column overlap_20
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: overlap_20
-		lineageTag: e9fdf557-cdd4-4693-93eb-01dac677a51e
+		lineageTag: 534e1e98-cebe-4d38-a6c7-d9652bee9d99
 	column share_pct
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: share_pct
-		lineageTag: 4a4fb37a-5673-44af-a423-48d9beb098a9
+		lineageTag: d0d6b57f-818a-4293-a787-dff964f52f1a
 
 	partition Stability = m
 		mode: import

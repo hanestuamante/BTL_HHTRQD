@@ -1,0 +1,195 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "b_note",
+  "position": {
+    "x": 16,
+    "y": 348,
+    "z": 1,
+    "width": 372,
+    "height": 356,
+    "tabOrder": 9
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Cách tính kế hoạch mua",
+                    "textStyle": {
+                      "fontSize": "15pt",
+                      "color": "#12324F",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Ngân sách là tổng vốn, không phải giá một căn. Ứng viên được xếp theo mức giảm sâu nhất rồi mua lần lượt đến khi hết ngân sách; chỉ xét giao dịch giảm ≤ 50% (các giao dịch giảm sâu hơn cần xác minh thủ công).",
+                    "textStyle": {
+                      "fontSize": "12pt",
+                      "color": "#1B2A3A"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Mặc định 2.000.000 USD, ngưỡng 20%: mua được 8 căn, vốn 1.809.500 USD, chênh lệch kỳ vọng 1.758.645 USD, dùng 90,5% ngân sách.",
+                    "textStyle": {
+                      "fontSize": "12pt",
+                      "color": "#1B2A3A"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Đổi ngân sách ở thanh trượt trên: số căn và vốn cập nhật ngay. ROI giảm dần khi mua nhiều vì danh sách phải lùi xuống các căn giảm ít hơn.",
+                    "textStyle": {
+                      "fontSize": "12pt",
+                      "color": "#1B2A3A"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#DCE6F0'"
+                    }
+                  }
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Hộp văn bản: Cách tính kế hoạch mua'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

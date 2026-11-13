@@ -1,176 +1,176 @@
 table KingSales
-	lineageTag: f20dfe3d-1ad0-4c5d-99f0-0165fdc78a13
+	lineageTag: e8dd2553-c015-40f3-8789-dc32c42ba0a3
 
 	column source_row_id
 		dataType: int64
 		summarizeBy: none
 		isHidden
 		sourceColumn: source_row_id
-		lineageTag: 962a819d-7698-4326-99c7-ee4c03cf14ac
+		lineageTag: 3e2f62e1-be2c-4add-becc-5902061acb60
 	column id
 		dataType: string
 		sourceColumn: id
-		lineageTag: e89d30f1-6236-4847-a3bf-c0d900970cef
+		lineageTag: 6b1b3a42-f477-4821-a2b2-634dcf58be59
 	column date
 		dataType: dateTime
 		sourceColumn: date
-		lineageTag: 246774fe-b765-4576-be7b-d01a52d31229
+		lineageTag: c71f6cef-965d-4f33-b05e-6a157e6fc724
 	column price
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: price
-		lineageTag: ab600a30-ab7d-42f9-b8ec-f6458a5c2f8e
+		lineageTag: ff4bf081-908f-4d76-a4cd-4ef752345a76
 	column zipcode
 		dataType: string
 		sourceColumn: zipcode
-		lineageTag: ace53a30-21d7-4cf2-9e40-58c8c79c5a0e
+		lineageTag: 91b6f488-016b-42a5-8ce3-18b581de4aca
 	column lat
 		dataType: double
 		summarizeBy: none
 		sourceColumn: lat
-		lineageTag: 35ead003-ccfa-4704-a2cc-78af7feab2f3
+		lineageTag: 513d2d75-85de-48c9-905c-0d85b22fcfc1
 	column long
 		dataType: double
 		summarizeBy: none
 		sourceColumn: long
-		lineageTag: 6a130138-3385-4efa-90cb-666b4fa7618e
+		lineageTag: aaffd1ad-1d6b-4d0e-84e7-4129b5ea554e
 	column bedrooms
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: bedrooms
-		lineageTag: a51706dd-9b14-4650-bd48-396f0d89a083
+		lineageTag: 44f5e759-9c8b-411b-837c-796b3fef9605
 	column bathrooms
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: bathrooms
-		lineageTag: e9b3f656-3938-40de-a282-4042cea2690a
+		lineageTag: ea5f2732-3500-4ba6-af61-e11dd2d02678
 	column sqft_living
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: sqft_living
-		lineageTag: 732b711e-f5dd-4a58-8970-ae6fefe91719
+		lineageTag: 182b8e8e-da71-43b7-b481-b003caf2b025
 	column sqft_lot
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: sqft_lot
-		lineageTag: 22872973-b7d1-4dc4-808e-9a49f0f7d3fb
+		lineageTag: 21440485-554e-441b-ae13-ad3402b4cccb
 	column grade
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: grade
-		lineageTag: af8dc28d-c38e-4893-93bf-9a585fd6824f
+		lineageTag: b54cf64c-53ec-4b43-96c9-92cb9a406fe6
 	column condition
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: condition
-		lineageTag: 51f1269b-7aae-4bf3-9a20-3b238615e618
+		lineageTag: 7d031c7a-27c0-4aaf-a9e9-446b78a31e19
 	column view
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: view
-		lineageTag: de3d3886-584f-4cb4-b677-b70bf4a21f2e
+		lineageTag: e2c359d4-d567-4b82-b7b0-ccb31affeaa9
 	column waterfront
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: waterfront
-		lineageTag: 24ed4813-2f33-4bf3-9256-bf00e3c6398d
+		lineageTag: 1a90b092-acbc-42bf-ab51-d6a5e95f8f63
 	column house_age
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: house_age
-		lineageTag: 04c9238a-eac8-4b6f-abd6-ee7c95a5b6c2
+		lineageTag: 0ed43812-dd5e-44c8-a946-64e85a2e16cb
 	column is_renovated
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: is_renovated
-		lineageTag: a30a61ef-64c8-48f4-8123-6f1c01bb55a0
+		lineageTag: d3795cfd-42fa-4a3c-9609-eb83af85d573
 	column distance_to_center_km
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: distance_to_center_km
-		lineageTag: 4128af3a-eff6-47fc-9c82-e467cdaa9757
+		lineageTag: f21db981-0af2-452c-a7a0-c725f066d011
 	column zero_room_flag
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: zero_room_flag
-		lineageTag: 1b31f711-4917-4bcd-98a6-2e81aa5e4c5f
+		lineageTag: 098ce88e-d12f-4ada-8e5b-0e942860faae
 	column predicted_price
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: predicted_price
-		lineageTag: cc792f69-e7b2-482a-9819-6cffde2e720d
+		lineageTag: fbafd19c-5263-44f5-8191-befbf1a29b61
 	column residual
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: residual
-		lineageTag: aa2c5ab4-835e-4a30-add8-6a9d2de1cbc7
+		lineageTag: 24388a8d-d1d8-4e70-89cd-3a1444adc1ec
 	column residual_pct
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: residual_pct
-		lineageTag: 62cbd8ca-eebc-49d3-be8e-cb193bde8c05
+		lineageTag: dc06e5d4-3385-4da4-b880-ecf1c2c08dbc
 	column residual_pct_rf
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: residual_pct_rf
-		lineageTag: 2772de6c-76db-441b-85c8-5ec85063f789
+		lineageTag: 7b4cf4d6-8cd1-4159-bd26-1c9ebfdeef5d
 	column residual_pct_lr
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: residual_pct_lr
-		lineageTag: 678c93be-ff3b-46ee-9b63-9c001a2394a0
+		lineageTag: 263ac988-ba8e-4a10-a129-da2107ca853e
 	column residual_pct_conservative
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: residual_pct_conservative
-		lineageTag: b0b377a2-0949-46e8-9dee-407ab5ada378
+		lineageTag: 0d4b3262-1f9f-4be4-b5a7-57c6b2902764
 	column undervalued_20pct
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: undervalued_20pct
-		lineageTag: 9961b42f-c379-4fc0-8efc-85c895855afd
+		lineageTag: 26b6219f-d8bb-4541-af49-c07c3dac1fa8
 	column models_agree_undervalued
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: models_agree_undervalued
-		lineageTag: 5eb28c67-9298-4860-a642-f1b647ab9c2e
+		lineageTag: d53e3c78-a405-4429-9036-974ebe86f8b5
 	column is_latest_sale
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: is_latest_sale
-		lineageTag: b5cfccb2-55a4-40d2-85d1-9d3812e43097
+		lineageTag: fb662433-4044-4811-b1e6-31ea7b97df76
 	column sale_year
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: sale_year
-		lineageTag: 206408f5-5c27-40b4-9d3d-28e20965bc09
+		lineageTag: 05fa0418-232d-41bf-bee0-2cb825803b4a
 	column sale_month
 		dataType: string
 		sourceColumn: sale_month
-		lineageTag: c3c73742-1751-4c4d-a734-d20e7022e431
+		lineageTag: 165f59b5-6337-45fc-81bc-985a1cdc0dbc
 	column price_band
 		dataType: string
 		sourceColumn: price_band
-		lineageTag: dcf77140-1d52-4e76-97ea-f3253389e3b8
+		lineageTag: 3542b2ec-5a99-4e89-9bdc-12720a52d445
 	column discount_pct
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: discount_pct
-		lineageTag: 34550b55-609b-4768-85fa-dd56b03b8ac2
+		lineageTag: 3c362fe5-7b02-488b-8c8c-ce89d650e941
 	column discount_conservative_pct
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: discount_conservative_pct
-		lineageTag: e031fb3e-fcb6-4058-9ee9-7c289f90e8ea
+		lineageTag: ae28c309-f2e3-49d1-a620-78a94d3be277
 	column upside_usd
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: upside_usd
-		lineageTag: 8e54b405-cd96-47b5-afe7-87c368d6994f
+		lineageTag: 40326271-d21c-43d2-952b-c2f96d3f5c39
 	column zip_top
 		dataType: string
 		sourceColumn: zip_top
-		lineageTag: ebe89d1a-5286-450c-8d90-8084dffb2eb6
+		lineageTag: e36640bd-e30a-4665-ba47-0f78a521010b
 
 	partition KingSales = m
 		mode: import

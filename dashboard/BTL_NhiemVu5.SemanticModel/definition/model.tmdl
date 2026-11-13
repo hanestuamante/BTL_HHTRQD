@@ -4,7 +4,7 @@ model Model
 	discourageImplicitMeasures
 	sourceQueryCulture: en-US
 
-	annotation PBI_QueryOrder = ["KingSales", "AmesSales", "Top20", "ModelMetrics", "ModelCompare", "SegmentCompare", "Sensitivity", "ImportanceTop", "Stability", "WhatIfScenarios"]
+	annotation PBI_QueryOrder = ["KingSales", "AmesSales", "Top20", "ModelMetrics", "ModelCompare", "SegmentCompare", "Sensitivity", "ImportanceTop", "Stability", "WhatIfScenarios", "BudgetPlan", "ChonChiSo"]
 
 	annotation __PBI_TimeIntelligenceEnabled = 0
 
@@ -18,7 +18,11 @@ ref table Sensitivity
 ref table ImportanceTop
 ref table Stability
 ref table WhatIfScenarios
+ref table BudgetPlan
+ref table ChonChiSo
 ref table KPI
 ref table Nguong
+ref table NganSach
+ref table ChonChiSo
 
 ref cultureInfo en-US

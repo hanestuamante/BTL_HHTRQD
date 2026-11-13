@@ -7,7 +7,7 @@
     "z": 1,
     "width": 300,
     "height": 100,
-    "tabOrder": 1
+    "tabOrder": 0
   },
   "visual": {
     "visualType": "card",
@@ -135,6 +135,19 @@
           }
         }
       ],
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
       "title": [
         {
           "properties": {
@@ -180,13 +193,13 @@
           }
         }
       ],
-      "visualHeader": [
+      "general": [
         {
           "properties": {
-            "show": {
+            "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "'Thẻ số liệu: Số tài sản Ames'"
                 }
               }
             }

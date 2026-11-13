@@ -7,7 +7,7 @@
     "z": 1,
     "width": 616,
     "height": 260,
-    "tabOrder": 1
+    "tabOrder": 5
   },
   "visual": {
     "visualType": "barChart",
@@ -23,11 +23,11 @@
                       "Entity": "KingSales"
                     }
                   },
-                  "Property": "zip_top"
+                  "Property": "zipcode"
                 }
               },
-              "queryRef": "KingSales.zip_top",
-              "nativeQueryRef": "Mã ZIP"
+              "queryRef": "KingSales.zipcode",
+              "nativeQueryRef": "ZIP"
             }
           ]
         },
@@ -153,6 +153,19 @@
           }
         }
       ],
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
       "title": [
         {
           "properties": {
@@ -198,13 +211,13 @@
           }
         }
       ],
-      "visualHeader": [
+      "general": [
         {
           "properties": {
-            "show": {
+            "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "'Biểu đồ thanh: Top 12 ZIP theo số giao dịch'"
                 }
               }
             }

@@ -7,7 +7,7 @@
     "z": 1,
     "width": 616,
     "height": 296,
-    "tabOrder": 1
+    "tabOrder": 7
   },
   "visual": {
     "visualType": "tableEx",
@@ -163,6 +163,19 @@
           }
         }
       ],
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
       "title": [
         {
           "properties": {
@@ -208,13 +221,13 @@
           }
         }
       ],
-      "visualHeader": [
+      "general": [
         {
           "properties": {
-            "show": {
+            "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "'Bảng dữ liệu: MAPE theo khúc giá King: Linear vs XGBoost'"
                 }
               }
             }

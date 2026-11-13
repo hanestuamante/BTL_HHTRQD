@@ -7,7 +7,7 @@
     "z": 1,
     "width": 624,
     "height": 260,
-    "tabOrder": 1
+    "tabOrder": 4
   },
   "visual": {
     "visualType": "clusteredColumnChart",
@@ -171,6 +171,19 @@
           }
         }
       ],
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
       "title": [
         {
           "properties": {
@@ -216,13 +229,13 @@
           }
         }
       ],
-      "visualHeader": [
+      "general": [
         {
           "properties": {
-            "show": {
+            "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "'Biểu đồ cột: MAPE theo mô hình: King vs Ames (%)'"
                 }
               }
             }

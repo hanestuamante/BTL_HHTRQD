@@ -1,20 +1,20 @@
 table ImportanceTop
-	lineageTag: 2f47c447-a0b6-4b6a-a5c1-c4d7f7d5beda
+	lineageTag: 209642c8-fd8b-4964-9385-2a6b1392de74
 
 	column feature
 		dataType: string
 		sourceColumn: feature
-		lineageTag: 96d18ad1-4f0f-4a72-8bb4-5b977eafe463
+		lineageTag: 9104d9ce-07ac-43c0-bea1-f07cacc5eb6b
 	column mape_increase_pp
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: mape_increase_pp
-		lineageTag: 2285eefc-f247-4ee7-aa1d-40e8c1c1336d
+		lineageTag: b7958716-a93b-441c-974f-ae87f8ab06f9
 	column std_pp
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: std_pp
-		lineageTag: 5e15903e-7a93-4b11-84a3-7d7f8b1ef112
+		lineageTag: da18323b-4449-4a70-bcd1-e1a1be852078
 
 	partition ImportanceTop = m
 		mode: import

@@ -1,0 +1,228 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "pp_quy_trinh",
+  "position": {
+    "x": 16,
+    "y": 16,
+    "z": 1,
+    "width": 616,
+    "height": 372,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Quy trình",
+                    "textStyle": {
+                      "fontSize": "16pt",
+                      "color": "#12324F",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "1. Dữ liệu: King County house sales 2014–2015, 21.612 giao dịch; Ames 2.930 tài sản (chỉ dùng để kiểm chứng).",
+                    "textStyle": {
+                      "fontSize": "12.5pt",
+                      "color": "#1B2A3A"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "2. Phạm vi ứng viên: is_latest_sale = 1, zero_room_flag = 0, condition ≥ 3 → 21.229 giao dịch.",
+                    "textStyle": {
+                      "fontSize": "12.5pt",
+                      "color": "#1B2A3A"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "3. Đặc trưng: diện tích, hạng chất lượng, tình trạng, tuổi nhà, số phòng, hướng nhìn, giáp nước, khoảng cách trung tâm, ZIP.",
+                    "textStyle": {
+                      "fontSize": "12.5pt",
+                      "color": "#1B2A3A"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "4. Mô hình: Linear Regression, Random Forest, XGBoost (tuned) trên log giá; GroupKFold 5 theo id để tránh rò rỉ khi cùng một căn được bán nhiều lần.",
+                    "textStyle": {
+                      "fontSize": "12.5pt",
+                      "color": "#1B2A3A"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "5. Chấm điểm: dự báo out-of-fold cho từng giao dịch — mỗi căn chỉ được dự báo bởi mô hình không thấy căn đó khi huấn luyện.",
+                    "textStyle": {
+                      "fontSize": "12.5pt",
+                      "color": "#1B2A3A"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "6. Xếp hạng: residual_pct ≤ −ngưỡng là ứng viên; ưu tiên căn cả 3 mô hình đồng ý, xếp theo mức giảm thận trọng nhất.",
+                    "textStyle": {
+                      "fontSize": "12.5pt",
+                      "color": "#1B2A3A"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#DCE6F0'"
+                    }
+                  }
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Hộp văn bản: Quy trình'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

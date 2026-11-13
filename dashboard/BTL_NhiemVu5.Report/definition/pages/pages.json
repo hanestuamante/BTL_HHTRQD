@@ -3,9 +3,13 @@
   "pageOrder": [
     "tong_quan",
     "what_if",
+    "ngan_sach",
     "top20",
     "ames",
-    "mo_hinh"
+    "mo_hinh",
+    "ban_do",
+    "yeu_to",
+    "phuong_phap"
   ],
   "activePageName": "tong_quan"
 }

@@ -6,8 +6,8 @@
     "y": 408,
     "z": 1,
     "width": 1248,
-    "height": 296,
-    "tabOrder": 1
+    "height": 248,
+    "tabOrder": 6
   },
   "visual": {
     "visualType": "tableEx",
@@ -177,6 +177,19 @@
           }
         }
       ],
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
       "title": [
         {
           "properties": {
@@ -222,13 +235,13 @@
           }
         }
       ],
-      "visualHeader": [
+      "general": [
         {
           "properties": {
-            "show": {
+            "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "'Bảng dữ liệu: ZIP: quy mô và tỷ lệ ứng viên'"
                 }
               }
             }

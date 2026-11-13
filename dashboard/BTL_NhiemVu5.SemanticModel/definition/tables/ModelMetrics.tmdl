@@ -1,49 +1,49 @@
 table ModelMetrics
-	lineageTag: 41abce15-5338-4dd9-8fba-913bccfe8000
+	lineageTag: f674f016-fe71-45fd-8bf5-b30551459733
 
 	column market
 		dataType: string
 		sourceColumn: market
-		lineageTag: 075b4d12-2f90-49cc-b467-3f0bd341f3ee
+		lineageTag: 7931c8aa-1c08-4674-a049-974a5f654dec
 	column model
 		dataType: string
 		sourceColumn: model
-		lineageTag: aadabe3e-63ea-456f-b322-019a60d1bc26
+		lineageTag: b5764031-6ff5-43d1-98d1-6605a4e61214
 	column mape
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: mape
-		lineageTag: fd251cbd-73f0-43f8-84c6-8d5bf781fa80
+		lineageTag: c055b7c5-50af-4ddd-a2b4-8e41bffed78e
 	column mdape
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: mdape
-		lineageTag: e3557948-8d52-4c51-9da1-0df5b92dcbbd
+		lineageTag: 3b72c2d0-08a8-4652-b422-6bf7c02b7343
 	column rmse
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: rmse
-		lineageTag: 34ef40d8-2a3c-402a-9322-5b4115201746
+		lineageTag: 43a833e4-c0b1-4571-ab99-c7e94e009de1
 	column mae
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: mae
-		lineageTag: a0f3a1b3-3968-4ea9-98a8-53b14560b57c
+		lineageTag: 0ff4d58a-e834-4442-8da5-3ecaf3003520
 	column r2
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: r2
-		lineageTag: 5f76c1b0-455e-4df5-a66b-b61952b62009
+		lineageTag: 86f06b73-4e4f-473a-a442-6800ea7a0e1f
 	column acc10
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: acc10
-		lineageTag: 26186b92-2478-4816-9ee5-047cd8b32e34
+		lineageTag: fd0d6a4e-894a-4423-ada2-f7b53da2e861
 	column acc20
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: acc20
-		lineageTag: f68b6fd3-a950-4e3c-9729-196ce387fc00
+		lineageTag: c854a14f-b259-45e6-9aa3-8a92e9157b2c
 
 	partition ModelMetrics = m
 		mode: import

@@ -7,7 +7,7 @@
     "z": 1,
     "width": 300,
     "height": 150,
-    "tabOrder": 1
+    "tabOrder": 0
   },
   "visual": {
     "visualType": "slicer",
@@ -135,13 +135,26 @@
           }
         }
       ],
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
       "title": [
         {
           "properties": {
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Ngưỡng undervalued (5%–50%)'"
+                  "Value": "'Ngưỡng undervalued (kéo đầu trái, 5%–50%)'"
                 }
               }
             },
@@ -180,13 +193,13 @@
           }
         }
       ],
-      "visualHeader": [
+      "general": [
         {
           "properties": {
-            "show": {
+            "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "'Bộ lọc: Ngưỡng undervalued (kéo đầu trái, 5%–50%)'"
                 }
               }
             }
@@ -215,7 +228,7 @@
             "end": {
               "expr": {
                 "Literal": {
-                  "Value": "0.50D"
+                  "Value": "0.51D"
                 }
               }
             }
@@ -256,7 +269,7 @@
                         },
                         "UpperBound": {
                           "Literal": {
-                            "Value": "0.50D"
+                            "Value": "0.51D"
                           }
                         }
                       }

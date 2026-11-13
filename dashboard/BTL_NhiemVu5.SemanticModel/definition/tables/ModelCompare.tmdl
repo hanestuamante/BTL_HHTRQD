@@ -1,19 +1,19 @@
 table ModelCompare
-	lineageTag: 5817c4db-1492-426b-91a9-0f3151b9f93a
+	lineageTag: 66184dc7-5d1a-411c-a71a-12f1e146604e
 
 	column model
 		dataType: string
 		sourceColumn: model
-		lineageTag: 44c199de-3d49-4416-b000-2c58c31b946d
+		lineageTag: b8e5c619-9f5b-4a9d-a3d6-f51012d58e6d
 	column market
 		dataType: string
 		sourceColumn: market
-		lineageTag: 0e58ade6-e347-43a4-913c-1866a947200f
+		lineageTag: 1aba9f6d-3844-463b-87e5-15bfccbff06d
 	column mape
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: mape
-		lineageTag: 51c68119-6ee0-4fee-b8c1-d4b81be6d55b
+		lineageTag: 95ff1bca-12a6-44af-bf40-99b562edabae
 
 	partition ModelCompare = m
 		mode: import

@@ -1,97 +1,97 @@
 table AmesSales
-	lineageTag: 408d7737-2a58-464e-a836-9299daf21993
+	lineageTag: f15ec897-2124-4266-a96d-44022ec9f784
 
 	column pid
 		dataType: string
 		sourceColumn: pid
-		lineageTag: 941d9d34-d6d7-4ae7-9d2f-83e68f4b9811
+		lineageTag: 9d6f87b0-157b-4e16-b2db-eb42b89d00b3
 	column neighborhood
 		dataType: string
 		sourceColumn: neighborhood
-		lineageTag: 49ae3a5f-ad81-4b87-b06a-a753ae2a8fe9
+		lineageTag: 3a823e38-a121-4e46-8595-c35ad59936af
 	column price
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: price
-		lineageTag: 43205023-59ed-4434-8703-6ca8c21e6ec7
+		lineageTag: e6f5c22b-c12f-43fd-bf67-81493f65fbd2
 	column gr_liv_area
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: gr_liv_area
-		lineageTag: 87b75738-616f-4f4a-a55e-1adb923035d4
+		lineageTag: 65b76414-2a42-4507-92f7-178efc350b8a
 	column overall_qual
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: overall_qual
-		lineageTag: fffdd52e-752f-438a-9e5c-2206d89c6260
+		lineageTag: 8a03d6d9-fb6b-4c32-9506-68cc125c55d3
 	column year_built
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: year_built
-		lineageTag: 9955202d-3bca-4074-b963-c8774b36bdbd
+		lineageTag: 8a18d1aa-da15-4c5d-8c96-c18a4f110a7e
 	column house_age
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: house_age
-		lineageTag: db6cb7ad-babd-459d-9b37-8b84892e8a7a
+		lineageTag: 7ebe0bd9-831c-4441-9569-d23a0063a116
 	column bedroom_abvgr
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: bedroom_abvgr
-		lineageTag: 9659d21b-220a-4481-a5c1-6ea5437a799d
+		lineageTag: bd021cd3-c6dd-4081-95ed-d820939a70cf
 	column garage_cars
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: garage_cars
-		lineageTag: a82d23ef-f097-4816-b868-809f742dc0bd
+		lineageTag: df0c28c3-8652-46cb-831f-cce02ff06f18
 	column lot_area
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: lot_area
-		lineageTag: 80ad0317-d338-4e9a-9945-c85e70ac0a2a
+		lineageTag: 2ebf8465-f05a-48ef-a9d8-15df3af7fe3b
 	column yr_sold
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: yr_sold
-		lineageTag: ab4dd55c-b445-460b-8393-2cb1bb6bcce1
+		lineageTag: 3b5cb19e-a58a-4b82-bad9-b9659d12ae1c
 	column bathrooms_total
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: bathrooms_total
-		lineageTag: 2ddf2bfe-f80c-4ade-ac5a-77f5fa8045ef
+		lineageTag: 819b6947-0ac8-4ac2-96aa-6d05703f1dfc
 	column predicted_price
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: predicted_price
-		lineageTag: a9ec4340-87f7-4b3b-a7b2-f8639eccbc61
+		lineageTag: f1578a6d-f729-453f-ab05-d5b775f853eb
 	column residual_pct
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: residual_pct
-		lineageTag: 1b61337a-4471-4022-9543-b8207147553a
+		lineageTag: d4e21266-2daf-4db7-a994-c0dbc5b8944d
 	column discount_pct
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: discount_pct
-		lineageTag: 431a4c4f-192a-467d-8d49-f013f4c514ea
+		lineageTag: bf5c74ff-c5e4-4e9f-a9e1-42313d236ae8
 	column upside_usd
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: upside_usd
-		lineageTag: fc93c232-b27b-4b16-bae6-70625c67a29b
+		lineageTag: faefdaea-4f31-4c30-8aeb-a14f860adbd4
 	column price_band
 		dataType: string
 		sourceColumn: price_band
-		lineageTag: c890442c-e114-4891-9b10-06f1d83c9f4f
+		lineageTag: 6fddda58-6ef7-4e4c-ab63-7a71ecc8280e
 	column is_undervalued_20pct
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: is_undervalued_20pct
-		lineageTag: e6b7c7cb-ffd2-4b78-87cf-3280531dd5f0
+		lineageTag: d5d4a934-3ab1-44ad-8ed0-1606e0feee9d
 	column neighborhood_top
 		dataType: string
 		sourceColumn: neighborhood_top
-		lineageTag: 7b94e859-fd6e-4f4d-8eb6-4fc56cf50a5e
+		lineageTag: 14f5268d-57a4-4604-a26e-dee7b5c15ff3
 
 	partition AmesSales = m
 		mode: import

@@ -1,0 +1,27 @@
+table ChonChiSo
+	lineageTag: 7a4a9ef3-4bbf-4ff0-8277-137f8d443a97
+
+	column ChiSo
+		dataType: string
+		sourceColumn: ChiSo
+		lineageTag: 6d317bf4-a085-49c9-9c9e-75345a99e4db
+	column ThuTu
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: ThuTu
+		lineageTag: 01728b39-c1f6-4b19-8a4e-aea0fc068f93
+
+	partition ChonChiSo = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\chon_chi_so.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted,
+					{
+					{"ChiSo", type text},
+					{"ThuTu", Int64.Type}
+					}),
+				Result = Typed
+			in
+				Result

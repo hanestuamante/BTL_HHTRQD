@@ -1,40 +1,40 @@
 table Sensitivity
-	lineageTag: 7352ebe6-7941-4498-bf77-0658b490ba13
+	lineageTag: b3df8f1a-28c2-4e67-9a5d-4750acdc8803
 
 	column threshold_pct
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: threshold_pct
-		lineageTag: ee186951-7e3b-4104-86e7-c924a554ccab
+		lineageTag: 246bd7d1-9325-4f3c-837f-9a6d8139726b
 	column candidates
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: candidates
-		lineageTag: e71e448f-257d-4fad-954e-ce99f12194b1
+		lineageTag: 8934be34-2cc6-4cf1-a558-f5d17ea3cded
 	column share_pct
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: share_pct
-		lineageTag: aa25b15d-7db0-4d3b-a542-d3a28f0b0090
+		lineageTag: 8a154162-7e2c-4aa0-9d5e-5a43ef5c6df1
 	column all3
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: all3
-		lineageTag: 11828622-ba60-478c-b5c4-b6c46b86064a
+		lineageTag: bb9ce8d2-a015-4adf-888b-5b97eede9974
 	column over_50pct
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: over_50pct
-		lineageTag: f3852aa9-5418-475c-9e4f-58ac9a5c45e5
+		lineageTag: 13111c25-f839-4daa-8e4a-2726993b4c30
 	column median_price
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: median_price
-		lineageTag: 4dad6a08-2011-485b-8226-8ac2dad910e0
+		lineageTag: d80c5da1-ac63-41a8-8c79-434c5d3ec6f2
 	column enough_20
 		dataType: boolean
 		sourceColumn: enough_20
-		lineageTag: 0d00bec8-c297-49f9-ad30-9b65aa753bdd
+		lineageTag: 7d294143-d210-40ab-a5e8-7e9a60ed68bc
 
 	partition Sensitivity = m
 		mode: import

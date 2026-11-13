@@ -7,7 +7,7 @@
     "z": 1,
     "width": 1248,
     "height": 384,
-    "tabOrder": 1
+    "tabOrder": 4
   },
   "visual": {
     "visualType": "tableEx",
@@ -275,6 +275,19 @@
           }
         }
       ],
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
       "title": [
         {
           "properties": {
@@ -320,13 +333,13 @@
           }
         }
       ],
-      "visualHeader": [
+      "general": [
         {
           "properties": {
-            "show": {
+            "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "'Bảng dữ liệu: 20 căn đề xuất (xếp theo mức giảm thận trọng)'"
                 }
               }
             }
