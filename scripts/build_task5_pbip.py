@@ -510,7 +510,7 @@ PAGES = [
     ("what_if", "2. What-if ngưỡng undervalued"),
     ("ngan_sach", "3. Ngân sách và kế hoạch mua"),
     ("top20", "4. 20 căn đề xuất"),
-    ("ames", "5. So sánh Ames"),
+    ("ames", "5. Kiểm chứng bằng Ames"),
     ("mo_hinh", "6. Mô hình và độ nhạy"),
 ]
 

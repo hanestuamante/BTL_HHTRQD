@@ -1,15 +1,15 @@
 table ChonChiSo
-	lineageTag: 12a7cc25-23c7-4c0b-ac50-665fdc3fa3a6
+	lineageTag: 6b91081f-bf55-415d-954d-d2026c5d3b27
 
 	column 'Chỉ số'
 		dataType: string
 		sourceColumn: ChiSo
-		lineageTag: 4ac75df4-f595-43c0-9735-d82aae24ed3a
+		lineageTag: c12aa183-c7fe-4a6c-b8d6-7f9cccde7742
 	column 'ThuTu'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: ThuTu
-		lineageTag: 8f7f6db7-3ca4-4c5b-a493-ddf56a61af7e
+		lineageTag: e18819d8-a6da-4a42-90ef-1ffe006dd097
 
 	partition ChonChiSo = m
 		mode: import

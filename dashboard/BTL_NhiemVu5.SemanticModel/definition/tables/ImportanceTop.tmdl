@@ -1,20 +1,20 @@
 table ImportanceTop
-	lineageTag: 9849fb6b-8a82-4c8e-8455-aae39ab67a02
+	lineageTag: 97617aaa-bd4f-477e-ae60-3d2bdcc59e93
 
 	column 'Biến'
 		dataType: string
 		sourceColumn: feature
-		lineageTag: 6b145009-2e77-4893-8a79-7eac1a4b09fe
+		lineageTag: 5568006e-309f-4a07-a030-6342a557b45e
 	column 'MAPE tăng (điểm %)'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: mape_increase_pp
-		lineageTag: 4264923c-7530-42a1-9440-c6400a95cdd1
+		lineageTag: 22438080-2209-450d-be1b-1eafc1fa20fe
 	column 'std_pp'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: std_pp
-		lineageTag: 69bdb35b-a9c7-43b9-a89b-109e8172c2c1
+		lineageTag: 95ca28a5-45b5-423f-8e42-b23c2e90fc3c
 
 	partition ImportanceTop = m
 		mode: import

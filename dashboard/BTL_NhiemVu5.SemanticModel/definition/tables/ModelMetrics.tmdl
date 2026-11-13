@@ -1,49 +1,49 @@
 table ModelMetrics
-	lineageTag: 75bdc766-9309-4061-a852-7cd2bb16b2a7
+	lineageTag: 99fbd83e-ba27-4744-9108-9ba9f26a0652
 
 	column 'Thị trường'
 		dataType: string
 		sourceColumn: market
-		lineageTag: 0877e6e1-bd9a-40e2-818f-6807c316f69e
+		lineageTag: e5091a4a-b44f-4f44-9f04-b84f544d0312
 	column 'Mô hình'
 		dataType: string
 		sourceColumn: model
-		lineageTag: 71d0e56a-78e7-4801-8822-19495fd3cc12
+		lineageTag: 7b375efc-976b-40c9-87d6-e98342bbc8a1
 	column 'MAPE (%)'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: mape
-		lineageTag: aa08d564-b4d3-4804-aeaa-228c8a58e0c1
+		lineageTag: caae5678-d659-46fe-909a-912369051d4b
 	column 'mdape'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: mdape
-		lineageTag: 2cba8dcc-4a48-4bd8-9b4f-1b1cfa468317
+		lineageTag: 35ad6b12-0eb7-4eb8-b7c6-c0ea369140e0
 	column 'rmse'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: rmse
-		lineageTag: 7c51a905-7cfd-4f51-a866-3f0dab20f8f3
+		lineageTag: 7793a970-3d47-43d3-9a71-0118c61b5b64
 	column 'mae'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: mae
-		lineageTag: e4f473e2-9d25-4369-b312-00d5ad797387
+		lineageTag: ae3bbcd2-8148-4f05-a6b1-6a764e37fde5
 	column 'R²'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: r2
-		lineageTag: 7bcbe6c2-61d9-45e0-a07e-b24c9c38ebe3
+		lineageTag: 568c656b-2c7c-4060-9873-8a0503743635
 	column 'acc10'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: acc10
-		lineageTag: 884d35ae-2ee8-4f0c-ac34-0ed19872042d
+		lineageTag: 3dc062e6-aa53-40ad-9a75-9dd6e62c5576
 	column 'acc20'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: acc20
-		lineageTag: 9d99fa7e-36cf-45c2-a06f-7d76652f09bc
+		lineageTag: bfa1604b-76bf-4c07-87c4-07fb3f6a3940
 
 	partition ModelMetrics = m
 		mode: import

@@ -1,19 +1,19 @@
 table ModelCompare
-	lineageTag: 1d4b3244-4581-4fe0-9e78-448b758f2335
+	lineageTag: 6c261458-f7ee-44cd-a2b5-f6ea9f0f4717
 
 	column 'Mô hình'
 		dataType: string
 		sourceColumn: model
-		lineageTag: ffb6fee6-7588-4531-bde6-ad87ce7d8554
+		lineageTag: ae472d65-da3c-4b57-ab96-8377dceb2ba6
 	column 'Thị trường'
 		dataType: string
 		sourceColumn: market
-		lineageTag: c6f28e55-9906-43cd-bd8f-068aa6fc5dc8
+		lineageTag: b068e076-5985-4c2f-a4c2-b1997fac0591
 	column 'MAPE (%)'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: mape
-		lineageTag: 6861f8c8-5809-4200-855a-481a5cd9df4b
+		lineageTag: b7ceb2ec-6e09-4113-ad55-b41298dc3eaa
 
 	partition ModelCompare = m
 		mode: import

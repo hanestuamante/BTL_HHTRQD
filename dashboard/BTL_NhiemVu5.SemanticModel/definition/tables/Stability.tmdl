@@ -1,20 +1,20 @@
 table Stability
-	lineageTag: 274de774-3310-42a5-8bef-079019b41fdb
+	lineageTag: fd945895-17e7-4cae-bfdf-3374d655ce76
 
 	column 'Kịch bản'
 		dataType: string
 		sourceColumn: variant
-		lineageTag: c76f5850-4321-4fe6-8de8-4d4d652a40bf
+		lineageTag: 57fd2363-86e3-4415-a6c9-ad9a98277924
 	column 'Trùng 20 căn'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: overlap_20
-		lineageTag: b9105e40-2106-4ca1-91c6-ac4c1768e8eb
+		lineageTag: f55486b1-1f7d-4d47-8a2c-55d09942c11f
 	column 'Tỷ lệ (%)'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: share_pct
-		lineageTag: ef79b0bb-7741-4a51-98f7-54eddea18cfc
+		lineageTag: 6ed21ad3-1d29-4eeb-a1ca-ee3515633061
 
 	partition Stability = m
 		mode: import

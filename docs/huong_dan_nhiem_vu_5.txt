@@ -25,7 +25,7 @@ MỞ DASHBOARD
    ROI kỳ vọng; biểu đồ theo ZIP đổi chỉ số bằng hộp chọn.
 4. 20 căn đề xuất: vốn 4.534.822 USD, chênh lệch kỳ vọng 3.986.894 USD, mức giảm trung vị 46,1%,
    cả 3 mô hình đồng ý 20/20; bảng chi tiết và chênh lệch theo ZIP.
-5. So sánh Ames: MAPE King vs Ames theo mô hình, giá trung vị theo khu dân cư,
+5. Kiểm chứng bằng Ames: MAPE King vs Ames theo mô hình, giá trung vị theo khu dân cư,
    số tài sản theo khúc giá, MAPE theo khúc giá King.
 6. Mô hình và độ nhạy: permutation importance, what-if từng biến, số ứng viên theo ngưỡng,
    độ ổn định của danh sách 20 căn.
