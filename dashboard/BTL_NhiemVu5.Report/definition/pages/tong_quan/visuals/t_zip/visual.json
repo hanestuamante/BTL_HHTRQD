@@ -23,10 +23,10 @@
                       "Entity": "KingSales"
                     }
                   },
-                  "Property": "zip_top"
+                  "Property": "Mã ZIP"
                 }
               },
-              "queryRef": "KingSales.zip_top",
+              "queryRef": "KingSales.Mã ZIP",
               "nativeQueryRef": "Mã ZIP"
             },
             {
@@ -37,10 +37,10 @@
                       "Entity": "KPI"
                     }
                   },
-                  "Property": "King Transactions"
+                  "Property": "Số giao dịch"
                 }
               },
-              "queryRef": "KPI.King Transactions",
+              "queryRef": "KPI.Số giao dịch",
               "nativeQueryRef": "Số giao dịch"
             },
             {
@@ -51,10 +51,10 @@
                       "Entity": "KPI"
                     }
                   },
-                  "Property": "King Median Price"
+                  "Property": "Giá trung vị"
                 }
               },
-              "queryRef": "KPI.King Median Price",
+              "queryRef": "KPI.Giá trung vị",
               "nativeQueryRef": "Giá trung vị"
             },
             {
@@ -65,10 +65,10 @@
                       "Entity": "KPI"
                     }
                   },
-                  "Property": "Candidate Share"
+                  "Property": "Tỷ lệ ứng viên"
                 }
               },
-              "queryRef": "KPI.Candidate Share",
+              "queryRef": "KPI.Tỷ lệ ứng viên",
               "nativeQueryRef": "Tỷ lệ ứng viên"
             }
           ]

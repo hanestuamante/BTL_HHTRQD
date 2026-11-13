@@ -23,11 +23,11 @@
                       "Entity": "KPI"
                     }
                   },
-                  "Property": "Selected Threshold"
+                  "Property": "Ngưỡng (%)"
                 }
               },
-              "queryRef": "KPI.Selected Threshold",
-              "nativeQueryRef": "Ngưỡng"
+              "queryRef": "KPI.Ngưỡng (%)",
+              "nativeQueryRef": "Ngưỡng (%)"
             }
           ]
         }

@@ -27,7 +27,7 @@
                 }
               },
               "queryRef": "KPI.Budget ROI",
-              "nativeQueryRef": "ROI kỳ vọng"
+              "nativeQueryRef": "Budget ROI"
             }
           ]
         }

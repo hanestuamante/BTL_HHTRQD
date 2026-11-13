@@ -154,7 +154,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Ngưỡng undervalued (kéo đầu trái, 5%–50%)'"
+                  "Value": "'Ngưỡng undervalued'"
                 }
               }
             },
@@ -199,7 +199,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Bộ lọc: Ngưỡng undervalued (kéo đầu trái, 5%–50%)'"
+                  "Value": "'Bộ lọc: Ngưỡng undervalued'"
                 }
               }
             }
@@ -214,21 +214,20 @@
             "mode": {
               "expr": {
                 "Literal": {
-                  "Value": "'Between'"
+                  "Value": "'Dropdown'"
                 }
               }
-            },
-            "start": {
+            }
+          }
+        }
+      ],
+      "header": [
+        {
+          "properties": {
+            "show": {
               "expr": {
                 "Literal": {
-                  "Value": "0.20D"
-                }
-              }
-            },
-            "end": {
-              "expr": {
-                "Literal": {
-                  "Value": "0.51D"
+                  "Value": "false"
                 }
               }
             }
@@ -251,27 +250,28 @@
                 "Where": [
                   {
                     "Condition": {
-                      "Between": {
-                        "Expression": {
-                          "Column": {
-                            "Expression": {
-                              "SourceRef": {
-                                "Source": "n"
+                      "In": {
+                        "Expressions": [
+                          {
+                            "Column": {
+                              "Expression": {
+                                "SourceRef": {
+                                  "Source": "n"
+                                }
+                              },
+                              "Property": "Value"
+                            }
+                          }
+                        ],
+                        "Values": [
+                          [
+                            {
+                              "Literal": {
+                                "Value": "20L"
                               }
-                            },
-                            "Property": "Value"
-                          }
-                        },
-                        "LowerBound": {
-                          "Literal": {
-                            "Value": "0.20D"
-                          }
-                        },
-                        "UpperBound": {
-                          "Literal": {
-                            "Value": "0.51D"
-                          }
-                        }
+                            }
+                          ]
+                        ]
                       }
                     }
                   }

@@ -27,7 +27,7 @@
                 }
               },
               "queryRef": "KPI.Budget Used",
-              "nativeQueryRef": "% ngân sách đã dùng"
+              "nativeQueryRef": "Budget Used"
             }
           ]
         }

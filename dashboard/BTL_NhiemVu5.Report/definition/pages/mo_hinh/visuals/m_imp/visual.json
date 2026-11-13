@@ -23,10 +23,10 @@
                       "Entity": "ImportanceTop"
                     }
                   },
-                  "Property": "feature"
+                  "Property": "Biến"
                 }
               },
-              "queryRef": "ImportanceTop.feature",
+              "queryRef": "ImportanceTop.Biến",
               "nativeQueryRef": "Biến"
             }
           ]
@@ -41,18 +41,32 @@
                       "Entity": "KPI"
                     }
                   },
-                  "Property": "Importance Increase"
+                  "Property": "MAPE tăng (điểm %)"
                 }
               },
-              "queryRef": "KPI.Importance Increase",
-              "nativeQueryRef": "Importance Increase"
+              "queryRef": "KPI.MAPE tăng (điểm %)",
+              "nativeQueryRef": "MAPE tăng (điểm %)"
             }
           ]
         }
       },
       "sortDefinition": {
-        "sort": [],
-        "isDefaultSort": true
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "KPI"
+                  }
+                },
+                "Property": "MAPE tăng (điểm %)"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": false
       }
     },
     "drillFilterOtherVisuals": true,
@@ -225,6 +239,59 @@
         }
       ]
     },
-    "objects": {}
+    "objects": {
+      "categoryAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "valueAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "labels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "legend": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
   }
 }

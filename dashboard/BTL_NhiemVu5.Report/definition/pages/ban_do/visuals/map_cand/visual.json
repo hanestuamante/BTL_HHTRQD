@@ -10,28 +10,10 @@
     "tabOrder": 0
   },
   "visual": {
-    "visualType": "scatterChart",
+    "visualType": "azureMap",
     "query": {
       "queryState": {
-        "X": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "KPI"
-                    }
-                  },
-                  "Property": "Kinh độ"
-                }
-              },
-              "queryRef": "KPI.Kinh độ",
-              "nativeQueryRef": "Kinh độ"
-            }
-          ]
-        },
-        "Y": {
+        "Latitude": {
           "projections": [
             {
               "field": {
@@ -49,7 +31,7 @@
             }
           ]
         },
-        "Size": {
+        "Longitude": {
           "projections": [
             {
               "field": {
@@ -59,11 +41,11 @@
                       "Entity": "KPI"
                     }
                   },
-                  "Property": "Candidates"
+                  "Property": "Kinh độ"
                 }
               },
-              "queryRef": "KPI.Candidates",
-              "nativeQueryRef": "Ứng viên"
+              "queryRef": "KPI.Kinh độ",
+              "nativeQueryRef": "Kinh độ"
             }
           ]
         },
@@ -77,11 +59,29 @@
                       "Entity": "KingSales"
                     }
                   },
-                  "Property": "zipcode"
+                  "Property": "ZIP"
                 }
               },
-              "queryRef": "KingSales.zipcode",
+              "queryRef": "KingSales.ZIP",
               "nativeQueryRef": "ZIP"
+            }
+          ]
+        },
+        "Size": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "KPI"
+                    }
+                  },
+                  "Property": "Số ứng viên"
+                }
+              },
+              "queryRef": "KPI.Số ứng viên",
+              "nativeQueryRef": "Số ứng viên"
             }
           ]
         },
@@ -95,11 +95,11 @@
                       "Entity": "KPI"
                     }
                   },
-                  "Property": "Candidate Median Price"
+                  "Property": "Giá trung vị ứng viên"
                 }
               },
-              "queryRef": "KPI.Candidate Median Price",
-              "nativeQueryRef": "Giá trung vị"
+              "queryRef": "KPI.Giá trung vị ứng viên",
+              "nativeQueryRef": "Giá trung vị ứng viên"
             }
           ]
         }
@@ -271,7 +271,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Biểu đồ phân tán theo tọa độ: Ứng viên theo vị trí (mỗi điểm = 1 ZIP, kích thước = số ứng viên)'"
+                  "Value": "'Biểu đồ: Ứng viên theo vị trí (mỗi điểm = 1 ZIP, kích thước = số ứng viên)'"
                 }
               }
             }
@@ -279,72 +279,6 @@
         }
       ]
     },
-    "objects": {
-      "xAxis": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "yAxis": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "categoryAxis": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "valueAxis": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "legend": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ]
-    }
+    "objects": {}
   }
 }

@@ -23,10 +23,10 @@
                       "Entity": "KingSales"
                     }
                   },
-                  "Property": "price_band"
+                  "Property": "Khúc giá"
                 }
               },
-              "queryRef": "KingSales.price_band",
+              "queryRef": "KingSales.Khúc giá",
               "nativeQueryRef": "Khúc giá"
             }
           ]
@@ -41,11 +41,11 @@
                       "Entity": "KPI"
                     }
                   },
-                  "Property": "Candidates"
+                  "Property": "Số ứng viên"
                 }
               },
-              "queryRef": "KPI.Candidates",
-              "nativeQueryRef": "Ứng viên"
+              "queryRef": "KPI.Số ứng viên",
+              "nativeQueryRef": "Số ứng viên"
             }
           ]
         }
@@ -225,6 +225,59 @@
         }
       ]
     },
-    "objects": {}
+    "objects": {
+      "categoryAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "valueAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "labels": [
+        {
+          "properties": {
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "legend": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
   }
 }

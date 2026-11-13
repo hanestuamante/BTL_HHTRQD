@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
-  "name": "pp_kiem_chung",
+  "name": "tree_note",
   "position": {
     "x": 16,
-    "y": 396,
+    "y": 584,
     "z": 1,
-    "width": 1248,
-    "height": 308,
-    "tabOrder": 2
+    "width": 616,
+    "height": 120,
+    "tabOrder": 3
   },
   "visual": {
     "visualType": "textbox",
@@ -19,9 +19,9 @@
               {
                 "textRuns": [
                   {
-                    "value": "Đo lường và giới hạn",
+                    "value": "Cách đọc cây",
                     "textStyle": {
-                      "fontSize": "16pt",
+                      "fontSize": "13pt",
                       "color": "#12324F",
                       "fontWeight": "bold"
                     }
@@ -31,31 +31,9 @@
               {
                 "textRuns": [
                   {
-                    "value": "Chất lượng mô hình (tập test): XGBoost King County MAPE 11,20% · RMSE 106.477 USD · R² 0,918; out-of-fold MAPE 10,94%. Ames MAPE 7,49% · R² 0,935; out-of-fold 7,90%.",
+                    "value": "Cấp 1 là Mã ZIP: 12 ZIP nhiều giao dịch nhất và nhóm “Khác” (58 ZIP còn lại). Bấm dấu + dưới một ZIP rồi chọn thuộc tính (khúc giá, hạng chất lượng, hướng nhìn, tình trạng…) để tách tiếp và xem thuộc tính nào đóng góp nhiều ứng viên nhất.",
                     "textStyle": {
-                      "fontSize": "12.5pt",
-                      "color": "#1B2A3A"
-                    }
-                  }
-                ]
-              },
-              {
-                "textRuns": [
-                  {
-                    "value": "Độ nhạy của ngưỡng: 5% → 6.248 căn (29,4%); 10% → 3.672 (17,3%); 15% → 2.132 (10,0%); 20% → 1.193 (5,6%); 25% → 677 (3,2%); 30% → 411 (1,9%); 35% → 209 (1,0%); 40% → 106 (0,5%).",
-                    "textStyle": {
-                      "fontSize": "12.5pt",
-                      "color": "#1B2A3A"
-                    }
-                  }
-                ]
-              },
-              {
-                "textRuns": [
-                  {
-                    "value": "Giới hạn: (1) “định giá thấp” chỉ là proxy theo sai số mô hình khoảng 11%, không chứng minh chủ nhà định giá sai; (2) dữ liệu 2014–2015, không phải giá thị trường hiện tại; (3) chưa có thông tin pháp lý, hiện trạng và quy hoạch; (4) 36 giao dịch giảm trên 50% phải xác minh thủ công trước khi dùng.",
-                    "textStyle": {
-                      "fontSize": "12.5pt",
+                      "fontSize": "11pt",
                       "color": "#1B2A3A"
                     }
                   }
@@ -183,7 +161,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Hộp văn bản: Đo lường và giới hạn'"
+                  "Value": "'Hộp văn bản: Cách đọc cây'"
                 }
               }
             }

@@ -154,7 +154,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Ngân sách mua (USD, kéo đầu phải)'"
+                  "Value": "'Ngân sách mua (USD)'"
                 }
               }
             },
@@ -199,7 +199,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Bộ lọc: Ngân sách mua (USD, kéo đầu phải)'"
+                  "Value": "'Bộ lọc: Ngân sách mua (USD)'"
                 }
               }
             }
@@ -214,21 +214,20 @@
             "mode": {
               "expr": {
                 "Literal": {
-                  "Value": "'Between'"
+                  "Value": "'Dropdown'"
                 }
               }
-            },
-            "start": {
+            }
+          }
+        }
+      ],
+      "header": [
+        {
+          "properties": {
+            "show": {
               "expr": {
                 "Literal": {
-                  "Value": "500000D"
-                }
-              }
-            },
-            "end": {
-              "expr": {
-                "Literal": {
-                  "Value": "2000000D"
+                  "Value": "false"
                 }
               }
             }
@@ -251,27 +250,28 @@
                 "Where": [
                   {
                     "Condition": {
-                      "Between": {
-                        "Expression": {
-                          "Column": {
-                            "Expression": {
-                              "SourceRef": {
-                                "Source": "b"
+                      "In": {
+                        "Expressions": [
+                          {
+                            "Column": {
+                              "Expression": {
+                                "SourceRef": {
+                                  "Source": "b"
+                                }
+                              },
+                              "Property": "Value"
+                            }
+                          }
+                        ],
+                        "Values": [
+                          [
+                            {
+                              "Literal": {
+                                "Value": "2000000D"
                               }
-                            },
-                            "Property": "Value"
-                          }
-                        },
-                        "LowerBound": {
-                          "Literal": {
-                            "Value": "500000D"
-                          }
-                        },
-                        "UpperBound": {
-                          "Literal": {
-                            "Value": "2000000D"
-                          }
-                        }
+                            }
+                          ]
+                        ]
                       }
                     }
                   }

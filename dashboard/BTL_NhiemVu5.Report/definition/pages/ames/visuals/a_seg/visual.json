@@ -23,10 +23,10 @@
                       "Entity": "SegmentCompare"
                     }
                   },
-                  "Property": "segment"
+                  "Property": "Khúc giá"
                 }
               },
-              "queryRef": "SegmentCompare.segment",
+              "queryRef": "SegmentCompare.Khúc giá",
               "nativeQueryRef": "Khúc giá"
             },
             {
@@ -37,10 +37,10 @@
                       "Entity": "SegmentCompare"
                     }
                   },
-                  "Property": "mape_lr"
+                  "Property": "MAPE Linear"
                 }
               },
-              "queryRef": "SegmentCompare.mape_lr",
+              "queryRef": "SegmentCompare.MAPE Linear",
               "nativeQueryRef": "MAPE Linear"
             },
             {
@@ -51,10 +51,10 @@
                       "Entity": "SegmentCompare"
                     }
                   },
-                  "Property": "mape_xgb"
+                  "Property": "MAPE XGBoost"
                 }
               },
-              "queryRef": "SegmentCompare.mape_xgb",
+              "queryRef": "SegmentCompare.MAPE XGBoost",
               "nativeQueryRef": "MAPE XGBoost"
             }
           ]

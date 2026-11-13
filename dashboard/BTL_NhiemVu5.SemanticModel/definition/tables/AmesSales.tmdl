@@ -1,97 +1,97 @@
 table AmesSales
-	lineageTag: f15ec897-2124-4266-a96d-44022ec9f784
+	lineageTag: 2f6250ac-5e26-4c58-9650-f49680913cbf
 
-	column pid
+	column 'pid'
 		dataType: string
 		sourceColumn: pid
-		lineageTag: 9d6f87b0-157b-4e16-b2db-eb42b89d00b3
-	column neighborhood
+		lineageTag: cc48b966-b823-4ca8-b93a-e0899e695137
+	column 'Khu dân cư'
 		dataType: string
 		sourceColumn: neighborhood
-		lineageTag: 3a823e38-a121-4e46-8595-c35ad59936af
-	column price
+		lineageTag: 257e59d4-6c12-4483-80da-b6c93c9bb9e2
+	column 'Giá bán'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: price
-		lineageTag: e6f5c22b-c12f-43fd-bf67-81493f65fbd2
-	column gr_liv_area
+		lineageTag: 8f6a3a30-31f7-460b-81e3-c5a7717bc708
+	column 'gr_liv_area'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: gr_liv_area
-		lineageTag: 65b76414-2a42-4507-92f7-178efc350b8a
-	column overall_qual
+		lineageTag: 766e940b-165c-45c7-ba94-14bf37c95880
+	column 'overall_qual'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: overall_qual
-		lineageTag: 8a03d6d9-fb6b-4c32-9506-68cc125c55d3
-	column year_built
+		lineageTag: 787521d7-8dda-4204-a7a8-be61095b2922
+	column 'year_built'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: year_built
-		lineageTag: 8a18d1aa-da15-4c5d-8c96-c18a4f110a7e
-	column house_age
+		lineageTag: 8817ce7b-3611-4745-bd31-8ad3b823c239
+	column 'Tuổi nhà'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: house_age
-		lineageTag: 7ebe0bd9-831c-4441-9569-d23a0063a116
-	column bedroom_abvgr
+		lineageTag: b5ca5ec8-fac7-45e7-a1d4-e22028c63c45
+	column 'bedroom_abvgr'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: bedroom_abvgr
-		lineageTag: bd021cd3-c6dd-4081-95ed-d820939a70cf
-	column garage_cars
+		lineageTag: 2afb17b9-0268-47fd-9c2e-e8cfb5509918
+	column 'garage_cars'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: garage_cars
-		lineageTag: df0c28c3-8652-46cb-831f-cce02ff06f18
-	column lot_area
+		lineageTag: 70a985f2-9f12-4941-a8c9-4436b1147cfe
+	column 'lot_area'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: lot_area
-		lineageTag: 2ebf8465-f05a-48ef-a9d8-15df3af7fe3b
-	column yr_sold
+		lineageTag: 9c30e20f-f33f-473a-9ac1-7d00277a3af2
+	column 'yr_sold'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: yr_sold
-		lineageTag: 3b5cb19e-a58a-4b82-bad9-b9659d12ae1c
-	column bathrooms_total
+		lineageTag: 99781ddf-7881-47f3-8a44-5d7422470828
+	column 'bathrooms_total'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: bathrooms_total
-		lineageTag: 819b6947-0ac8-4ac2-96aa-6d05703f1dfc
-	column predicted_price
+		lineageTag: ccbffccf-dcfc-4e90-b7a9-60a2aa74ee96
+	column 'Giá mô hình'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: predicted_price
-		lineageTag: f1578a6d-f729-453f-ab05-d5b775f853eb
-	column residual_pct
+		lineageTag: 0fd3587a-8f50-4702-aa5b-c24410e5f142
+	column 'Sai số (%)'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: residual_pct
-		lineageTag: d4e21266-2daf-4db7-a994-c0dbc5b8944d
-	column discount_pct
+		lineageTag: 63a7216b-58ea-4c74-bd30-da6a054a0b72
+	column 'Mức giảm (%)'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: discount_pct
-		lineageTag: bf5c74ff-c5e4-4e9f-a9e1-42313d236ae8
-	column upside_usd
+		lineageTag: c5bd6fa1-0d26-4716-9a82-062767f0eaaf
+	column 'Chênh lệch (USD)'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: upside_usd
-		lineageTag: faefdaea-4f31-4c30-8aeb-a14f860adbd4
-	column price_band
+		lineageTag: b74099b5-7ca3-49c5-be7d-7b973a3ef678
+	column 'Khúc giá'
 		dataType: string
 		sourceColumn: price_band
-		lineageTag: 6fddda58-6ef7-4e4c-ab63-7a71ecc8280e
-	column is_undervalued_20pct
+		lineageTag: 04308e1e-8d2d-460b-9b88-33d1cd3d21f1
+	column 'is_undervalued_20pct'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: is_undervalued_20pct
-		lineageTag: d5d4a934-3ab1-44ad-8ed0-1606e0feee9d
-	column neighborhood_top
+		lineageTag: b7bf12f3-d136-48d7-aa21-a842d649d8fc
+	column 'Khu dân cư tiêu biểu'
 		dataType: string
 		sourceColumn: neighborhood_top
-		lineageTag: 14f5268d-57a4-4604-a26e-dee7b5c15ff3
+		lineageTag: 3b01d083-1c7b-451c-9aa6-fbcae7163c45
 
 	partition AmesSales = m
 		mode: import

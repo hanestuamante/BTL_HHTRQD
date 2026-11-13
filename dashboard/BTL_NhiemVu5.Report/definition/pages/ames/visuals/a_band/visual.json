@@ -23,10 +23,10 @@
                       "Entity": "AmesSales"
                     }
                   },
-                  "Property": "price_band"
+                  "Property": "Khúc giá"
                 }
               },
-              "queryRef": "AmesSales.price_band",
+              "queryRef": "AmesSales.Khúc giá",
               "nativeQueryRef": "Khúc giá"
             }
           ]
@@ -41,11 +41,11 @@
                       "Entity": "KPI"
                     }
                   },
-                  "Property": "Ames Properties"
+                  "Property": "Số tài sản Ames"
                 }
               },
-              "queryRef": "KPI.Ames Properties",
-              "nativeQueryRef": "Số tài sản"
+              "queryRef": "KPI.Số tài sản Ames",
+              "nativeQueryRef": "Số tài sản Ames"
             }
           ]
         }
@@ -225,6 +225,59 @@
         }
       ]
     },
-    "objects": {}
+    "objects": {
+      "categoryAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "valueAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "labels": [
+        {
+          "properties": {
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "legend": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
   }
 }

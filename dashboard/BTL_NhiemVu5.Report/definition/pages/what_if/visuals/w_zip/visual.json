@@ -23,10 +23,10 @@
                       "Entity": "KingSales"
                     }
                   },
-                  "Property": "zipcode"
+                  "Property": "ZIP"
                 }
               },
-              "queryRef": "KingSales.zipcode",
+              "queryRef": "KingSales.ZIP",
               "nativeQueryRef": "ZIP"
             }
           ]
@@ -41,18 +41,32 @@
                       "Entity": "KPI"
                     }
                   },
-                  "Property": "Candidates"
+                  "Property": "Số ứng viên"
                 }
               },
-              "queryRef": "KPI.Candidates",
-              "nativeQueryRef": "Ứng viên"
+              "queryRef": "KPI.Số ứng viên",
+              "nativeQueryRef": "Số ứng viên"
             }
           ]
         }
       },
       "sortDefinition": {
-        "sort": [],
-        "isDefaultSort": true
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "KPI"
+                  }
+                },
+                "Property": "Số ứng viên"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": false
       }
     },
     "drillFilterOtherVisuals": true,
@@ -225,6 +239,59 @@
         }
       ]
     },
-    "objects": {}
+    "objects": {
+      "categoryAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "valueAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "labels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "legend": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
   }
 }

@@ -6,7 +6,7 @@
     "y": 16,
     "z": 1,
     "width": 616,
-    "height": 688,
+    "height": 560,
     "tabOrder": 0
   },
   "visual": {
@@ -23,11 +23,11 @@
                       "Entity": "KPI"
                     }
                   },
-                  "Property": "Candidates"
+                  "Property": "Số ứng viên"
                 }
               },
-              "queryRef": "KPI.Candidates",
-              "nativeQueryRef": "Ứng viên"
+              "queryRef": "KPI.Số ứng viên",
+              "nativeQueryRef": "Số ứng viên"
             }
           ]
         },
@@ -41,10 +41,10 @@
                       "Entity": "KingSales"
                     }
                   },
-                  "Property": "zip_top"
+                  "Property": "Mã ZIP"
                 }
               },
-              "queryRef": "KingSales.zip_top",
+              "queryRef": "KingSales.Mã ZIP",
               "nativeQueryRef": "Mã ZIP",
               "active": true
             },
@@ -56,10 +56,10 @@
                       "Entity": "KingSales"
                     }
                   },
-                  "Property": "price_band"
+                  "Property": "Khúc giá"
                 }
               },
-              "queryRef": "KingSales.price_band",
+              "queryRef": "KingSales.Khúc giá",
               "nativeQueryRef": "Khúc giá",
               "active": true
             },
@@ -71,10 +71,10 @@
                       "Entity": "KingSales"
                     }
                   },
-                  "Property": "grade"
+                  "Property": "Hạng chất lượng"
                 }
               },
-              "queryRef": "KingSales.grade",
+              "queryRef": "KingSales.Hạng chất lượng",
               "nativeQueryRef": "Hạng chất lượng",
               "active": true
             },
@@ -86,10 +86,10 @@
                       "Entity": "KingSales"
                     }
                   },
-                  "Property": "waterfront"
+                  "Property": "Giáp nước"
                 }
               },
-              "queryRef": "KingSales.waterfront",
+              "queryRef": "KingSales.Giáp nước",
               "nativeQueryRef": "Giáp nước",
               "active": true
             },
@@ -101,10 +101,10 @@
                       "Entity": "KingSales"
                     }
                   },
-                  "Property": "view"
+                  "Property": "Hướng nhìn"
                 }
               },
-              "queryRef": "KingSales.view",
+              "queryRef": "KingSales.Hướng nhìn",
               "nativeQueryRef": "Hướng nhìn",
               "active": true
             },
@@ -116,10 +116,10 @@
                       "Entity": "KingSales"
                     }
                   },
-                  "Property": "condition"
+                  "Property": "Tình trạng"
                 }
               },
-              "queryRef": "KingSales.condition",
+              "queryRef": "KingSales.Tình trạng",
               "nativeQueryRef": "Tình trạng",
               "active": true
             },
@@ -131,10 +131,10 @@
                       "Entity": "KingSales"
                     }
                   },
-                  "Property": "is_renovated"
+                  "Property": "Đã cải tạo"
                 }
               },
-              "queryRef": "KingSales.is_renovated",
+              "queryRef": "KingSales.Đã cải tạo",
               "nativeQueryRef": "Đã cải tạo",
               "active": true
             },
@@ -146,10 +146,10 @@
                       "Entity": "KingSales"
                     }
                   },
-                  "Property": "sqft_living"
+                  "Property": "Diện tích (sqft)"
                 }
               },
-              "queryRef": "KingSales.sqft_living",
+              "queryRef": "KingSales.Diện tích (sqft)",
               "nativeQueryRef": "Diện tích (sqft)",
               "active": true
             }
@@ -157,8 +157,22 @@
         }
       },
       "sortDefinition": {
-        "sort": [],
-        "isDefaultSort": true
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "KPI"
+                  }
+                },
+                "Property": "Số ứng viên"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": false
       }
     },
     "drillFilterOtherVisuals": true,
@@ -278,7 +292,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Phân rã số ứng viên theo thuộc tính'"
+                  "Value": "'Ứng viên theo Mã ZIP và thuộc tính'"
                 }
               }
             },
@@ -323,7 +337,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Cây phân rã: Phân rã số ứng viên theo thuộc tính'"
+                  "Value": "'Cây phân rã: Ứng viên theo Mã ZIP và thuộc tính'"
                 }
               }
             }

@@ -11,6 +11,7 @@ Sau đó mở file .pbip bằng Power BI Desktop và Save As .pbix.
 from pathlib import Path
 from uuid import uuid4
 import json
+import re
 import shutil
 
 import pandas as pd
@@ -95,6 +96,32 @@ def m_type(dtype):
 STRING_COLS = {"id", "zipcode", "pid", "zip_top", "ms_subclass", "sale_month",
                "neighborhood", "neighborhood_top", "date"}
 
+# Tên hiển thị tiếng Việt của cột. TMDL đặt tên cột theo đây và giữ
+# sourceColumn trỏ về tên gốc trong CSV; DAX trong MEASURES cũng được đổi theo.
+COL_NAMES = {
+    "id": "Mã căn", "zipcode": "ZIP", "zip_top": "Mã ZIP",
+    "price": "Giá bán", "predicted_price": "Giá mô hình",
+    "upside_usd": "Chênh lệch (USD)", "discount_pct": "Mức giảm (%)",
+    "sqft_living": "Diện tích (sqft)", "grade": "Hạng chất lượng",
+    "condition": "Tình trạng", "distance_to_center_km": "Cách trung tâm (km)",
+    "price_band": "Khúc giá", "lat": "Vĩ độ", "long": "Kinh độ",
+    "neighborhood": "Khu dân cư", "neighborhood_top": "Khu dân cư tiêu biểu",
+    "bedrooms": "Phòng ngủ", "house_age": "Tuổi nhà", "view": "Hướng nhìn",
+    "waterfront": "Giáp nước", "is_renovated": "Đã cải tạo",
+    "models_agree_undervalued": "Số mô hình đồng ý",
+    "residual_pct": "Sai số (%)", "is_latest_sale": "Giao dịch mới nhất",
+    "zero_room_flag": "Thiếu phòng", "Hang": "Hạng",
+    "model": "Mô hình", "market": "Thị trường", "mape": "MAPE (%)", "r2": "R²",
+    "mape_lr": "MAPE Linear", "mape_xgb": "MAPE XGBoost",
+    "segment": "Khúc giá", "threshold_pct": "Ngưỡng (%)",
+    "candidates": "Số ứng viên", "share_pct": "Tỷ lệ (%)",
+    "median_price": "Giá trung vị (USD)", "variant": "Kịch bản",
+    "overlap_20": "Trùng 20 căn", "scenario": "Kịch bản",
+    "median_change_pct": "Thay đổi (%)", "feature": "Biến",
+    "mape_increase_pp": "MAPE tăng (điểm %)", "rank": "Hạng",
+    "cum_price": "Lũy kế (USD)", "ChiSo": "Chỉ số",
+}
+
 
 def table_tmdl(csv, entity, hidden):
     df = pd.read_csv(DATA / csv, nrows=200)
@@ -108,7 +135,7 @@ def table_tmdl(csv, entity, hidden):
         else:
             mtype, ttype = m_type(df[name].dtype)
         m_types.append(f'{{"{name}", {mtype}}}')
-        col = [f"\tcolumn {name}", f"\t\tdataType: {ttype}"]
+        col = [f"\tcolumn '{COL_NAMES.get(name, name)}'", f"\t\tdataType: {ttype}"]
         if ttype in ("int64", "double"):
             col.append("\t\tsummarizeBy: none" if name in hidden or name in {"lat", "long"}
                        else "\t\tsummarizeBy: sum")
@@ -143,7 +170,8 @@ MEASURES = {
     "King Median Price": ("MEDIAN('KingSales'[price])", "#,0"),
     "King OOF MAPE": ("AVERAGEX('KingSales', ABS('KingSales'[residual_pct]))", "0.0%"),
     "Selected Threshold": (
-        "IF(ISFILTERED('Nguong'[Value]), MIN('Nguong'[Value]), 0.20)", "0%"),
+        "VAR p = IF(ISFILTERED('Nguong'[Value]), MIN('Nguong'[Value]), 20)\n"
+        "RETURN p / 100", "0%"),
     "Candidate Base": (
         "CALCULATE(COUNTROWS('KingSales'), 'KingSales'[is_latest_sale] = 1, "
         "'KingSales'[zero_room_flag] = 0, 'KingSales'[condition] >= 3)", "#,0"),
@@ -170,7 +198,7 @@ MEASURES = {
     "Top20 Count": ("COUNTROWS('Top20')", "#,0"),
     "Top20 Capital": ("SUM('Top20'[price])", "#,0"),
     "Top20 Upside": ("SUM('Top20'[upside_usd])", "#,0"),
-    "Top20 Median Discount": ("MEDIAN('Top20'[discount_pct])", "0.0"),
+    "Top20 Median Discount": ("MEDIAN('Top20'[discount_pct])", '0.0"%"'),
     "Top20 All3": ("COUNTROWS(FILTER('Top20', 'Top20'[models_agree_undervalued] = 3))", "#,0"),
     "Importance Increase": ("SUM('ImportanceTop'[mape_increase_pp])", "0.00"),
     "Scenario Change": ("SUM('WhatIfScenarios'[median_change_pct])", "0.00"),
@@ -237,13 +265,48 @@ MEASURES = {
 }
 
 
+# Tên hiển thị của các measure xuất hiện trên biểu đồ/bảng (tiêu đề cột, trục,
+# chú giải). Card dùng tiêu đề riêng nên không phụ thuộc tên này.
+MEASURE_RENAME = {
+    "King Transactions": "Số giao dịch",
+    "King Median Price": "Giá trung vị",
+    "Candidates": "Số ứng viên",
+    "Candidate Share": "Tỷ lệ ứng viên",
+    "Candidate Upside": "Chênh lệch ứng viên (USD)",
+    "Candidate Median Price": "Giá trung vị ứng viên",
+    "Candidate All3": "Đồng thuận 3 mô hình",
+    "Selected Threshold": "Ngưỡng (%)",
+    "Top20 Capital": "Vốn Top20 (USD)",
+    "Top20 Upside": "Chênh lệch Top20 (USD)",
+    "Top20 Median Discount": "Mức giảm trung vị (%)",
+    "Ames Properties": "Số tài sản Ames",
+    "Ames Median Price": "Giá trung vị Ames",
+    "Ames Candidates": "Số ứng viên Ames",
+    "Model MAPE": "MAPE (%)",
+    "Importance Increase": "MAPE tăng (điểm %)",
+    "Scenario Change": "Thay đổi giá (%)",
+    "Sensitivity Candidates": "Số ứng viên theo ngưỡng",
+    "Selected Budget": "Ngân sách (USD)",
+}
+
+
+def vi_dax(text):
+    """Đổi tên cột/measure trong công thức DAX sang tên hiển thị tiếng Việt."""
+    text = re.sub(r"'([^']+)'\[([^\]]+)\]",
+                  lambda m: f"'{m.group(1)}'[{COL_NAMES.get(m.group(2), m.group(2))}]",
+                  text)
+    return re.sub(r"(?<!')\[([^\]]+)\]",
+                  lambda m: "[" + MEASURE_RENAME.get(m.group(1), m.group(1)) + "]",
+                  text)
+
+
 def measures_tmdl():
     lines = [f"table {KPI_TABLE}\n\tlineageTag: {uid()}\n"]
     for name, (dax, fmt) in MEASURES.items():
-        body = "\t\t\t" + dax.replace("\n", "\n\t\t\t")
+        body = "\t\t\t" + vi_dax(dax).replace("\n", "\n\t\t\t")
         fmt_line = f"\t\tformatString: {fmt}\n" if fmt else ""
         lines.append(
-            f"\tmeasure '{name}' =\n{body}\n"
+            f"\tmeasure '{MEASURE_RENAME.get(name, name)}' =\n{body}\n"
             f"{fmt_line}\t\tlineageTag: {uid()}\n")
     lines.append(
         "\tcolumn Placeholder\n\t\tdataType: string\n\t\tisHidden\n"
@@ -276,13 +339,15 @@ def write_model():
               table_tmdl(csv, entity, hidden))
     write(MODEL_DIR / "definition" / "tables" / f"{KPI_TABLE}.tmdl", measures_tmdl())
 
+    # Ngưỡng lưu dạng số nguyên % (5..50) để bộ chọn lưu đúng một giá trị;
+    # measure đổi ra tỷ lệ 0,05..0,50.
     write(MODEL_DIR / "definition" / "tables" / "Nguong.tmdl",
           f"table Nguong\n\tlineageTag: {uid()}\n\n"
-          "\tcolumn Value\n\t\tdataType: double\n\t\tformatString: 0%\n"
+          "\tcolumn Value\n\t\tdataType: int64\n\t\tformatString: 0\"%\"\n"
           "\t\tsummarizeBy: none\n\t\tisNameInferred\n\t\tsourceColumn: [Value]\n"
           f"\t\tlineageTag: {uid()}\n\n"
           "\tpartition Nguong = calculated\n\t\tmode: import\n"
-          "\t\tsource = GENERATESERIES(0.05, 0.50, 0.01)\n")
+          "\t\tsource = GENERATESERIES(5, 50, 1)\n")
 
     # Tham số ngân sách (what-if thứ 2).
     write(MODEL_DIR / "definition" / "tables" / "NganSach.tmdl",
@@ -309,81 +374,20 @@ def write_model():
 
 
 # ---------------------------------------------------------------- report
-DISPLAY = {
-    "King Transactions": "Số giao dịch",
-    "King Median Price": "Giá trung vị",
-    "King OOF MAPE": "MAPE OOF",
-    "Candidates": "Ứng viên",
-    "Candidate Share": "Tỷ lệ ứng viên",
-    "Candidate Upside": "Chênh lệch (USD)",
-    "Candidate Median Price": "Giá trung vị",
-    "Candidate All3": "Đồng thuận 3 mô hình",
-    "Top20 Capital": "Vốn (USD)",
-    "Top20 Upside": "Chênh lệch (USD)",
-    "Top20 Median Discount": "Giảm (%)",
-    "Top20 All3": "Đồng thuận",
-    "Ames Properties": "Số tài sản",
-    "Ames Median Price": "Giá trung vị",
-    "Ames OOF MAPE": "MAPE OOF",
-    "Ames Candidates": "Ứng viên",
-    "Selected Threshold": "Ngưỡng",
-    "zip_top": "Mã ZIP",
-    "price_band": "Khúc giá",
-    "zipcode": "ZIP",
-    "price": "Giá bán",
-    "predicted_price": "Giá mô hình",
-    "upside_usd": "Chênh lệch",
-    "discount_pct": "Giảm (%)",
-    "sqft_living": "Diện tích (sqft)",
-    "grade": "Hạng chất lượng",
-    "condition": "Tình trạng",
-    "distance_to_center_km": "Cách trung tâm (km)",
-    "Hang": "Hạng",
-    "id": "ID",
-    "segment": "Khúc giá",
-    "mape_lr": "MAPE Linear",
-    "mape_xgb": "MAPE XGBoost",
-    "variant": "Kịch bản",
-    "overlap_20": "Trùng 20 căn",
-    "share_pct": "Tỷ lệ (%)",
-    "feature": "Biến",
-    "scenario": "Kịch bản",
-    "threshold_pct": "Ngưỡng (%)",
-    "candidates": "Số ứng viên",
-    "mape_increase_pp": "MAPE tăng (điểm %)",
-    "median_change_pct": "Thay đổi (%)",
-    "discount_flag": "Nhóm định giá",
-    "Vĩ độ": "Vĩ độ",
-    "Kinh độ": "Kinh độ",
-    "waterfront": "Giáp nước",
-    "view": "Hướng nhìn",
-    "is_renovated": "Đã cải tạo",
-    "bedrooms": "Phòng ngủ",
-    "house_age": "Tuổi nhà",
-    "undervalued_20pct": "Cờ định giá thấp",
-    "models_agree_undervalued": "Số mô hình đồng ý",
-    "Selected Budget": "Ngân sách",
-    "Budget Bought": "Căn mua được",
-    "Budget Capital": "Vốn sử dụng",
-    "Budget Upside": "Chênh lệch kỳ vọng",
-    "Budget Used": "% ngân sách đã dùng",
-    "Budget ROI": "ROI kỳ vọng",
-    "ChiSo": "Chỉ số",
-}
-
-
-def col(entity, prop, native=None):
+def col(entity, prop):
+    prop = COL_NAMES.get(prop, prop)
     return {"field": {"Column": {"Expression": {"SourceRef": {"Entity": entity}},
                                  "Property": prop}},
             "queryRef": f"{entity}.{prop}",
-            "nativeQueryRef": native or DISPLAY.get(prop, prop)}
+            "nativeQueryRef": prop}
 
 
-def meas(entity, prop, native=None):
+def meas(entity, prop):
+    prop = MEASURE_RENAME.get(prop, prop)
     return {"field": {"Measure": {"Expression": {"SourceRef": {"Entity": entity}},
                                   "Property": prop}},
             "queryRef": f"{entity}.{prop}",
-            "nativeQueryRef": native or DISPLAY.get(prop, prop)}
+            "nativeQueryRef": prop}
 
 
 def container(title=None):
@@ -454,7 +458,39 @@ def textbox(name, x, y, w, h, paragraphs):
     }
 
 
+def polish_chart(v):
+    """Theo theme: bỏ tiêu đề trục (thường là tên cột tiếng Anh), thu gọn nhãn
+    số và xếp thanh giảm dần để ZIP lớn nhất hiện trước."""
+    vis = v["visual"]
+    kind = vis["visualType"]
+    if kind not in ("barChart", "clusteredColumnChart"):
+        return
+    objects = vis.setdefault("objects", {})
+    for axis in ("categoryAxis", "valueAxis"):
+        objects.setdefault(axis, [{"properties": {
+            "showAxisTitle": {"expr": {"Literal": {"Value": "false"}}}}}])
+    if kind == "barChart":
+        objects.setdefault("labels", [{"properties": {
+            "show": {"expr": {"Literal": {"Value": "false"}}}}}])
+        y = vis["query"]["queryState"].get("Y")
+        if y:
+            vis["query"]["sortDefinition"] = {
+                "sort": [{"field": y["projections"][0]["field"],
+                          "direction": "Descending"}],
+                "isDefaultSort": False}
+    else:
+        objects.setdefault("labels", [{"properties": {
+            "labelDisplayUnits": {"expr": {"Literal": {"Value": "1D"}}}}}])
+    if "Series" not in vis["query"]["queryState"]:
+        objects.setdefault("legend", [{"properties": {
+            "show": {"expr": {"Literal": {"Value": "false"}}}}}])
+    else:
+        objects.setdefault("legend", [{"properties": {
+            "showTitle": {"expr": {"Literal": {"Value": "false"}}}}}])
+
+
 def add(page_dir, v):
+    polish_chart(v)
     write(page_dir / "visuals" / v["name"] / "visual.json",
           json.dumps(v, ensure_ascii=False, indent=2))
 
@@ -480,7 +516,6 @@ PAGES = [
     ("mo_hinh", "6. Mô hình và độ nhạy"),
     ("ban_do", "7. Bản đồ ứng viên"),
     ("yeu_to", "8. Yếu tố ảnh hưởng"),
-    ("phuong_phap", "9. Phương pháp và định nghĩa"),
 ]
 
 
@@ -588,7 +623,7 @@ def build_pages():
     bz = visual("b_zip", "barChart", 648, 132, 616, 260,
                 {"Category": [col("KingSales", "zipcode")],
                  "Y": [meas(KPI_TABLE, "King Transactions")]},
-                "Top 12 ZIP theo số giao dịch")
+                "Số giao dịch theo ZIP (giảm dần)")
     bz["visual"]["objects"]["labels"] = [{"properties": {
         "show": {"expr": {"Literal": {"Value": "false"}}}}}]
     add(p, bz)
@@ -602,24 +637,24 @@ def build_pages():
 
     # ---- Trang 2
     p = pages / "what_if"
+    # Slicer một giá trị (dropdown) thay cho thanh trượt 2 đầu: người dùng chỉ
+    # chọn đúng một ngưỡng, không còn đầu thứ hai gây nhầm lẫn.
     slicer = visual("s_nguong", "slicer", 16, 16, 300, 150,
                     {"Values": [col("Nguong", "Value")]},
-                    "Ngưỡng undervalued (kéo đầu trái, 5%–50%)")
+                    "Ngưỡng undervalued")
     slicer["visual"]["objects"] = {
         "data": [{"properties": {
-            "mode": {"expr": {"Literal": {"Value": "'Between'"}}},
-            "start": {"expr": {"Literal": {"Value": "0.20D"}}},
-            "end": {"expr": {"Literal": {"Value": "0.51D"}}},
-        }}],
+            "mode": {"expr": {"Literal": {"Value": "'Dropdown'"}}}}}],
+        "header": [{"properties": {
+            "show": {"expr": {"Literal": {"Value": "false"}}}}}],
         "general": [{"properties": {"filter": {"filter": {
             "Version": 2,
             "From": [{"Name": "n", "Entity": "Nguong", "Type": 0}],
-            "Where": [{"Condition": {"Between": {
-                "Expression": {"Column": {
+            "Where": [{"Condition": {"In": {
+                "Expressions": [{"Column": {
                     "Expression": {"SourceRef": {"Source": "n"}},
-                    "Property": "Value"}},
-                "LowerBound": {"Literal": {"Value": "0.20D"}},
-                "UpperBound": {"Literal": {"Value": "0.51D"}},
+                    "Property": "Value"}}],
+                "Values": [[{"Literal": {"Value": "20L"}}]],
             }}}],
         }}}}],
     }
@@ -649,22 +684,20 @@ def build_pages():
     p = pages / "ngan_sach"
     bud = visual("s_budget", "slicer", 16, 16, 372, 150,
                  {"Values": [col("NganSach", "Value")]},
-                 "Ngân sách mua (USD, kéo đầu phải)")
+                 "Ngân sách mua (USD)")
     bud["visual"]["objects"] = {
         "data": [{"properties": {
-            "mode": {"expr": {"Literal": {"Value": "'Between'"}}},
-            "start": {"expr": {"Literal": {"Value": "500000D"}}},
-            "end": {"expr": {"Literal": {"Value": "2000000D"}}},
-        }}],
+            "mode": {"expr": {"Literal": {"Value": "'Dropdown'"}}}}}],
+        "header": [{"properties": {
+            "show": {"expr": {"Literal": {"Value": "false"}}}}}],
         "general": [{"properties": {"filter": {"filter": {
             "Version": 2,
             "From": [{"Name": "b", "Entity": "NganSach", "Type": 0}],
-            "Where": [{"Condition": {"Between": {
-                "Expression": {"Column": {
+            "Where": [{"Condition": {"In": {
+                "Expressions": [{"Column": {
                     "Expression": {"SourceRef": {"Source": "b"}},
-                    "Property": "Value"}},
-                "LowerBound": {"Literal": {"Value": "500000D"}},
-                "UpperBound": {"Literal": {"Value": "2000000D"}},
+                    "Property": "Value"}}],
+                "Values": [[{"Literal": {"Value": "2000000D"}}]],
             }}}],
         }}}}],
     }
@@ -676,6 +709,8 @@ def build_pages():
     met["visual"]["objects"] = {
         "data": [{"properties": {
             "mode": {"expr": {"Literal": {"Value": "'Dropdown'"}}}}}],
+        "header": [{"properties": {
+            "show": {"expr": {"Literal": {"Value": "false"}}}}}],
     }
     add(p, met)
 
@@ -698,7 +733,7 @@ def build_pages():
          "(các giao dịch giảm sâu hơn cần xác minh thủ công).", 12, False, "#1B2A3A"),
         ("Mặc định 2.000.000 USD, ngưỡng 20%: mua được 8 căn, vốn 1.809.500 USD, "
          "chênh lệch kỳ vọng 1.758.645 USD, dùng 90,5% ngân sách.", 12, False, "#1B2A3A"),
-        ("Đổi ngân sách ở thanh trượt trên: số căn và vốn cập nhật ngay. ROI giảm dần khi "
+        ("Đổi ngân sách ở hộp chọn phía trên: số căn và vốn cập nhật ngay. ROI giảm dần khi "
          "mua nhiều vì danh sách phải lùi xuống các căn giảm ít hơn.", 12, False, "#1B2A3A"),
     ]))
     add(p, textbox("b_insight", 400, 490, 864, 214, [
@@ -777,19 +812,16 @@ def build_pages():
                   "Độ ổn định của danh sách 20 căn"))
 
     # ---- Trang 7: bản đồ
-    # Không dùng visual "map" vì nó phụ thuộc tùy chọn bảo mật "Use map and filled map
-    # visuals" (mặc định tắt) — tọa độ thật vẫn vẽ được bằng scatter nên chạy ở mọi máy.
+    # Azure Maps cần đăng nhập tài khoản Microsoft trong Power BI Desktop; sau khi
+    # đăng nhập sẽ có nền bản đồ thật, còn tọa độ vẫn lấy từ dữ liệu.
     p = pages / "ban_do"
-    mp = visual("map_cand", "scatterChart", 16, 16, 1248, 452,
-                {"X": [meas(KPI_TABLE, "Kinh độ")],
-                 "Y": [meas(KPI_TABLE, "Vĩ độ")],
-                 "Size": [meas(KPI_TABLE, "Candidates")],
+    mp = visual("map_cand", "azureMap", 16, 16, 1248, 452,
+                {"Latitude": [meas(KPI_TABLE, "Vĩ độ")],
+                 "Longitude": [meas(KPI_TABLE, "Kinh độ")],
                  "Category": [col("KingSales", "zipcode")],
+                 "Size": [meas(KPI_TABLE, "Candidates")],
                  "Tooltips": [meas(KPI_TABLE, "Candidate Median Price")]},
                 "Ứng viên theo vị trí (mỗi điểm = 1 ZIP, kích thước = số ứng viên)")
-    mp["visual"]["objects"] = {
-        name: [{"properties": {"show": {"expr": {"Literal": {"Value": "false"}}}}}]
-        for name in ("xAxis", "yAxis", "categoryAxis", "valueAxis", "legend")}
     add(p, mp)
     add(p, textbox("map_note", 16, 480, 1248, 224, [
         ("Đọc bản đồ", 15, True, "#12324F"),
@@ -808,12 +840,23 @@ def build_pages():
     # (Key Influencers là visual đóng gói riêng, PBIP không có resource .pbiviz nên
     #  dùng tỷ lệ ứng viên theo phân khúc — cùng nội dung, tự tính, chạy mọi máy.)
     p = pages / "yeu_to"
-    add(p, visual("dtree", "decompositionTreeVisual", 16, 16, 616, 688,
+    tree = visual("dtree", "decompositionTreeVisual", 16, 16, 616, 560,
                   {"Analyze": [meas(KPI_TABLE, "Candidates")],
                    "ExplainBy": [dict(col("KingSales", f), active=True) for f in
                                  ("zip_top", "price_band", "grade", "waterfront",
                                   "view", "condition", "is_renovated", "sqft_living")]},
-                  "Phân rã số ứng viên theo thuộc tính"))
+                  "Ứng viên theo Mã ZIP và thuộc tính")
+    tree["visual"]["query"]["sortDefinition"] = {
+        "sort": [{"field": meas(KPI_TABLE, "Candidates")["field"],
+                  "direction": "Descending"}],
+        "isDefaultSort": False}
+    add(p, tree)
+    add(p, textbox("tree_note", 16, 584, 616, 120, [
+        ("Cách đọc cây", 13, True, "#12324F"),
+        ("Cấp 1 là Mã ZIP: 12 ZIP nhiều giao dịch nhất và nhóm “Khác” (58 ZIP còn lại). "
+         "Bấm dấu + dưới một ZIP rồi chọn thuộc tính (khúc giá, hạng chất lượng, hướng nhìn, "
+         "tình trạng…) để tách tiếp và xem thuộc tính nào đóng góp nhiều ứng viên nhất.", 11, False, "#1B2A3A"),
+    ]))
     add(p, visual("yt_grade", "barChart", 648, 16, 616, 330,
                   {"Category": [col("KingSales", "grade")],
                    "Y": [meas(KPI_TABLE, "Candidate Share")]},
@@ -822,47 +865,6 @@ def build_pages():
                   {"Category": [col("KingSales", "view")],
                    "Y": [meas(KPI_TABLE, "Candidate Share")]},
                   "Tỷ lệ ứng viên theo hướng nhìn (%)"))
-
-    # ---- Trang 9: phương pháp
-    p = pages / "phuong_phap"
-    add(p, textbox("pp_quy_trinh", 16, 16, 616, 372, [
-        ("Quy trình", 16, True, "#12324F"),
-        ("1. Dữ liệu: King County house sales 2014–2015, 21.612 giao dịch; Ames 2.930 tài sản "
-         "(chỉ dùng để kiểm chứng).", 12.5, False, "#1B2A3A"),
-        ("2. Phạm vi ứng viên: is_latest_sale = 1, zero_room_flag = 0, condition ≥ 3 "
-         "→ 21.229 giao dịch.", 12.5, False, "#1B2A3A"),
-        ("3. Đặc trưng: diện tích, hạng chất lượng, tình trạng, tuổi nhà, số phòng, hướng nhìn, "
-         "giáp nước, khoảng cách trung tâm, ZIP.", 12.5, False, "#1B2A3A"),
-        ("4. Mô hình: Linear Regression, Random Forest, XGBoost (tuned) trên log giá; "
-         "GroupKFold 5 theo id để tránh rò rỉ khi cùng một căn được bán nhiều lần.", 12.5, False, "#1B2A3A"),
-        ("5. Chấm điểm: dự báo out-of-fold cho từng giao dịch — mỗi căn chỉ được dự báo bởi mô hình "
-         "không thấy căn đó khi huấn luyện.", 12.5, False, "#1B2A3A"),
-        ("6. Xếp hạng: residual_pct ≤ −ngưỡng là ứng viên; ưu tiên căn cả 3 mô hình đồng ý, "
-         "xếp theo mức giảm thận trọng nhất.", 12.5, False, "#1B2A3A"),
-    ]))
-    add(p, textbox("pp_dinh_nghia", 648, 16, 616, 372, [
-        ("Định nghĩa", 16, True, "#12324F"),
-        ("residual_pct = (giá bán − giá mô hình) / giá mô hình. Giá trị âm nghĩa là bán dưới "
-         "giá mô hình dự báo.", 12.5, False, "#1B2A3A"),
-        ("Ứng viên = residual_pct ≤ −ngưỡng, tính trong phạm vi 21.229 giao dịch nêu trên.", 12.5, False, "#1B2A3A"),
-        ("upside_usd = giá mô hình − giá bán: chênh lệch kỳ vọng tính bằng USD.", 12.5, False, "#1B2A3A"),
-        ("discount_pct = mức giảm theo mô hình bảo thủ nhất trong 3 mô hình (%).", 12.5, False, "#1B2A3A"),
-        ("Đồng thuận = cả 3 mô hình cùng gắn cờ định giá thấp tại ngưỡng đang chọn.", 12.5, False, "#1B2A3A"),
-        ("Top 20 = 20 căn giảm sâu nhất theo discount_pct; 36 giao dịch giảm trên 50% bị loại "
-         "sang danh sách cần xác minh thủ công.", 12.5, False, "#1B2A3A"),
-        ("Ngưỡng = tham số What-if, thanh trượt 5%–50% bước 1%; mặc định 20%.", 12.5, False, "#1B2A3A"),
-    ]))
-    add(p, textbox("pp_kiem_chung", 16, 396, 1248, 308, [
-        ("Đo lường và giới hạn", 16, True, "#12324F"),
-        ("Chất lượng mô hình (tập test): XGBoost King County MAPE 11,20% · RMSE 106.477 USD · R² 0,918; "
-         "out-of-fold MAPE 10,94%. Ames MAPE 7,49% · R² 0,935; out-of-fold 7,90%.", 12.5, False, "#1B2A3A"),
-        ("Độ nhạy của ngưỡng: 5% → 6.248 căn (29,4%); 10% → 3.672 (17,3%); 15% → 2.132 (10,0%); "
-         "20% → 1.193 (5,6%); 25% → 677 (3,2%); 30% → 411 (1,9%); 35% → 209 (1,0%); 40% → 106 (0,5%).", 12.5, False, "#1B2A3A"),
-        ("Giới hạn: (1) “định giá thấp” chỉ là proxy theo sai số mô hình khoảng 11%, không chứng minh "
-         "chủ nhà định giá sai; (2) dữ liệu 2014–2015, không phải giá thị trường hiện tại; "
-         "(3) chưa có thông tin pháp lý, hiện trạng và quy hoạch; (4) 36 giao dịch giảm trên 50% "
-         "phải xác minh thủ công trước khi dùng.", 12.5, False, "#1B2A3A"),
-    ]))
 
 
 KIND_LABEL = {
@@ -911,7 +913,7 @@ def decorate_visuals(pages):
 
 BOOKMARKS = [
     ("che_do_nha_dau_tu", "Chế độ nhà đầu tư: ngân sách và danh mục", "ngan_sach"),
-    ("che_do_hoc_thuat", "Chế độ học thuật: mô hình và phương pháp", "phuong_phap"),
+    ("che_do_hoc_thuat", "Chế độ học thuật: mô hình và độ nhạy", "mo_hinh"),
 ]
 
 

@@ -178,7 +178,7 @@ for head, body in sections:
         })
         add_table(df, "Bảng 6.1. Kết quả tham số What-if theo ngưỡng")
         add_picture("whatif_curve.png", "Hình 6.2. Số ứng viên và tỷ lệ theo ngưỡng.")
-        add_picture("dashboard_page2.png", "Hình 6.3. Trang What-if với thanh trượt ngưỡng 5%–50%.")
+        add_picture("dashboard_page2.png", "Hình 6.3. Trang What-if với hộp chọn ngưỡng 5%–50%.")
         add_picture("dashboard_page3.png",
                     "Hình 6.4. Trang Ngân sách: what-if thứ hai, ngân sách 2.000.000 USD mua được "
                     "8 căn (dùng 90,5% ngân sách, ROI kỳ vọng 97,2%).")

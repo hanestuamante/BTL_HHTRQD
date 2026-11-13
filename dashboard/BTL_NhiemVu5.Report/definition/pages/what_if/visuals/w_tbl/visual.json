@@ -23,10 +23,10 @@
                       "Entity": "KingSales"
                     }
                   },
-                  "Property": "zip_top"
+                  "Property": "Mã ZIP"
                 }
               },
-              "queryRef": "KingSales.zip_top",
+              "queryRef": "KingSales.Mã ZIP",
               "nativeQueryRef": "Mã ZIP"
             },
             {
@@ -37,11 +37,11 @@
                       "Entity": "KPI"
                     }
                   },
-                  "Property": "Candidates"
+                  "Property": "Số ứng viên"
                 }
               },
-              "queryRef": "KPI.Candidates",
-              "nativeQueryRef": "Ứng viên"
+              "queryRef": "KPI.Số ứng viên",
+              "nativeQueryRef": "Số ứng viên"
             },
             {
               "field": {
@@ -51,10 +51,10 @@
                       "Entity": "KPI"
                     }
                   },
-                  "Property": "Candidate Share"
+                  "Property": "Tỷ lệ ứng viên"
                 }
               },
-              "queryRef": "KPI.Candidate Share",
+              "queryRef": "KPI.Tỷ lệ ứng viên",
               "nativeQueryRef": "Tỷ lệ ứng viên"
             },
             {
@@ -65,11 +65,11 @@
                       "Entity": "KPI"
                     }
                   },
-                  "Property": "Candidate Upside"
+                  "Property": "Chênh lệch ứng viên (USD)"
                 }
               },
-              "queryRef": "KPI.Candidate Upside",
-              "nativeQueryRef": "Chênh lệch (USD)"
+              "queryRef": "KPI.Chênh lệch ứng viên (USD)",
+              "nativeQueryRef": "Chênh lệch ứng viên (USD)"
             },
             {
               "field": {
@@ -79,10 +79,10 @@
                       "Entity": "KPI"
                     }
                   },
-                  "Property": "Candidate All3"
+                  "Property": "Đồng thuận 3 mô hình"
                 }
               },
-              "queryRef": "KPI.Candidate All3",
+              "queryRef": "KPI.Đồng thuận 3 mô hình",
               "nativeQueryRef": "Đồng thuận 3 mô hình"
             }
           ]

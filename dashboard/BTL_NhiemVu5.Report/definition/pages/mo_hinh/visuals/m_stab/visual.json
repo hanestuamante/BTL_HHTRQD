@@ -23,10 +23,10 @@
                       "Entity": "Stability"
                     }
                   },
-                  "Property": "variant"
+                  "Property": "Kịch bản"
                 }
               },
-              "queryRef": "Stability.variant",
+              "queryRef": "Stability.Kịch bản",
               "nativeQueryRef": "Kịch bản"
             },
             {
@@ -37,10 +37,10 @@
                       "Entity": "Stability"
                     }
                   },
-                  "Property": "overlap_20"
+                  "Property": "Trùng 20 căn"
                 }
               },
-              "queryRef": "Stability.overlap_20",
+              "queryRef": "Stability.Trùng 20 căn",
               "nativeQueryRef": "Trùng 20 căn"
             },
             {
@@ -51,10 +51,10 @@
                       "Entity": "Stability"
                     }
                   },
-                  "Property": "share_pct"
+                  "Property": "Tỷ lệ (%)"
                 }
               },
-              "queryRef": "Stability.share_pct",
+              "queryRef": "Stability.Tỷ lệ (%)",
               "nativeQueryRef": "Tỷ lệ (%)"
             }
           ]

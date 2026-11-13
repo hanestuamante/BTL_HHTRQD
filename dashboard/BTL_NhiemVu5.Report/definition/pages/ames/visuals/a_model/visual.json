@@ -23,11 +23,11 @@
                       "Entity": "ModelCompare"
                     }
                   },
-                  "Property": "model"
+                  "Property": "Mô hình"
                 }
               },
-              "queryRef": "ModelCompare.model",
-              "nativeQueryRef": "model"
+              "queryRef": "ModelCompare.Mô hình",
+              "nativeQueryRef": "Mô hình"
             }
           ]
         },
@@ -41,11 +41,11 @@
                       "Entity": "ModelCompare"
                     }
                   },
-                  "Property": "market"
+                  "Property": "Thị trường"
                 }
               },
-              "queryRef": "ModelCompare.market",
-              "nativeQueryRef": "market"
+              "queryRef": "ModelCompare.Thị trường",
+              "nativeQueryRef": "Thị trường"
             }
           ]
         },
@@ -59,11 +59,11 @@
                       "Entity": "KPI"
                     }
                   },
-                  "Property": "Model MAPE"
+                  "Property": "MAPE (%)"
                 }
               },
-              "queryRef": "KPI.Model MAPE",
-              "nativeQueryRef": "Model MAPE"
+              "queryRef": "KPI.MAPE (%)",
+              "nativeQueryRef": "MAPE (%)"
             }
           ]
         }
@@ -243,6 +243,59 @@
         }
       ]
     },
-    "objects": {}
+    "objects": {
+      "categoryAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "valueAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "labels": [
+        {
+          "properties": {
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "legend": [
+        {
+          "properties": {
+            "showTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
   }
 }

@@ -23,10 +23,10 @@
                       "Entity": "KPI"
                     }
                   },
-                  "Property": "Candidate Share"
+                  "Property": "Tỷ lệ ứng viên"
                 }
               },
-              "queryRef": "KPI.Candidate Share",
+              "queryRef": "KPI.Tỷ lệ ứng viên",
               "nativeQueryRef": "Tỷ lệ ứng viên"
             }
           ]

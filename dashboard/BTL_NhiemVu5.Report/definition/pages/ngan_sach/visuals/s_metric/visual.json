@@ -23,10 +23,10 @@
                       "Entity": "ChonChiSo"
                     }
                   },
-                  "Property": "ChiSo"
+                  "Property": "Chỉ số"
                 }
               },
-              "queryRef": "ChonChiSo.ChiSo",
+              "queryRef": "ChonChiSo.Chỉ số",
               "nativeQueryRef": "Chỉ số"
             }
           ]
@@ -215,6 +215,19 @@
               "expr": {
                 "Literal": {
                   "Value": "'Dropdown'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "header": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

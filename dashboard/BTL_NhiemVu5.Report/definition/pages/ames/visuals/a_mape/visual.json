@@ -27,7 +27,7 @@
                 }
               },
               "queryRef": "KPI.Ames OOF MAPE",
-              "nativeQueryRef": "MAPE OOF"
+              "nativeQueryRef": "Ames OOF MAPE"
             }
           ]
         }

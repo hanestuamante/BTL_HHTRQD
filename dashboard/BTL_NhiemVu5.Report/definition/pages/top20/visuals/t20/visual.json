@@ -23,10 +23,10 @@
                       "Entity": "Top20"
                     }
                   },
-                  "Property": "Hang"
+                  "Property": "Hạng"
                 }
               },
-              "queryRef": "Top20.Hang",
+              "queryRef": "Top20.Hạng",
               "nativeQueryRef": "Hạng"
             },
             {
@@ -37,11 +37,11 @@
                       "Entity": "Top20"
                     }
                   },
-                  "Property": "id"
+                  "Property": "Mã căn"
                 }
               },
-              "queryRef": "Top20.id",
-              "nativeQueryRef": "ID"
+              "queryRef": "Top20.Mã căn",
+              "nativeQueryRef": "Mã căn"
             },
             {
               "field": {
@@ -51,10 +51,10 @@
                       "Entity": "Top20"
                     }
                   },
-                  "Property": "zipcode"
+                  "Property": "ZIP"
                 }
               },
-              "queryRef": "Top20.zipcode",
+              "queryRef": "Top20.ZIP",
               "nativeQueryRef": "ZIP"
             },
             {
@@ -65,10 +65,10 @@
                       "Entity": "Top20"
                     }
                   },
-                  "Property": "price"
+                  "Property": "Giá bán"
                 }
               },
-              "queryRef": "Top20.price",
+              "queryRef": "Top20.Giá bán",
               "nativeQueryRef": "Giá bán"
             },
             {
@@ -79,10 +79,10 @@
                       "Entity": "Top20"
                     }
                   },
-                  "Property": "predicted_price"
+                  "Property": "Giá mô hình"
                 }
               },
-              "queryRef": "Top20.predicted_price",
+              "queryRef": "Top20.Giá mô hình",
               "nativeQueryRef": "Giá mô hình"
             },
             {
@@ -93,11 +93,11 @@
                       "Entity": "Top20"
                     }
                   },
-                  "Property": "upside_usd"
+                  "Property": "Chênh lệch (USD)"
                 }
               },
-              "queryRef": "Top20.upside_usd",
-              "nativeQueryRef": "Chênh lệch"
+              "queryRef": "Top20.Chênh lệch (USD)",
+              "nativeQueryRef": "Chênh lệch (USD)"
             },
             {
               "field": {
@@ -107,11 +107,11 @@
                       "Entity": "Top20"
                     }
                   },
-                  "Property": "discount_pct"
+                  "Property": "Mức giảm (%)"
                 }
               },
-              "queryRef": "Top20.discount_pct",
-              "nativeQueryRef": "Giảm (%)"
+              "queryRef": "Top20.Mức giảm (%)",
+              "nativeQueryRef": "Mức giảm (%)"
             },
             {
               "field": {
@@ -121,10 +121,10 @@
                       "Entity": "Top20"
                     }
                   },
-                  "Property": "sqft_living"
+                  "Property": "Diện tích (sqft)"
                 }
               },
-              "queryRef": "Top20.sqft_living",
+              "queryRef": "Top20.Diện tích (sqft)",
               "nativeQueryRef": "Diện tích (sqft)"
             },
             {
@@ -135,10 +135,10 @@
                       "Entity": "Top20"
                     }
                   },
-                  "Property": "grade"
+                  "Property": "Hạng chất lượng"
                 }
               },
-              "queryRef": "Top20.grade",
+              "queryRef": "Top20.Hạng chất lượng",
               "nativeQueryRef": "Hạng chất lượng"
             },
             {
@@ -149,10 +149,10 @@
                       "Entity": "Top20"
                     }
                   },
-                  "Property": "condition"
+                  "Property": "Tình trạng"
                 }
               },
-              "queryRef": "Top20.condition",
+              "queryRef": "Top20.Tình trạng",
               "nativeQueryRef": "Tình trạng"
             },
             {
@@ -163,10 +163,10 @@
                       "Entity": "Top20"
                     }
                   },
-                  "Property": "distance_to_center_km"
+                  "Property": "Cách trung tâm (km)"
                 }
               },
-              "queryRef": "Top20.distance_to_center_km",
+              "queryRef": "Top20.Cách trung tâm (km)",
               "nativeQueryRef": "Cách trung tâm (km)"
             }
           ]

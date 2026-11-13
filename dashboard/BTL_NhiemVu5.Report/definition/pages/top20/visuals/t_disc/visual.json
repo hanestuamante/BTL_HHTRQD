@@ -23,11 +23,11 @@
                       "Entity": "KPI"
                     }
                   },
-                  "Property": "Top20 Median Discount"
+                  "Property": "Mức giảm trung vị (%)"
                 }
               },
-              "queryRef": "KPI.Top20 Median Discount",
-              "nativeQueryRef": "Giảm (%)"
+              "queryRef": "KPI.Mức giảm trung vị (%)",
+              "nativeQueryRef": "Mức giảm trung vị (%)"
             }
           ]
         }

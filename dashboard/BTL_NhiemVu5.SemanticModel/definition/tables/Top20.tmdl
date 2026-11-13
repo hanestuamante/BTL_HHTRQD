@@ -1,123 +1,123 @@
 table Top20
-	lineageTag: a9c34311-9f91-43a6-aebe-fa3ebfb56e1e
+	lineageTag: a03074ec-395d-48a7-bf0b-fcbbe6d7e11f
 
-	column Hang
+	column 'Hạng'
 		dataType: int64
 		summarizeBy: none
 		isHidden
 		sourceColumn: Hang
-		lineageTag: e51d199b-db4a-471f-b438-b7f48697d8e1
-	column id
+		lineageTag: 000aa80e-fbd2-48cf-8184-ead729b664e8
+	column 'Mã căn'
 		dataType: string
 		sourceColumn: id
-		lineageTag: 9ed1019f-2baf-46e7-b0da-58ca12ace4ca
-	column date
+		lineageTag: 44030028-b421-4830-afdc-b8dc775b2ee5
+	column 'date'
 		dataType: dateTime
 		sourceColumn: date
-		lineageTag: 9c41acc0-208c-4ad0-9ba9-169335a46868
-	column zipcode
+		lineageTag: 62981b3a-4576-410d-9842-149e93008738
+	column 'ZIP'
 		dataType: string
 		sourceColumn: zipcode
-		lineageTag: 8c8fd313-48d8-47a4-9900-3b81dfdb356a
-	column price
+		lineageTag: 1ed80da9-3090-4f71-875b-1c9be5684edb
+	column 'Giá bán'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: price
-		lineageTag: 16d78f41-0482-44f8-82bd-fa226bd9c42f
-	column predicted_price
+		lineageTag: a76fe937-9847-4a0c-8f89-4300ed8991be
+	column 'Giá mô hình'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: predicted_price
-		lineageTag: b6eceb99-7d30-473c-a9d3-43769d4c13de
-	column upside_usd
+		lineageTag: 408312d9-35a1-4f96-8272-b4456f72e2a4
+	column 'Chênh lệch (USD)'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: upside_usd
-		lineageTag: 5e1e1c1a-4efa-4758-a90f-169e08c44663
-	column discount_pct
+		lineageTag: dc0ed757-5445-4586-b099-e9c7232625dc
+	column 'Mức giảm (%)'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: discount_pct
-		lineageTag: 86a86d3a-2958-4eb7-9066-2ed5c2e49a6f
-	column discount_conservative_pct
+		lineageTag: 860c04f2-0756-4f17-a529-f305620a55a9
+	column 'discount_conservative_pct'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: discount_conservative_pct
-		lineageTag: d387cf16-2860-4de1-875f-973be507ff12
-	column residual
+		lineageTag: 300d9c35-2dcd-490e-ab83-9d9c13e8bdc8
+	column 'residual'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: residual
-		lineageTag: 53781e63-f45e-4f38-9e40-ccf88ddb7837
-	column models_agree_undervalued
+		lineageTag: 5a34ffe9-1ba1-41df-8b54-1a7eba0a3fb0
+	column 'Số mô hình đồng ý'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: models_agree_undervalued
-		lineageTag: 4eb559a5-78fd-4c5c-8111-d7985bcf638b
-	column sqft_living
+		lineageTag: e4bd5058-2457-4372-bcbc-5e558f7d01d8
+	column 'Diện tích (sqft)'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: sqft_living
-		lineageTag: a04cb48a-e2af-48f4-bb29-83ab4ffba80a
-	column bedrooms
+		lineageTag: db6ac131-3d93-4ec4-a1bf-be692754194a
+	column 'Phòng ngủ'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: bedrooms
-		lineageTag: 24b5009e-175a-42ac-91d8-ce06bca51475
-	column bathrooms
+		lineageTag: c14c1a1a-f56b-4a71-a9bf-82db1b939d01
+	column 'bathrooms'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: bathrooms
-		lineageTag: af3b2b68-333a-42cf-9d7a-95182fb0d421
-	column grade
+		lineageTag: 42a79b5b-6b63-4d0c-aa0c-e3d8d8196b96
+	column 'Hạng chất lượng'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: grade
-		lineageTag: 5d8d236b-3972-4a64-9242-63414d234b01
-	column condition
+		lineageTag: a5af2f4d-d7a8-4415-8dc8-5b59575600f4
+	column 'Tình trạng'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: condition
-		lineageTag: 2875c2e4-3d9a-40ff-aa15-a5f9c51bc602
-	column view
+		lineageTag: 359e9ed0-d593-416f-9a53-ab88e418412c
+	column 'Hướng nhìn'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: view
-		lineageTag: 9a76fead-84e1-40ad-b999-fe4ca4fd9255
-	column waterfront
+		lineageTag: 7567c3f8-4986-46da-bf52-3b7f874fc331
+	column 'Giáp nước'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: waterfront
-		lineageTag: fb5c5c19-881a-4556-ab8e-ca2385f7b87d
-	column house_age
+		lineageTag: e51ffb69-0026-4ae5-bcd6-f11c36eac1bf
+	column 'Tuổi nhà'
 		dataType: int64
 		summarizeBy: sum
 		sourceColumn: house_age
-		lineageTag: 54f26bfb-9e3c-4cfe-bc60-06e0f561b7ee
-	column distance_to_center_km
+		lineageTag: bad320ec-2c95-494f-a7b0-0da2cf429c36
+	column 'Cách trung tâm (km)'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: distance_to_center_km
-		lineageTag: 212dd8ce-ca5f-4fbe-b9b5-78138bc44d9b
-	column lat
+		lineageTag: 42d3d1f2-4ba5-4318-8931-b46afc6734a1
+	column 'Vĩ độ'
 		dataType: double
 		summarizeBy: none
 		sourceColumn: lat
-		lineageTag: 530b6d3e-2fd8-4d60-9527-afe15f8daf0e
-	column long
+		lineageTag: 2a3eae19-2215-4e85-a89f-0ea58de9ae48
+	column 'Kinh độ'
 		dataType: double
 		summarizeBy: none
 		sourceColumn: long
-		lineageTag: 975c95d6-fa34-475f-9189-fc6c84b7a834
-	column cumulative_cost_usd
+		lineageTag: 2d1b96a9-5b0a-4506-88da-e0e0d94d59b6
+	column 'cumulative_cost_usd'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: cumulative_cost_usd
-		lineageTag: 155a031b-6c83-4661-8078-3ca3c055538d
-	column price_band
+		lineageTag: 5576bda4-0d1d-4134-a0d8-d148fc2790de
+	column 'Khúc giá'
 		dataType: string
 		sourceColumn: price_band
-		lineageTag: 0c18abc3-6349-48f7-8dc4-cf6b39592dbb
+		lineageTag: 6698ba96-fddd-46e1-b59f-4f5626c2bf16
 
 	partition Top20 = m
 		mode: import

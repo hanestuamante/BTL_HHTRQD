@@ -23,10 +23,10 @@
                       "Entity": "KingSales"
                     }
                   },
-                  "Property": "zipcode"
+                  "Property": "ZIP"
                 }
               },
-              "queryRef": "KingSales.zipcode",
+              "queryRef": "KingSales.ZIP",
               "nativeQueryRef": "ZIP"
             }
           ]
@@ -41,18 +41,32 @@
                       "Entity": "KPI"
                     }
                   },
-                  "Property": "King Transactions"
+                  "Property": "Số giao dịch"
                 }
               },
-              "queryRef": "KPI.King Transactions",
+              "queryRef": "KPI.Số giao dịch",
               "nativeQueryRef": "Số giao dịch"
             }
           ]
         }
       },
       "sortDefinition": {
-        "sort": [],
-        "isDefaultSort": true
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "KPI"
+                  }
+                },
+                "Property": "Số giao dịch"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": false
       }
     },
     "drillFilterOtherVisuals": true,
@@ -172,7 +186,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Top 12 ZIP theo số giao dịch'"
+                  "Value": "'Số giao dịch theo ZIP (giảm dần)'"
                 }
               }
             },
@@ -217,7 +231,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Biểu đồ thanh: Top 12 ZIP theo số giao dịch'"
+                  "Value": "'Biểu đồ thanh: Số giao dịch theo ZIP (giảm dần)'"
                 }
               }
             }
@@ -227,6 +241,45 @@
     },
     "objects": {
       "labels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "valueAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "legend": [
         {
           "properties": {
             "show": {

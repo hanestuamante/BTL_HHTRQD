@@ -1,30 +1,30 @@
 table WhatIfScenarios
-	lineageTag: a67368da-4d1b-4ce6-afbf-2a73597c0994
+	lineageTag: 2b00699e-d5b9-46da-8535-a4383fe6642e
 
-	column scenario
+	column 'Kịch bản'
 		dataType: string
 		sourceColumn: scenario
-		lineageTag: 275b8fa6-ad28-46c9-917d-88629d0dcd7d
-	column median_change_pct
+		lineageTag: 485f9414-12b7-44ea-bbf7-4079e36b5589
+	column 'Thay đổi (%)'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: median_change_pct
-		lineageTag: 7936f576-f526-44ce-b039-9495c6ea4f6e
-	column mean_change_pct
+		lineageTag: 1785b2e3-2074-4c3a-b05a-10683a07bad5
+	column 'mean_change_pct'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: mean_change_pct
-		lineageTag: 8a3dd229-21ce-4333-90b8-c4a6827530b4
-	column p10
+		lineageTag: 4cc7fc56-56f9-49d3-8701-80f85df207e9
+	column 'p10'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: p10
-		lineageTag: 3a5ef83c-0e86-4287-93c1-d30adf2308e0
-	column p90
+		lineageTag: 78d11c99-fd2a-4a04-a1b8-044a2bd8eeab
+	column 'p90'
 		dataType: double
 		summarizeBy: sum
 		sourceColumn: p90
-		lineageTag: 99575f03-5946-4f59-95f6-4e8371a7333f
+		lineageTag: a146fa4c-1f4f-4eea-ab4d-1f81e8aa7fd0
 
 	partition WhatIfScenarios = m
 		mode: import

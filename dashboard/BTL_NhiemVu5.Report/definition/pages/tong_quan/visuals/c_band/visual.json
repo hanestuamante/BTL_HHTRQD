@@ -23,10 +23,10 @@
                       "Entity": "KingSales"
                     }
                   },
-                  "Property": "price_band"
+                  "Property": "Khúc giá"
                 }
               },
-              "queryRef": "KingSales.price_band",
+              "queryRef": "KingSales.Khúc giá",
               "nativeQueryRef": "Khúc giá"
             }
           ]
@@ -41,10 +41,10 @@
                       "Entity": "KPI"
                     }
                   },
-                  "Property": "King Transactions"
+                  "Property": "Số giao dịch"
                 }
               },
-              "queryRef": "KPI.King Transactions",
+              "queryRef": "KPI.Số giao dịch",
               "nativeQueryRef": "Số giao dịch"
             }
           ]
@@ -225,6 +225,59 @@
         }
       ]
     },
-    "objects": {}
+    "objects": {
+      "categoryAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "valueAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "labels": [
+        {
+          "properties": {
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "legend": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
   }
 }
