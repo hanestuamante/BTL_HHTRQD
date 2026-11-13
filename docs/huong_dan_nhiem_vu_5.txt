@@ -2,6 +2,7 @@ NHIỆM VỤ 5  DASHBOARD POWER BI VÀ PHẦN 6 KẾT QUẢ
 
 SẢN PHẨM
 dashboard/BTL_NhiemVu5.pbip              Project Power BI (mở bằng Power BI Desktop).
+dashboard/BTL_NhiemVu5.pdf                Bản PDF 6 trang của dashboard (gửi/nộp nhanh).
 dashboard/BTL_NhiemVu5.SemanticModel/    Model TMDL + measure DAX.
 dashboard/BTL_NhiemVu5.Report/           Ảnh báo cáo PBIR (6 trang, 2 hộp chọn What-if).
 dashboard/data/                          CSV nguồn cho dashboard (sinh từ output Nhiệm vụ 4).
@@ -14,6 +15,16 @@ MỞ DASHBOARD
 2. Model đã có cache dữ liệu; nếu trang trống, vào Home > Làm mới (Refresh) một lần.
 3. File > Save as > chọn .pbix nếu cần nộp kèm bản nhị phân:
    dashboard/BTL_NhiemVu5_Dashboard.pbix
+
+CHIA SẺ
+- Cách gọn nhất: File > Save as > .pbix rồi gửi đúng một file đó. Dữ liệu đã nhúng trong
+  model Import nên người nhận chỉ cần Power BI Desktop (bản miễn phí) là mở được, không cần CSV.
+- Người không cài Power BI: gửi dashboard/BTL_NhiemVu5.pdf (File > Export > PDF để xuất lại),
+  hoặc reports/Bao_cao_Nhiem_vu_5.docx.
+- Nếu gửi bản source PBIP: gửi nguyên thư mục dashboard/ (gồm .pbip, .Report, .SemanticModel,
+  data/); máy mới phải sửa DataFolder ở Transform data > Manage parameters rồi Refresh.
+- Nếu có tài khoản Power BI: Publish lên workspace rồi Share link; model là Import nên
+  không cần gateway. Bản Desktop và bản trên web dùng cùng một file .pbip/.pbix.
 
 6 TRANG
 1. Tổng quan King County: 21.612 giao dịch, giá trung vị 450.000 USD, MAPE OOF 10,7%,
@@ -48,7 +59,8 @@ THAM SỐ WHAT-IF
   chỉ có ở trang 2; nhãn không đổi theo hộp chọn (đã chọn cách ghi rõ thay vì đồng bộ slicer).
 
 ĐIỀU HƯỚNG VÀ TRỢ NĂNG
-- Trang 1 có dải điều hướng trang (page navigator) tự liệt kê cả 6 trang.
+- Trang 1 có dải điều hướng trang (page navigator) tự liệt kê cả 6 trang. Trong Power BI Desktop
+  ở chế độ chỉnh sửa phải Ctrl+click (hoặc View > Reading view); bản PDF là ảnh tĩnh nên không bấm được.
 - Bookmark "Chế độ nhà đầu tư: ngân sách và danh mục" mở trang 3; bookmark
   "Chế độ học thuật: mô hình và độ nhạy" mở trang 6 (menu View > Bookmarks).
 - Mọi visual có alt text và thứ tự tab theo thứ tự đọc (trên xuống, trái sang phải).
