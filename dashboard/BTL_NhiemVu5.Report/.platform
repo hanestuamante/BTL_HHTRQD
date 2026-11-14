@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "BTL_NhiemVu5"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "98f08369-fb07-4467-b3f5-d8bd52ab10d9"
+  }
+}

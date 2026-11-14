@@ -1,0 +1,14 @@
+{
+  "source": "outputs/task4/tables + ames_clean.csv",
+  "king_rows": 21612,
+  "ames_rows": 2930,
+  "king_pool_rows": 21229,
+  "ames_oof_mape_pct": 7.9,
+  "ames_undervalued_20pct": 91,
+  "threshold_pct": 20,
+  "king_candidates_20pct": 1193,
+  "king_share_20pct": 5.62,
+  "definition": "residual_pct = price / predicted_price - 1 (OOF); undervalued khi residual_pct <= -nguong",
+  "king_scope": "is_latest_sale=1, zero_room_flag=0, condition>=3 (giống nhiệm vụ 4)",
+  "ames_scope": "toàn bộ 2.930 tài sản; chỉ kiểm chứng, không dùng chọn 20 căn"
+}

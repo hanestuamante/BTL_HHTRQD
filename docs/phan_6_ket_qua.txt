@@ -1,0 +1,58 @@
+PHẦN 6. KẾT QUẢ
+
+6.1. Mục tiêu và phạm vi
+Phần 6 trình bày kết quả của dashboard Power BI được thiết kế cho bài toán định giá bất động sản tự động (Chủ đề 14). Dashboard kế thừa dữ liệu sạch của Nhiệm vụ 2, kết quả EDA của Nhiệm vụ 3 và mô hình dự báo của Nhiệm vụ 4. Toàn bộ số liệu trên dashboard lấy từ dự báo out-of-fold (OOF) của mô hình XGBoost trên King County: mỗi giao dịch được định giá bởi mô hình chưa từng thấy tài sản đó, nên residual phản ánh sai số ngoài mẫu chứ không phải sai số huấn luyện.
+
+Dashboard gồm 6 trang: (1) Tổng quan King County, (2) What-if ngưỡng undervalued, (3) Ngân sách và kế hoạch mua, (4) 20 căn đề xuất, (5) Kiểm chứng bằng Ames, (6) Mô hình và độ nhạy. Trang 2 có hộp chọn ngưỡng 5%–50%, trang 3 có hộp chọn ngân sách 0,5–10 triệu USD; cả hai là tham số What-if nên chỉ cần đổi một giá trị là toàn bộ số liệu liên quan cập nhật ngay.
+
+Toàn bộ 6 trang dùng chung một mô hình dữ liệu và cùng định nghĩa ứng viên, nhờ vậy số liệu giữa các trang luôn khớp nhau. Ngoài phần nội dung, dashboard có các thành phần hỗ trợ đọc: dải 6 nút điều hướng ở cuối mỗi trang (page navigator, đang mở trang nào thì nút đó được tô đậm), hai bookmark "Chế độ nhà đầu tư" (mở trang Ngân sách) và "Chế độ học thuật" (mở trang Mô hình và độ nhạy), hộp chọn chỉ số ở trang Ngân sách để đổi nhanh chỉ số của biểu đồ theo ZIP, tooltip khi di chuột lên từng điểm dữ liệu, cùng alt text và thứ tự tab cho trình đọc màn hình.
+
+6.2. Kết quả trang Tổng quan King County
+Bộ dữ liệu sạch có 21.612 giao dịch của 21.435 tài sản trong giai đoạn 05/2014–05/2015, thuộc 70 mã ZIP. Giá bán trung vị là 450.000 USD, trung bình 540.084 USD; phân phối lệch phải mạnh (skewness 4,02) do một số giao dịch rất cao vẫn được giữ hợp lệ. Sau khi lọc đúng phạm vi của Nhiệm vụ 4 (chỉ giao dịch gần nhất của mỗi tài sản, loại cờ zero_room_flag, condition ≥ 3), còn 21.229 giao dịch đại diện cho 21.229 tài sản.
+
+Trang Tổng quan cho thấy phần lớn giao dịch tập trung ở khúc 250.000–550.000 USD. Các ZIP có quy mô giao dịch lớn nhất gồm 98118, 98106, 98168, 98103, 98146 và 98198; đây cũng là những khu vực đóng góp nhiều ứng viên nhất ở ngưỡng 20%.
+
+6.3. Hai tham số What-if và kết quả theo ngưỡng
+Dashboard có hai tham số What-if độc lập, xây dựng theo cùng một cách: một bảng tính chỉ chứa dải giá trị (không sửa dữ liệu gốc), một hộp chọn để người dùng chọn đúng một giá trị, và các measure DAX đọc giá trị đang chọn rồi tính lại số liệu. Nhờ vậy người xem thử nhiều kịch bản mà không phải huấn luyện lại mô hình hay sửa dữ liệu.
+
+Tham số thứ nhất – ngưỡng undervalued: bảng Nguong = GENERATESERIES(5, 50, 1), hiển thị 5%–50% theo bước 1%, mặc định 20%. Một giao dịch là ứng viên khi residual_pct = giá bán / giá mô hình − 1 ≤ −ngưỡng, nghĩa là bán thấp hơn giá mô hình ít nhất bằng ngưỡng đó. Khi đổi ngưỡng, các measure Số ứng viên, Tỷ lệ ứng viên, Tổng chênh lệch, Giá trung vị nhóm, Đồng thuận 3 mô hình cùng hai biểu đồ theo ZIP và theo khúc giá cập nhật ngay; card "Ngưỡng đang áp dụng" luôn hiển thị đúng giá trị đang chọn để tránh đọc nhầm.
+
+Tham số thứ hai – ngân sách mua: bảng NganSach = GENERATESERIES(500.000, 10.000.000, 250.000), mặc định 2.000.000 USD. Ngân sách được hiểu là tổng vốn chứ không phải giá một căn: các ứng viên ở ngưỡng 20% được xếp theo mức giảm sâu nhất rồi mua lần lượt đến khi hết ngân sách (chỉ xét giao dịch giảm ≤ 50%). Các measure Số căn mua được, Vốn sử dụng, Chênh lệch kỳ vọng, % ngân sách đã dùng và ROI kỳ vọng tính trực tiếp từ danh sách đó, nên đổi ngân sách là thấy ngay hiệu quả đầu tư.
+
+Cách thao tác: mở trang 2 hoặc trang 3, bấm vào hộp chọn và chọn một giá trị, không cần bấm Làm mới. Hai tham số giữ nguyên giá trị khi chuyển trang; nếu muốn quay lại đúng trang theo vai trò thì dùng bookmark ở góc trên. Kết quả theo từng ngưỡng (mặc định 20%):
+
+Ngưỡng 5%: 6.248 căn (29,43% pool), cả 3 mô hình đồng ý 4.275 căn.
+Ngưỡng 10%: 3.672 căn (17,30%), cả 3 mô hình đồng ý 2.472 căn.
+Ngưỡng 15%: 2.132 căn (10,04%), cả 3 mô hình đồng ý 1.437 căn.
+Ngưỡng 20%: 1.193 căn (5,62%), cả 3 mô hình đồng ý 839 căn, giá trung vị 285.000 USD.
+Ngưỡng 25%: 677 căn (3,19%), cả 3 mô hình đồng ý 477 căn.
+Ngưỡng 30%: 411 căn (1,94%), cả 3 mô hình đồng ý 292 căn.
+
+Ở ngưỡng 20%, 486 căn (40,7%) nằm dưới 250.000 USD, 342 căn (28,7%) trong khoảng 250.000–400.000 USD; phần còn lại trải từ 400.000 USD đến trên 1 triệu USD. Điều này cho thấy "bị định giá thấp" không chỉ là hiện tượng của phân khúc giá rẻ. Theo ZIP, 98118 dẫn đầu với 60 căn, tiếp theo là 98106 (41), 98168 (34), 98103 (33), 98146 và 98198 (cùng 32).
+
+Có 36 trường hợp giảm sâu hơn 50% ở mọi ngưỡng. Đây là đuôi bất thường, thường là giao dịch không theo thị trường (bán cho người thân, thừa kế, bán tháo) hoặc lỗi dữ liệu, nên được tách sang danh sách cần xác minh thay vì đưa vào danh sách khuyến nghị.
+
+Với kế hoạch mua ở ngân sách 2.000.000 USD: mua được 8 căn, vốn 1.809.500 USD, chênh lệch kỳ vọng 1.758.645 USD, dùng 90,5% ngân sách và ROI kỳ vọng 97,2%. Tăng ngân sách thì số căn tăng nhưng ROI giảm dần: 1.000.000 USD → 4 căn, ROI 99,0%; 5.000.000 USD → 23 căn, ROI 92,0%; 10.000.000 USD → 43 căn, ROI 84,8%. Nguyên nhân là danh sách ứng viên không đủ dày: giá trung vị nhóm khoảng 285.000 USD nên mỗi 1 triệu USD chỉ mua thêm 3–5 căn, và càng mua nhiều càng phải lùi xuống các căn giảm ít hơn. Đây chính là điểm cần cân nhắc khi chọn ngân sách: 2 triệu USD là mức còn giữ được ROI cao mà vẫn đa dạng khu vực.
+
+6.4. Kết quả danh sách 20 căn đề xuất
+Danh sách 20 căn giữ đúng ràng buộc của Giám đốc đầu tư: mỗi tài sản chỉ chọn một lần, loại căn thiếu phòng/condition thấp, loại giao dịch giảm quá 50%, yêu cầu cả ba mô hình (XGBoost, Random Forest, Linear Regression) cùng đồng ý mức giảm ≥ 20%, và xếp theo mức giảm thận trọng nhất.
+
+Tổng vốn mua 20 căn là 4.534.822 USD; tổng giá trị theo mô hình là 8.521.716 USD; chênh lệch kỳ vọng 3.986.894 USD. Mức giảm trung vị là 46,1% và cả 20/20 căn đều được cả ba mô hình đồng ý. 20 căn nằm rải ở 16 mã ZIP, nhiều nhất là 98144, 98155, 98146 và 98125 (mỗi ZIP 2 căn); trung vị diện tích 1.560 sqft, grade 7 và cách điểm đại diện trung tâm Seattle 14,2 km.
+
+6.5. Kết quả kiểm chứng bằng Ames
+Ames là thị trường kiểm chứng, không dùng để chọn 20 căn. Trên 2.930 tài sản (2006–2010), mô hình XGBoost đạt MAPE 7,49% và R² 0,935 trên tập test, tốt hơn King County (MAPE 11,20%, R² 0,918). Khi tính out-of-fold cho toàn bộ Ames, MAPE là 7,90%; áp cùng ngưỡng 20% có 91 tài sản (3,11%) được xem là ứng viên. Chênh lệch chủ yếu do Ames có quan hệ giá–chất lượng mạnh hơn và ít giao dịch cực đoan hơn, không phải do mô hình tốt hơn về bản chất.
+
+6.6. Chất lượng mô hình và độ nhạy
+Trên tập test King County, XGBoost đạt MAPE 11,20%, RMSE 106.477 USD, R² 0,918; Linear Regression 13,34% và Random Forest 12,36%; mốc thô đơn giá ZIP × diện tích là 18,84%. Chia theo thời gian (huấn luyện trước 01/02/2015), XGBoost còn MAPE 12,46%, cho thấy mô hình không phụ thuộc quá mức vào việc chia ngẫu nhiên.
+
+Permutation importance cho thấy vĩ độ (lat) quan trọng nhất (làm MAPE tăng 16,24 điểm % khi xáo trộn), sau đó diện tích ở (7,11), khoảng cách tới trung tâm (6,70) và grade (5,35). Phân tích what-if một biến cho thấy cải tạo mới làm giá dự báo tăng trung vị 10,17%, grade +1 tăng 8,58%, view +1 tăng 6,65%, condition +1 tăng 4,31%, diện tích +10% tăng 3,64%; tuổi nhà +10 năm làm giảm 1,52%.
+
+Độ ổn định của danh sách 20 căn: khi đổi seed chia fold, danh sách giữ được 15–18/20 căn; xếp theo residual USD chỉ giữ 1/20; danh sách thô không lọc bất thường trùng 0/20. Vì vậy quy tắc lọc bất thường và xếp theo mức giảm thận trọng là cần thiết, không phải tùy chọn.
+
+6.7. Khuyến nghị và giới hạn
+Khuyến nghị chọn ngưỡng 20% làm mặc định: còn 1.193 ứng viên (5,62%), đủ rộng để lọc ra 20 căn nhưng vẫn giữ được tỷ lệ đồng thuận cao (839 căn cả ba mô hình). Ngưỡng 10% quá rộng (3.672 căn) và ngưỡng 30% chỉ còn 411 căn, dễ bỏ sót cơ hội.
+
+Giới hạn cần giữ khi trình bày: (1) "Undervalued" ở đây là proxy theo residual mô hình, không chứng minh nhà bị định giá sai so với giá trị thị trường; (2) residual OOF vẫn có sai số ~11%, nên 20 căn phải được xác minh thực địa trước khi xuống tiền; (3) quan hệ là tương quan, không phải nhân quả; (4) Ames chỉ là kiểm chứng, khác thị trường và định nghĩa diện tích; (5) dashboard phản ánh dữ liệu lịch sử 2014–2015 và 2006–2010, không phải giá hiện tại; (6) khi dùng cho dự báo mới phải chia train/test trước và fit lại imputation/encoding/ngưỡng trên train.
+
+6.8. Kết luận
+Dashboard đã trả lời được câu hỏi quyết định của Giám đốc đầu tư: với ngân sách khoảng 4,53 triệu USD, chọn 20 căn có mức giảm thận trọng lớn nhất, tập trung ở các ZIP 98118, 98106, 98168 và 98144. Tham số What-if giúp điều chỉnh ngưỡng theo khẩu vị rủi ro và quan sát ngay quy mô cơ hội, thay vì phải chạy lại mô hình.

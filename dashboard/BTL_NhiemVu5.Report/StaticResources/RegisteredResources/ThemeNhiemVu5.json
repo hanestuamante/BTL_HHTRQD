@@ -1,0 +1,149 @@
+{
+  "name": "NhiemVu5",
+  "dataColors": [
+    "#1F6FB2",
+    "#E4572E",
+    "#2A9D8F",
+    "#E9C46A",
+    "#7B61A8",
+    "#6C757D",
+    "#457B9D",
+    "#F4A261"
+  ],
+  "foreground": "#1B2A3A",
+  "foregroundNeutralSecondary": "#5A6B7B",
+  "background": "#FFFFFF",
+  "backgroundLight": "#F4F7FB",
+  "tableAccent": "#1F6FB2",
+  "good": "#2A9D8F",
+  "neutral": "#E9C46A",
+  "bad": "#E4572E",
+  "textClasses": {
+    "callout": {
+      "fontSize": 34,
+      "fontFace": "Segoe UI Semibold",
+      "color": "#12324F"
+    },
+    "title": {
+      "fontSize": 12,
+      "fontFace": "Segoe UI Semibold",
+      "color": "#12324F"
+    },
+    "header": {
+      "fontSize": 11,
+      "fontFace": "Segoe UI Semibold",
+      "color": "#12324F"
+    },
+    "label": {
+      "fontSize": 9,
+      "fontFace": "Segoe UI",
+      "color": "#4A5A6A"
+    }
+  },
+  "visualStyles": {
+    "card": {
+      "*": {
+        "labels": [
+          {
+            "fontSize": 28,
+            "bold": true,
+            "color": {
+              "solid": {
+                "color": "#12324F"
+              }
+            }
+          }
+        ],
+        "categoryLabels": [
+          {
+            "fontSize": 10,
+            "color": {
+              "solid": {
+                "color": "#5A6B7B"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "barChart": {
+      "*": {
+        "labels": [
+          {
+            "show": true,
+            "fontSize": 8
+          }
+        ],
+        "categoryAxis": [
+          {
+            "fontSize": 8
+          }
+        ],
+        "valueAxis": [
+          {
+            "fontSize": 8
+          }
+        ]
+      }
+    },
+    "clusteredColumnChart": {
+      "*": {
+        "labels": [
+          {
+            "show": true,
+            "fontSize": 8
+          }
+        ],
+        "categoryAxis": [
+          {
+            "fontSize": 8
+          }
+        ],
+        "valueAxis": [
+          {
+            "fontSize": 8
+          }
+        ]
+      }
+    },
+    "tableEx": {
+      "*": {
+        "columnHeaders": [
+          {
+            "fontSize": 9,
+            "bold": true,
+            "fontColor": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "backColor": {
+              "solid": {
+                "color": "#1F6FB2"
+              }
+            }
+          }
+        ],
+        "values": [
+          {
+            "fontSize": 9
+          }
+        ]
+      }
+    },
+    "slicer": {
+      "*": {
+        "items": [
+          {
+            "fontSize": 9
+          }
+        ],
+        "header": [
+          {
+            "fontSize": 9
+          }
+        ]
+      }
+    }
+  }
+}

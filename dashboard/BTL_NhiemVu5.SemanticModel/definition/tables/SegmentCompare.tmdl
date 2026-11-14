@@ -1,0 +1,33 @@
+table SegmentCompare
+	lineageTag: 82649af3-3b2b-4c94-9ea8-07708be56d3d
+
+	column 'Khúc giá'
+		dataType: string
+		sourceColumn: segment
+		lineageTag: 29c04a19-7ce3-444b-b15e-ef1e9b7c5b78
+	column 'MAPE Linear'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: mape_lr
+		lineageTag: 7d11a1fa-e9aa-4cbd-9f24-a3542b59133e
+	column 'MAPE XGBoost'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: mape_xgb
+		lineageTag: 809dbf4b-7aa4-4ec6-9c4e-13521363463d
+
+	partition SegmentCompare = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\segment_compare.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted,
+					{
+					{"segment", type text},
+					{"mape_lr", type number},
+					{"mape_xgb", type number}
+					}),
+				Result = Typed
+			in
+				Result

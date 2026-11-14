@@ -1,0 +1,45 @@
+table WhatIfScenarios
+	lineageTag: 0b69af97-14cc-4737-a0be-9d289fcaa97e
+
+	column 'Kịch bản'
+		dataType: string
+		sourceColumn: scenario
+		lineageTag: 26120ff8-be69-48c0-88f8-a875fb02a917
+	column 'Thay đổi (%)'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: median_change_pct
+		lineageTag: bbdac2d3-abfb-41e3-921f-c8128b532066
+	column 'mean_change_pct'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: mean_change_pct
+		lineageTag: f60c8105-0ff7-44aa-957c-902682f41c24
+	column 'p10'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: p10
+		lineageTag: de29cfc8-41e4-4fef-a12f-5b96905d6df5
+	column 'p90'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: p90
+		lineageTag: 6e6e41c4-76de-4686-b9f1-fca2902d854c
+
+	partition WhatIfScenarios = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\whatif_scenarios.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted,
+					{
+					{"scenario", type text},
+					{"median_change_pct", type number},
+					{"mean_change_pct", type number},
+					{"p10", type number},
+					{"p90", type number}
+					}),
+				Result = Typed
+			in
+				Result

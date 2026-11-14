@@ -10,3 +10,6 @@ __pycache__/
 .ipynb_checkpoints/
 .env
 .env.*
+dashboard/*.SemanticModel/.pbi/
+dashboard/*.Report/.pbi/
+dashboard/*.SemanticModel/diagramLayout.json
