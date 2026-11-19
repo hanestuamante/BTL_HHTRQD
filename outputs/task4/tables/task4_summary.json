@@ -1,0 +1,83 @@
+{
+  "best_model": "XGBoost (tuned)",
+  "xgb_best_params": {
+    "subsample": 0.8,
+    "reg_lambda": 10.0,
+    "n_estimators": 1800,
+    "min_child_weight": 1,
+    "max_depth": 7,
+    "learning_rate": 0.02,
+    "colsample_bytree": 0.5
+  },
+  "test_split": {
+    "train_rows": 17291,
+    "test_rows": 4321,
+    "split": "GroupShuffleSplit theo id, 80/20, seed 42"
+  },
+  "king_test_metrics": {
+    "Mốc thô: đơn giá zipcode × diện tích": {
+      "MAPE_%": 18.841,
+      "RMSE": 180483.7523,
+      "R2": 0.7652
+    },
+    "Linear Regression (baseline)": {
+      "MAPE_%": 13.3442,
+      "RMSE": 126925.6974,
+      "R2": 0.8839
+    },
+    "Random Forest": {
+      "MAPE_%": 12.3609,
+      "RMSE": 128796.4885,
+      "R2": 0.8805
+    },
+    "XGBoost (tuned)": {
+      "MAPE_%": 11.2042,
+      "RMSE": 106476.7134,
+      "R2": 0.9183
+    }
+  },
+  "king_time_split_metrics": {
+    "Linear Regression (baseline)": {
+      "MAPE_%": 13.8528,
+      "RMSE": 138273.5083,
+      "R2": 0.8552
+    },
+    "XGBoost (tuned)": {
+      "MAPE_%": 12.4611,
+      "RMSE": 120525.2875,
+      "R2": 0.89
+    }
+  },
+  "ames_test_metrics": {
+    "Mốc thô: đơn giá neighborhood × diện tích": {
+      "MAPE_%": 17.6038,
+      "RMSE": 40954.5888,
+      "R2": 0.7125
+    },
+    "Linear Regression (baseline)": {
+      "MAPE_%": 7.9638,
+      "RMSE": 19609.5395,
+      "R2": 0.9341
+    },
+    "Random Forest": {
+      "MAPE_%": 8.2216,
+      "RMSE": 21170.203,
+      "R2": 0.9232
+    },
+    "XGBoost": {
+      "MAPE_%": 7.4914,
+      "RMSE": 19487.7668,
+      "R2": 0.9349
+    }
+  },
+  "oof_mape_pct": 10.938,
+  "undervalued_rate_pct_all_transactions": 6.205,
+  "candidate_pool_size": 21229,
+  "recommended_pool_size": 795,
+  "needs_verification_count": 36,
+  "anomaly_cap_pct": -50.0,
+  "top20_raw_total_price_usd": 5697741.0,
+  "top20_total_price_usd": 4534822.0,
+  "top20_total_predicted_usd": 8521716.0,
+  "top20_all_three_models_agree": 20
+}
