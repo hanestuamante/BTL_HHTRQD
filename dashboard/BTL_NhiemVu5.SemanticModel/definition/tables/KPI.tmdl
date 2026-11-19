@@ -1,0 +1,273 @@
+table KPI
+	lineageTag: 39dd98e5-5a67-44c2-9bb6-76354fc31a81
+
+	measure 'Số giao dịch' =
+			COUNTROWS('KingSales')
+		formatString: #,0
+		lineageTag: ec8e41fd-9cce-47c2-9d0a-1821f1c95513
+
+	measure 'King Properties' =
+			DISTINCTCOUNT('KingSales'[Mã căn])
+		formatString: #,0
+		lineageTag: 0673331c-922a-4452-b181-7225e89e47c1
+
+	measure 'Giá trung vị' =
+			MEDIAN('KingSales'[Giá bán])
+		formatString: #,0
+		lineageTag: 74ad89ee-a442-4a8f-9065-d2fa723d5ffe
+
+	measure 'King OOF MAPE' =
+			AVERAGEX('KingSales', ABS('KingSales'[Sai số (%)]))
+		formatString: 0.0%
+		lineageTag: 3bb0eb72-fb6e-4b8b-9c1d-ec36b9e93db9
+
+	measure 'Ngưỡng (%)' =
+			VAR p = IF(ISFILTERED('Nguong'[Value]), MIN('Nguong'[Value]), 20)
+			RETURN p / 100
+		formatString: 0%
+		lineageTag: ba24c54e-7fae-49fd-bd1c-90d43e2b38fb
+
+	measure 'Candidate Base' =
+			CALCULATE(COUNTROWS('KingSales'), 'KingSales'[Giao dịch mới nhất] = 1, 'KingSales'[Thiếu phòng] = 0, 'KingSales'[Tình trạng] >= 3)
+		formatString: #,0
+		lineageTag: b5adb5e1-06f3-46e4-b76f-676e2065c672
+
+	measure 'Số ứng viên' =
+			VAR t = -[Ngưỡng (%)]
+			RETURN CALCULATE([Candidate Base], 'KingSales'[Sai số (%)] <= t)
+		formatString: #,0
+		lineageTag: ebc97c79-042b-44d1-bbc2-71abede9b1a1
+
+	measure 'Tỷ lệ ứng viên' =
+			DIVIDE([Số ứng viên], [Candidate Base])
+		formatString: 0.00%
+		lineageTag: ad95ff62-d795-4cc9-8431-f9f368a50b5b
+
+	measure 'Chênh lệch ứng viên (USD)' =
+			VAR t = -[Ngưỡng (%)]
+			RETURN CALCULATE(SUM('KingSales'[Chênh lệch (USD)]), 'KingSales'[Giao dịch mới nhất] = 1, 'KingSales'[Thiếu phòng] = 0, 'KingSales'[Tình trạng] >= 3, 'KingSales'[Sai số (%)] <= t)
+		formatString: #,0
+		lineageTag: 9327c635-4ae7-47cb-afe3-4bc43c8ca681
+
+	measure 'Giá trung vị ứng viên' =
+			VAR t = -[Ngưỡng (%)]
+			RETURN CALCULATE(MEDIAN('KingSales'[Giá bán]), 'KingSales'[Giao dịch mới nhất] = 1, 'KingSales'[Thiếu phòng] = 0, 'KingSales'[Tình trạng] >= 3, 'KingSales'[Sai số (%)] <= t)
+		formatString: #,0
+		lineageTag: a859bf92-84dc-47fc-8a5f-fda2fdf74db9
+
+	measure 'Đồng thuận 3 mô hình' =
+			VAR t = -[Ngưỡng (%)]
+			RETURN CALCULATE(COUNTROWS('KingSales'), 'KingSales'[Giao dịch mới nhất] = 1, 'KingSales'[Thiếu phòng] = 0, 'KingSales'[Tình trạng] >= 3, 'KingSales'[Số mô hình đồng ý] = 3, 'KingSales'[Sai số (%)] <= t)
+		formatString: #,0
+		lineageTag: 20709a3c-830b-4de4-b7cc-5052f807670b
+
+	measure 'Top20 Count' =
+			COUNTROWS('Top20')
+		formatString: #,0
+		lineageTag: 6d81e402-7ce1-4a8c-8221-f502838bf306
+
+	measure 'Vốn Top20 (USD)' =
+			SUM('Top20'[Giá bán])
+		formatString: #,0
+		lineageTag: 3a71ac4f-db0b-4d68-a3cb-6c26843bb7f3
+
+	measure 'Chênh lệch Top20 (USD)' =
+			SUM('Top20'[Chênh lệch (USD)])
+		formatString: #,0
+		lineageTag: d54607a7-95b9-4c24-add3-8ab841d90a6b
+
+	measure 'Mức giảm trung vị (%)' =
+			MEDIAN('Top20'[Mức giảm (%)])
+		formatString: 0.0"%"
+		lineageTag: 8972b65a-0c83-4f42-9bae-9ccb0c9c3e51
+
+	measure 'Top20 All3' =
+			COUNTROWS(FILTER('Top20', 'Top20'[Số mô hình đồng ý] = 3))
+		formatString: #,0
+		lineageTag: 8952e3e3-8d01-45eb-8130-92f4b3967cc0
+
+	measure 'MAPE tăng (điểm %)' =
+			SUM('ImportanceTop'[MAPE tăng (điểm %)])
+		formatString: 0.00
+		lineageTag: 068c0f99-d3bd-48c7-a93d-a0fa79a2102c
+
+	measure 'Thay đổi giá (%)' =
+			SUM('WhatIfScenarios'[Thay đổi (%)])
+		formatString: 0.00
+		lineageTag: 231c8869-67b8-4d2d-9010-1803e5b38958
+
+	measure 'Số ứng viên theo ngưỡng' =
+			SUM('Sensitivity'[Số ứng viên])
+		formatString: #,0
+		lineageTag: 84e9c6d5-e14b-42c6-bad8-8f7ec3745ff8
+
+	measure 'MAPE (%)' =
+			SUM('ModelCompare'[MAPE (%)])
+		formatString: 0.0
+		lineageTag: 9e274fe2-c859-4115-ac92-9454d990dac5
+
+	measure 'KingTx Text' =
+			FORMAT([Số giao dịch], "#,##0")
+		lineageTag: 46b1f1d5-f1b9-47c5-8a2b-89501ffac8af
+
+	measure 'KingMedian Text' =
+			FORMAT([Giá trung vị], "#,##0")
+		lineageTag: 00c8a648-b68e-4d18-950d-75ac96fb63d6
+
+	measure 'Candidates Text' =
+			FORMAT([Số ứng viên], "#,##0")
+		lineageTag: d20be063-4251-479c-a989-aab1af316aee
+
+	measure 'CandidateUpside Text' =
+			FORMAT([Chênh lệch ứng viên (USD)], "#,##0")
+		lineageTag: eca62c16-4ff6-4463-b3d0-8a2312928b6d
+
+	measure 'CandidateMedian Text' =
+			FORMAT([Giá trung vị ứng viên], "#,##0")
+		lineageTag: 8287c8e4-ab32-4643-8213-d2e0096b82d2
+
+	measure 'Top20Capital Text' =
+			FORMAT([Vốn Top20 (USD)], "#,##0")
+		lineageTag: d628235c-c2de-4871-b1a5-102f077eb228
+
+	measure 'Top20Upside Text' =
+			FORMAT([Chênh lệch Top20 (USD)], "#,##0")
+		lineageTag: 8a1d484d-af18-4623-972c-ae1e21e6827c
+
+	measure 'Top20All3 Text' =
+			FORMAT([Top20 All3], "#,##0")
+		lineageTag: 047a8336-da45-4e8c-a7e1-b91301afd9b4
+
+	measure 'AmesProperties Text' =
+			FORMAT([Số tài sản Ames], "#,##0")
+		lineageTag: 8d9c865f-b1ad-4d99-a386-61fa41af0f9f
+
+	measure 'AmesMedian Text' =
+			FORMAT([Giá trung vị Ames], "#,##0")
+		lineageTag: d84e4465-fcd9-4645-b62d-83ed290ab7d9
+
+	measure 'AmesCandidates Text' =
+			FORMAT([Số ứng viên Ames], "#,##0")
+		lineageTag: 40a2b235-46ee-4701-a181-282daa18b7af
+
+	measure 'Số tài sản Ames' =
+			COUNTROWS('AmesSales')
+		formatString: #,0
+		lineageTag: e5e0f6f5-4eec-4f9c-bdbd-9c828b483bb4
+
+	measure 'Giá trung vị Ames' =
+			MEDIAN('AmesSales'[Giá bán])
+		formatString: #,0
+		lineageTag: 1a7e100a-af72-48c2-b72e-6ffb2462cec5
+
+	measure 'Ames OOF MAPE' =
+			AVERAGEX('AmesSales', ABS('AmesSales'[Sai số (%)]))
+		formatString: 0.0%
+		lineageTag: c7342ad0-f846-490a-9a3a-278590be9162
+
+	measure 'Số ứng viên Ames' =
+			VAR t = -[Ngưỡng (%)]
+			RETURN CALCULATE(COUNTROWS('AmesSales'), 'AmesSales'[Sai số (%)] <= t)
+		formatString: #,0
+		lineageTag: 75211951-d358-41f1-8c55-444796fed56d
+
+	measure 'Ames Candidate Share' =
+			DIVIDE([Số ứng viên Ames], [Số tài sản Ames])
+		formatString: 0.00%
+		lineageTag: bb666789-4578-4e6d-a818-bc8bd6a82f6b
+
+	measure 'MAPE King XGB' =
+			CALCULATE(MAX('ModelMetrics'[MAPE (%)]), 'ModelMetrics'[Thị trường] = "King County", 'ModelMetrics'[Mô hình] = "XGBoost (tuned)")
+		formatString: 0.0
+		lineageTag: abfe8aba-796d-478e-9d81-21ac3e37af91
+
+	measure 'MAPE Ames XGB' =
+			CALCULATE(MAX('ModelMetrics'[MAPE (%)]), 'ModelMetrics'[Thị trường] = "Ames", 'ModelMetrics'[Mô hình] = "XGBoost")
+		formatString: 0.0
+		lineageTag: 4ade715b-65d1-4f1d-a476-0cad46af5f3d
+
+	measure 'R2 King XGB' =
+			CALCULATE(MAX('ModelMetrics'[R²]), 'ModelMetrics'[Thị trường] = "King County", 'ModelMetrics'[Mô hình] = "XGBoost (tuned)")
+		formatString: 0.000
+		lineageTag: 7864b129-d322-4139-8ff1-c09def0ce1ee
+
+	measure 'R2 Ames XGB' =
+			CALCULATE(MAX('ModelMetrics'[R²]), 'ModelMetrics'[Thị trường] = "Ames", 'ModelMetrics'[Mô hình] = "XGBoost")
+		formatString: 0.000
+		lineageTag: 399119ee-b8a2-42d2-add6-04dae087104b
+
+	measure 'MAPE King Time XGB' =
+			CALCULATE(MAX('ModelMetrics'[MAPE (%)]), 'ModelMetrics'[Thị trường] = "King County (chia theo thời gian)", 'ModelMetrics'[Mô hình] = "XGBoost (tuned)")
+		formatString: 0.0
+		lineageTag: 380af639-597a-4552-9955-5700e9a0ffa6
+
+	measure 'Ngân sách (USD)' =
+			IF(ISFILTERED('NganSach'[Value]), MAX('NganSach'[Value]), 2000000)
+		formatString: #,0
+		lineageTag: 4ed8f110-5efc-4009-ae2e-e39f1ed3e285
+
+	measure 'Budget Bought' =
+			VAR b = [Ngân sách (USD)]
+			RETURN CALCULATE(COUNTROWS('BudgetPlan'), 'BudgetPlan'[Lũy kế (USD)] <= b)
+		formatString: #,0
+		lineageTag: 8d82f166-8439-44fc-a2ee-2681f7da5e18
+
+	measure 'Budget Capital' =
+			VAR b = [Ngân sách (USD)]
+			RETURN CALCULATE(SUM('BudgetPlan'[Giá bán]), 'BudgetPlan'[Lũy kế (USD)] <= b)
+		formatString: #,0
+		lineageTag: 5531f6fb-0f35-4d1b-a340-dfdd85fe19cc
+
+	measure 'Budget Upside' =
+			VAR b = [Ngân sách (USD)]
+			RETURN CALCULATE(SUM('BudgetPlan'[Chênh lệch (USD)]), 'BudgetPlan'[Lũy kế (USD)] <= b)
+		formatString: #,0
+		lineageTag: c97e71f8-8009-437a-97c1-4f752b4f9290
+
+	measure 'Chỉ số đang chọn' =
+			SWITCH(SELECTEDVALUE('ChonChiSo'[Chỉ số]),
+			    "Giá trung vị nhóm", [Giá trung vị ứng viên],
+			    "Chênh lệch kỳ vọng (USD)", [Chênh lệch ứng viên (USD)],
+			    [Số ứng viên])
+		formatString: #,0
+		lineageTag: e20390d0-ca1f-47ca-a3b8-050d5c2782a2
+
+	measure 'Budget Used' =
+			DIVIDE([Budget Capital], [Ngân sách (USD)])
+		formatString: 0.0%
+		lineageTag: d03540f0-53f3-4ae3-aa98-d09cc4a9a6ba
+
+	measure 'Budget ROI' =
+			DIVIDE([Budget Upside], [Budget Capital])
+		formatString: 0.0%
+		lineageTag: 918b9eeb-6750-4adf-a38f-176a736ac7dd
+
+	measure 'SelectedBudget Text' =
+			FORMAT([Ngân sách (USD)], "#,##0")
+		lineageTag: a0acf581-a21c-4bf5-90e6-a9407eccf5e1
+
+	measure 'BudgetBought Text' =
+			FORMAT([Budget Bought], "#,##0")
+		lineageTag: fe1e4a6d-3524-4445-ba0c-9796d4a573c8
+
+	measure 'BudgetCapital Text' =
+			FORMAT([Budget Capital], "#,##0")
+		lineageTag: f85ee1b6-5175-4f28-8118-5cf8d4e1d4cd
+
+	measure 'BudgetUpside Text' =
+			FORMAT([Budget Upside], "#,##0")
+		lineageTag: fc641ac3-e518-4e81-8b07-990cb33f562d
+
+	column Placeholder
+		dataType: string
+		isHidden
+		sourceColumn: Placeholder
+		lineageTag: 4560c173-d71f-48f7-87ec-351545248e58
+
+	partition KPI = m
+		mode: import
+		source =
+			let
+				Source = #table(type table [Placeholder = text], {{""}})
+			in
+				Source

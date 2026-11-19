@@ -1,0 +1,33 @@
+table Stability
+	lineageTag: 15425e20-994b-45ef-b59f-eda04cb4c650
+
+	column 'Kịch bản'
+		dataType: string
+		sourceColumn: variant
+		lineageTag: 92c757cb-dd65-47c4-b9dc-bf9df3520f1a
+	column 'Trùng 20 căn'
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: overlap_20
+		lineageTag: 1e3dfafe-44a1-461e-8b3f-d541fa5d246f
+	column 'Tỷ lệ (%)'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: share_pct
+		lineageTag: 19d77cbe-cf09-427c-b8d7-b2fe466beffb
+
+	partition Stability = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\stability.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted,
+					{
+					{"variant", type text},
+					{"overlap_20", Int64.Type},
+					{"share_pct", type number}
+					}),
+				Result = Typed
+			in
+				Result

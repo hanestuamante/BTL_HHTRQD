@@ -1,0 +1,68 @@
+table ModelMetrics
+	lineageTag: 2e87c76a-f568-408b-b69c-e4cd4b032c85
+
+	column 'Thị trường'
+		dataType: string
+		sourceColumn: market
+		lineageTag: 944ab4a2-b630-49ee-9f4e-8ebc28fe040e
+	column 'Mô hình'
+		dataType: string
+		sourceColumn: model
+		lineageTag: b191765c-5ea0-45c4-a77a-bf356c0dab74
+	column 'MAPE (%)'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: mape
+		lineageTag: c3b940ff-25b9-4e98-9749-93ef09c2c8ab
+	column 'mdape'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: mdape
+		lineageTag: ba340d9b-20a4-4b96-8b48-23a79d9abacd
+	column 'rmse'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: rmse
+		lineageTag: 6fc35d1b-940a-4c8b-a909-39563a90baeb
+	column 'mae'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: mae
+		lineageTag: 55f6cfa8-8ded-4066-b25c-bd356595c532
+	column 'R²'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: r2
+		lineageTag: df831012-4747-497f-8984-5845e26f1646
+	column 'acc10'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: acc10
+		lineageTag: ffbd7f11-d347-4e01-91cf-5abc180629bc
+	column 'acc20'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: acc20
+		lineageTag: ef149841-42e8-4087-a6b2-e4547f8da852
+
+	partition ModelMetrics = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\model_metrics.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted,
+					{
+					{"market", type text},
+					{"model", type text},
+					{"mape", type number},
+					{"mdape", type number},
+					{"rmse", type number},
+					{"mae", type number},
+					{"r2", type number},
+					{"acc10", type number},
+					{"acc20", type number}
+					}),
+				Result = Typed
+			in
+				Result

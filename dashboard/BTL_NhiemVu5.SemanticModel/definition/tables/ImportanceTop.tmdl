@@ -1,0 +1,33 @@
+table ImportanceTop
+	lineageTag: 7a84e615-bd80-4092-87b6-8af635a64bf6
+
+	column 'Biến'
+		dataType: string
+		sourceColumn: feature
+		lineageTag: 969f4152-9287-441c-b2eb-9de0dff15887
+	column 'MAPE tăng (điểm %)'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: mape_increase_pp
+		lineageTag: 9d70422b-f728-490d-b03c-a3c89c31a8de
+	column 'std_pp'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: std_pp
+		lineageTag: a25ae738-89be-4b05-8203-601b8fb4e9b9
+
+	partition ImportanceTop = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\importance_top.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted,
+					{
+					{"feature", type text},
+					{"mape_increase_pp", type number},
+					{"std_pp", type number}
+					}),
+				Result = Typed
+			in
+				Result
