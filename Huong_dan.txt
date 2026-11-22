@@ -36,7 +36,7 @@ Từ thư mục chứa Huong_dan.txt:
 
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -r requirements.txt
+python -m pip install -r requirements.txt     (môi trường chung cho cả project, xem README.md)
 python scripts/prepare_data.py
 python scripts/analyze.py
 python scripts/build_notebook.py
@@ -63,5 +63,5 @@ GIỚI HẠN CẦN GIỮ KHI THUYẾT TRÌNH
 PHẠM VI YÊU CẦU
 Đã làm theo bảng phân công trong Google Doc, bỏ qua liên kết Prompt.
 Liên kết Chủ đề đính kèm yêu cầu đăng nhập và chưa đọc được ở phiên này.
-Chưa tải lên Drive, quay video hay thực hiện nhiệm vụ 4–6.
+Trạng thái nhiệm vụ 1–6 và hướng dẫn chung: README.md (cập nhật 23/11/2026).
 Mã nguồn và dữ liệu đã sẵn để người tổng hợp đưa vào kho và thư mục nhóm.

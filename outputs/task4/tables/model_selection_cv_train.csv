@@ -1,0 +1,4 @@
+Mo_hinh,CV_MAPE_train_%,Duoc_chon
+Linear Regression (baseline),13.118073740075479,False
+Random Forest,12.336173713547103,False
+XGBoost (tuned),11.270365826008394,True

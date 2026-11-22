@@ -1,10 +1,21 @@
-# Môi trường đã chạy: Python 3.12. Các thư viện trực tiếp được ghim phiên bản.
-numpy==2.5.4
-pandas==3.1.0
-scipy==1.18.1
+# Môi trường DUY NHẤT cho toàn bộ project (Nhiệm vụ 2–6). Python 3.12.
+# Đã kiểm chứng ngày 23/11/2026 trong venv sạch: prepare_data.py + analyze.py cho kết quả trùng byte với bản cũ,
+# task4_modeling.py / notebook chạy hết, pytest qua. models/model.pkl được lưu bằng đúng các phiên bản này
+# (scikit-learn 1.9.1, xgboost 3.2.0) — đọc model.pkl cần cùng phiên bản.
+numpy==2.4.6
+pandas==3.1.1
+scipy==1.17.1
 matplotlib==3.11.2
 seaborn==0.13.2
+scikit-learn==1.9.1
+xgboost==3.2.0
+joblib==1.6.0
+openpyxl==3.1.5
 nbformat==5.11.1
 nbclient==0.11.0
+nbconvert==7.17.2
 ipykernel==7.4.0
 python-docx==1.2.0
+docxcompose==2.2.0
+python-pptx==1.0.2
+pytest==9.2.0

@@ -1,0 +1,44 @@
+{
+  "cutoff": "2015-02-01",
+  "validation_start": "2014-11-01",
+  "past_rows": 15610,
+  "inner_train_rows": 11750,
+  "inner_validation_rows": 3818,
+  "future_rows": 5880,
+  "future_rows_dropped_seen_property": 122,
+  "past_date_range": [
+    "2014-05-02",
+    "2015-01-31"
+  ],
+  "future_date_range": [
+    "2015-02-01",
+    "2015-05-27"
+  ],
+  "xgb_params_tuned_on_past": {
+    "subsample": 0.8,
+    "reg_lambda": 10.0,
+    "n_estimators": 1800,
+    "min_child_weight": 1,
+    "max_depth": 7,
+    "learning_rate": 0.02,
+    "colsample_bytree": 0.5
+  },
+  "validation_mape_by_model": {
+    "Linear Regression (baseline)": 13.245696890823147,
+    "Random Forest": 12.47504506329119,
+    "XGBoost (tuned)": 11.341911378944923
+  },
+  "locked_model": {
+    "model": "XGBoost (tuned)",
+    "params": {
+      "subsample": 0.8,
+      "reg_lambda": 10.0,
+      "n_estimators": 1800,
+      "min_child_weight": 1,
+      "max_depth": 7,
+      "learning_rate": 0.02,
+      "colsample_bytree": 0.5
+    }
+  },
+  "rule": "Tương lai tách trước; tinh chỉnh và chọn mô hình chỉ dùng quá khứ (train < validation_start, validation = 3 tháng cuối quá khứ)."
+}

@@ -1,5 +1,13 @@
 {
+  "version": "2 (sửa theo feedback F01–F12)",
+  "fast_mode": false,
   "best_model": "XGBoost (tuned)",
+  "selected_by": "MAPE CV GroupKFold 3 theo id trên train (không dùng tập test)",
+  "cv_train_mape_pct": {
+    "Linear Regression (baseline)": 13.118073740075479,
+    "Random Forest": 12.336173713547103,
+    "XGBoost (tuned)": 11.270365826008394
+  },
   "xgb_best_params": {
     "subsample": 0.8,
     "reg_lambda": 10.0,
@@ -22,31 +30,87 @@
     },
     "Linear Regression (baseline)": {
       "MAPE_%": 13.3442,
-      "RMSE": 126925.6974,
+      "RMSE": 126925.7952,
       "R2": 0.8839
     },
     "Random Forest": {
-      "MAPE_%": 12.3609,
-      "RMSE": 128796.4885,
-      "R2": 0.8805
+      "MAPE_%": 12.3833,
+      "RMSE": 128898.3284,
+      "R2": 0.8803
     },
     "XGBoost (tuned)": {
-      "MAPE_%": 11.2042,
-      "RMSE": 106476.7134,
-      "R2": 0.9183
+      "MAPE_%": 11.2508,
+      "RMSE": 106961.0885,
+      "R2": 0.9176
     }
   },
-  "king_time_split_metrics": {
+  "king_temporal_backtest": {
     "Linear Regression (baseline)": {
       "MAPE_%": 13.8528,
-      "RMSE": 138273.5083,
+      "RMSE": 138273.7566,
       "R2": 0.8552
     },
     "XGBoost (tuned)": {
-      "MAPE_%": 12.4611,
-      "RMSE": 120525.2875,
-      "R2": 0.89
+      "MAPE_%": 12.4278,
+      "RMSE": 120048.9582,
+      "R2": 0.8909
+    },
+    "info": {
+      "cutoff": "2015-02-01",
+      "validation_start": "2014-11-01",
+      "past_rows": 15610,
+      "inner_train_rows": 11750,
+      "inner_validation_rows": 3818,
+      "future_rows": 5880,
+      "future_rows_dropped_seen_property": 122,
+      "past_date_range": [
+        "2014-05-02",
+        "2015-01-31"
+      ],
+      "future_date_range": [
+        "2015-02-01",
+        "2015-05-27"
+      ],
+      "xgb_params_tuned_on_past": {
+        "subsample": 0.8,
+        "reg_lambda": 10.0,
+        "n_estimators": 1800,
+        "min_child_weight": 1,
+        "max_depth": 7,
+        "learning_rate": 0.02,
+        "colsample_bytree": 0.5
+      },
+      "validation_mape_by_model": {
+        "Linear Regression (baseline)": 13.245696890823147,
+        "Random Forest": 12.47504506329119,
+        "XGBoost (tuned)": 11.341911378944923
+      },
+      "locked_model": {
+        "model": "XGBoost (tuned)",
+        "params": {
+          "subsample": 0.8,
+          "reg_lambda": 10.0,
+          "n_estimators": 1800,
+          "min_child_weight": 1,
+          "max_depth": 7,
+          "learning_rate": 0.02,
+          "colsample_bytree": 0.5
+        }
+      },
+      "rule": "Tương lai tách trước; tinh chỉnh và chọn mô hình chỉ dùng quá khứ (train < validation_start, validation = 3 tháng cuối quá khứ)."
     }
+  },
+  "king_nested_cv": {
+    "MAPE_%": 11.0841,
+    "RMSE": 113105.9,
+    "R2": 0.9051,
+    "chosen_per_fold": [
+      "XGBoost (tuned)",
+      "XGBoost (tuned)",
+      "XGBoost (tuned)",
+      "XGBoost (tuned)",
+      "XGBoost (tuned)"
+    ]
   },
   "ames_test_metrics": {
     "Mốc thô: đơn giá neighborhood × diện tích": {
@@ -55,29 +119,59 @@
       "R2": 0.7125
     },
     "Linear Regression (baseline)": {
-      "MAPE_%": 7.9638,
-      "RMSE": 19609.5395,
+      "MAPE_%": 7.9646,
+      "RMSE": 19610.5206,
       "R2": 0.9341
     },
     "Random Forest": {
-      "MAPE_%": 8.2216,
-      "RMSE": 21170.203,
-      "R2": 0.9232
+      "MAPE_%": 8.1588,
+      "RMSE": 21177.7609,
+      "R2": 0.9231
     },
     "XGBoost": {
-      "MAPE_%": 7.4914,
-      "RMSE": 19487.7668,
-      "R2": 0.9349
+      "MAPE_%": 7.5387,
+      "RMSE": 19297.5195,
+      "R2": 0.9362
     }
   },
-  "oof_mape_pct": 10.938,
-  "undervalued_rate_pct_all_transactions": 6.205,
+  "ames_imputation_fix": [
+    {
+      "Mo_hinh": "Linear Regression (baseline)",
+      "MAPE_cu_dien_truoc_khi_chia_%": 7.9639,
+      "MAPE_moi_dien_trong_pipeline_%": 7.9646,
+      "Chenh_lech_diem_%": 0.0007,
+      "RMSE_cu": 19609.4491,
+      "RMSE_moi": 19610.5206
+    },
+    {
+      "Mo_hinh": "Random Forest",
+      "MAPE_cu_dien_truoc_khi_chia_%": 8.2325,
+      "MAPE_moi_dien_trong_pipeline_%": 8.1588,
+      "Chenh_lech_diem_%": -0.0738,
+      "RMSE_cu": 21191.781,
+      "RMSE_moi": 21177.7609
+    },
+    {
+      "Mo_hinh": "XGBoost",
+      "MAPE_cu_dien_truoc_khi_chia_%": 7.4554,
+      "MAPE_moi_dien_trong_pipeline_%": 7.5387,
+      "Chenh_lech_diem_%": 0.0833,
+      "RMSE_cu": 19183.3143,
+      "RMSE_moi": 19297.5195
+    }
+  ],
+  "oof_screening_mape_pct": 10.937,
+  "below_prediction_rate_pct_all_transactions": 6.26,
   "candidate_pool_size": 21229,
   "recommended_pool_size": 795,
-  "needs_verification_count": 36,
+  "needs_verification_count": 37,
   "anomaly_cap_pct": -50.0,
   "top20_raw_total_price_usd": 5697741.0,
-  "top20_total_price_usd": 4534822.0,
-  "top20_total_predicted_usd": 8521716.0,
-  "top20_all_three_models_agree": 20
+  "top20_total_historical_price_usd": 4669822.0,
+  "top20_total_predicted_usd": 8786216.0,
+  "top20_gap_to_prediction_usd": 4116394.0,
+  "top20_gap_note": "Chênh lệch so với giá dự báo trên giao dịch lịch sử; không phải lợi nhuận có thể đạt được.",
+  "top20_all_three_models_agree": 20,
+  "top20_core_all_seed_variants": 4,
+  "seed_variants_counted": 8
 }

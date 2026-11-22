@@ -1,24 +1,47 @@
 # %% [markdown]
-# # Nhiệm vụ 4 — Mô hình dự báo giá & danh sách 20 căn bị định giá thấp
-# Chủ đề 14: Mô hình định giá bất động sản tự động.
+# # Nhiệm vụ 4 — Mô hình dự báo giá & 20 ứng viên có giá giao dịch thấp hơn dự báo
+# Chủ đề 14: Mô hình định giá bất động sản tự động. **Phiên bản 2** (sửa theo feedback 21/11/2026, mã F01–F12).
 #
 # **Đầu vào:** dữ liệu sạch của Nhiệm vụ 2 (`data/processed/*.csv`).
 # **Đầu ra:** `models/model.pkl`, `outputs/task4/tables/*`, `outputs/task4/figures/*`.
 #
+# Logic dùng lại (tạo biến, registry mô hình, đánh giá, what-if, quy tắc chọn, dự báo) nằm trong package
+# `bds_valuation/`; import package không huấn luyện gì. Script này là luồng chạy đầy đủ và cũng là nguồn của
+# notebook `notebooks/04_Modeling.ipynb`.
+#
 # Quy trình:
-# 1. Đọc dữ liệu, tạo biến cho mô hình, loại các biến rò rỉ giá (`price_per_sqft`, `price_iqr_outlier`).
-# 2. Chia train/test 80/20 **theo id tài sản** (một căn bán nhiều lần không nằm ở cả hai phía).
-# 3. Mốc so sánh thô (trung vị đơn giá theo zipcode), Baseline Linear Regression, Random Forest, XGBoost (tinh chỉnh bằng CV).
-# 4. Đánh giá MAPE, RMSE, MAE, R² trên tập test; MAPE theo phân khúc giá; kiểm tra chia theo thời gian.
-# 5. Dự báo **out-of-fold** (5-fold theo id) cho toàn bộ giao dịch → residual → 20 căn có residual âm lớn nhất.
-# 6. Phân tích độ nhạy: what-if từng biến, permutation importance, ngưỡng %, độ ổn định top 20.
-# 7. Kiểm chứng phụ trên Ames.
+# 1. Đọc dữ liệu, tạo biến qua `engineer_king_features` (cùng hàm dùng khi dự báo); loại biến rò rỉ giá.
+# 2. Chia train/test 80/20 **theo id tài sản**. Tập test là tập đánh giá cuối, không dùng để chọn gì.
+# 3. Tinh chỉnh XGBoost và **chọn mô hình bằng CV trên train** (F04: mọi bước dùng chung một registry).
+# 4. Đánh giá test; MAPE theo phân khúc; **backtest thời gian độc lập** (F02); **nested CV** (F03).
+# 5. OOF cho sàng lọc → residual → 20 ứng viên *giá giao dịch thấp hơn dự báo, cần xác minh* (F05, F08).
+# 6. Độ nhạy: what-if giữ quan hệ diện tích (F06), permutation importance, ngưỡng %, tần suất xuất hiện top 20.
+# 7. Kiểm chứng phụ trên Ames với điền thiếu học trong Pipeline (F01).
 
 # %%
 import json
+import os
+import sys
 import time
 import warnings
 from pathlib import Path
+
+
+def _locate_root():
+    """Script: đi lên từ __file__. Notebook: đi lên từ cwd. Hoặc đặt BDS_PROJECT_ROOT (F11)."""
+    if os.environ.get("BDS_PROJECT_ROOT"):
+        return Path(os.environ["BDS_PROJECT_ROOT"]).expanduser().resolve()
+    try:
+        start = Path(__file__).resolve().parent
+    except NameError:                      # notebook không có __file__
+        start = Path.cwd().resolve()
+    for cand in (start, *start.parents):
+        if (cand / "bds_valuation").is_dir() and (cand / "data" / "processed").is_dir():
+            return cand
+    raise FileNotFoundError("Không tìm thấy thư mục gốc project; đặt BDS_PROJECT_ROOT.")
+
+
+sys.path.insert(0, str(_locate_root()))
 
 import joblib
 import matplotlib
@@ -28,33 +51,26 @@ import numpy as np
 import pandas as pd
 import sklearn
 import xgboost
-from sklearn.compose import ColumnTransformer, TransformedTargetRegressor
-from sklearn.ensemble import RandomForestRegressor
 from sklearn.inspection import permutation_importance
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import (mean_absolute_error, mean_absolute_percentage_error,
-                             mean_squared_error, r2_score)
-from sklearn.model_selection import GroupKFold, GroupShuffleSplit, RandomizedSearchCV
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import (FunctionTransformer, OneHotEncoder, OrdinalEncoder,
-                                   StandardScaler)
-from xgboost import XGBRegressor
+from sklearn.metrics import mean_absolute_percentage_error
+from sklearn.model_selection import GroupKFold, GroupShuffleSplit
+
+from bds_valuation import ames as A
+from bds_valuation import selection as S
+from bds_valuation.evaluation import (group_split, metrics, nested_cv_oof, oof_predict, run_temporal_backtest,
+                                      select_by_cv, tune_xgb)
+from bds_valuation.features import CAT_FEATURES, FEATURES, LEAKAGE, NUM_FEATURES, load_king_clean
+from bds_valuation.models import (LR_NAME, MODEL_NAMES, RF_NAME, SEED, XGB_NAME, build_model,
+                                  check_bundle_consistency)
+from bds_valuation.paths import find_project_root, project_paths
+from bds_valuation.whatif import run_whatif
 
 warnings.filterwarnings("ignore", category=UserWarning)
 
-ROOT = Path.cwd()
-if not (ROOT / "data").exists():          # chạy từ notebooks/ hoặc scripts/
-    ROOT = ROOT.parent
-DATA = ROOT / "data" / "processed"
-OUT_T = ROOT / "outputs" / "task4" / "tables"
-OUT_F = ROOT / "outputs" / "task4" / "figures"
-OUT_M = ROOT / "models"
-for p in (OUT_T, OUT_F, OUT_M):
-    p.mkdir(parents=True, exist_ok=True)
-
-SEED = 42
-UNDERVALUE_THRESHOLD = -0.20     # giá bán thấp hơn giá trị mô hình ≥ 20%
-N_CANDIDATES = 20                # ràng buộc: Giám đốc đầu tư chọn 20 căn
+P = project_paths(find_project_root(_locate_root()))
+ROOT, DATA, OUT_T, OUT_F, OUT_M = P["root"], P["data"], P["tables"], P["figures"], P["models"]
+FAST = os.environ.get("BDS_FAST") == "1"     # chạy nhanh để kiểm tra luồng (ít vòng tinh chỉnh); kết quả nộp dùng FAST=0
+N_ITER, N_ITER_NESTED = (3, 2) if FAST else (20, 10)
 
 # Bảng màu (đã kiểm định cho người mù màu) — xanh = mô hình chính, cam = nổi bật/ứng viên
 BLUE, ORANGE, AQUA, GRAY, INK, MUTED = "#2a78d6", "#eb6834", "#1baf7a", "#a3a29c", "#0b0b0b", "#52514e"
@@ -66,131 +82,60 @@ plt.rcParams.update({
     "grid.color": "#ecebe7", "grid.linewidth": 0.8, "font.size": 10, "figure.dpi": 110,
 })
 
+
 def savefig(fig, name):
     for ext in ("png", "svg"):
         fig.savefig(OUT_F / f"{name}.{ext}", bbox_inches="tight", dpi=160 if ext == "png" else None)
     plt.close(fig)
 
-def metrics(y_true, y_pred):
-    y_true, y_pred = np.asarray(y_true), np.asarray(y_pred)
-    ape = np.abs(y_pred - y_true) / y_true
-    return {
-        "MAPE_%": 100 * mean_absolute_percentage_error(y_true, y_pred),
-        "MdAPE_%": 100 * np.median(ape),
-        "RMSE": float(np.sqrt(mean_squared_error(y_true, y_pred))),
-        "MAE": mean_absolute_error(y_true, y_pred),
-        "R2": r2_score(y_true, y_pred),
-        "Ty_le_sai_<=10%": 100 * np.mean(ape <= 0.10),
-        "Ty_le_sai_<=20%": 100 * np.mean(ape <= 0.20),
-    }
 
-print("pandas", pd.__version__, "| sklearn", sklearn.__version__, "| xgboost", xgboost.__version__)
+print("ROOT =", ROOT)
+print("python", sys.version.split()[0], "| pandas", pd.__version__, "| sklearn", sklearn.__version__,
+      "| xgboost", xgboost.__version__, "| FAST =", FAST)
 
 # %% [markdown]
 # ## 1. Đọc dữ liệu King County và tạo biến
-# Đọc đúng kiểu theo `docs/data_handoff.txt`. Các biến thêm cho mô hình (chỉ dùng thông tin có trước giao dịch):
-# - `is_renovated`, `years_since_update` = năm bán − max(năm xây, năm cải tạo)
-# - `month_index` = số tháng kể từ 05/2014 (bắt xu hướng thị trường)
-#
+# `load_king_clean` đọc đúng kiểu theo `docs/data_handoff.txt` rồi gọi `engineer_king_features` — **cùng một hàm**
+# mà `bds_valuation.predict` dùng khi dự báo căn mới (F12). Biến thêm (chỉ dùng thông tin có trước giao dịch):
+# `is_renovated`, `years_since_update` = năm bán − max(năm xây, năm cải tạo), `month_index` = số tháng kể từ 05/2014.
 # Loại khỏi X: `price` (mục tiêu), `price_per_sqft`, `price_iqr_outlier` (chứa giá), các mã truy vết.
 
 # %%
-king = pd.read_csv(DATA / "king_county_clean.csv", dtype={"id": "string", "zipcode": "string"})
-king["date"] = pd.to_datetime(king["date"])
-king["is_renovated"] = (king["yr_renovated"] > 0).astype(int)
-king["years_since_update"] = (king["sale_year"] - king[["yr_built", "yr_renovated"]].max(axis=1)).clip(lower=0)
-king["month_index"] = (king["date"].dt.year - 2014) * 12 + king["date"].dt.month - 5
-
-NUM_FEATURES = ["bedrooms", "bathrooms", "sqft_living", "sqft_lot", "floors", "waterfront", "view",
-                "condition", "grade", "sqft_above", "sqft_basement", "house_age", "is_renovated",
-                "years_since_update", "lat", "long", "distance_to_center_km", "sqft_living15",
-                "sqft_lot15", "month_index"]
-CAT_FEATURES = ["zipcode"]
-FEATURES = NUM_FEATURES + CAT_FEATURES
-LOG_COLS = ["sqft_living", "sqft_lot", "sqft_above", "sqft_living15", "sqft_lot15", "distance_to_center_km"]
-LEAKAGE = {"price", "price_per_sqft", "price_iqr_outlier"}
+king = load_king_clean(DATA / "king_county_clean.csv")
 assert not LEAKAGE & set(FEATURES), "Biến rò rỉ giá nằm trong X!"
-
 X, y, groups = king[FEATURES], king["price"], king["id"]
 print(f"King County: {len(king):,} giao dịch, {king['id'].nunique():,} tài sản, {len(FEATURES)} biến đầu vào")
 
 # %% [markdown]
 # ## 2. Chia train/test theo id tài sản
+# Tập test (20%) là **tập đánh giá cuối**: không tham gia tinh chỉnh, không tham gia chọn mô hình.
 
 # %%
-gss = GroupShuffleSplit(n_splits=1, test_size=0.2, random_state=SEED)
-tr_idx, te_idx = next(gss.split(X, y, groups))
+tr_idx, te_idx = group_split(X, y, groups, test_size=0.2, seed=SEED)
 X_tr, X_te, y_tr, y_te = X.iloc[tr_idx], X.iloc[te_idx], y.iloc[tr_idx], y.iloc[te_idx]
 g_tr = groups.iloc[tr_idx]
-assert not set(g_tr) & set(groups.iloc[te_idx])
-print(f"Train {len(X_tr):,} | Test {len(X_te):,} | id trùng giữa hai tập: 0")
+print(f"Train {len(X_tr):,} | Test {len(X_te):,} | id trùng giữa hai tập: {len(set(g_tr) & set(groups.iloc[te_idx]))}")
 
 # %% [markdown]
-# ## 3. Xây dựng mô hình
-# Mọi mô hình học trên **log(price)** (giá lệch phải mạnh) rồi đổi ngược về USD khi dự báo —
-# `TransformedTargetRegressor` lo việc này, nên MAPE/RMSE được tính trên giá thật.
-# Mọi bước tiền xử lý nằm trong Pipeline và chỉ fit trên train (tránh rò rỉ).
-
-# %%
-def make_linear():
-    pre = ColumnTransformer([
-        ("log", Pipeline([("log", FunctionTransformer(np.log1p, feature_names_out="one-to-one")),
-                          ("sc", StandardScaler())]), LOG_COLS),
-        ("num", StandardScaler(), [c for c in NUM_FEATURES if c not in LOG_COLS]),
-        ("zip", OneHotEncoder(handle_unknown="ignore"), CAT_FEATURES),
-    ])
-    return TransformedTargetRegressor(Pipeline([("pre", pre), ("model", LinearRegression())]),
-                                      func=np.log, inverse_func=np.exp)
-
-def tree_pre():
-    return ColumnTransformer([
-        ("num", "passthrough", NUM_FEATURES),
-        ("zip", OrdinalEncoder(handle_unknown="use_encoded_value", unknown_value=-1), CAT_FEATURES),
-    ], verbose_feature_names_out=False)
-
-def make_rf(seed=SEED):
-    rf = RandomForestRegressor(n_estimators=300, min_samples_leaf=2, max_features=0.5,
-                               n_jobs=-1, random_state=seed)
-    return TransformedTargetRegressor(Pipeline([("pre", tree_pre()), ("model", rf)]),
-                                      func=np.log, inverse_func=np.exp)
-
-def make_xgb(params=None, seed=SEED):
-    base = dict(n_estimators=1500, learning_rate=0.03, max_depth=6, min_child_weight=3,
-                subsample=0.8, colsample_bytree=0.7, reg_lambda=1.0, tree_method="hist",
-                n_jobs=-1, random_state=seed)
-    base.update(params or {})
-    return TransformedTargetRegressor(Pipeline([("pre", tree_pre()), ("model", XGBRegressor(**base))]),
-                                      func=np.log, inverse_func=np.exp)
-
-# %% [markdown]
-# ### 3a. Mốc so sánh thô: trung vị đơn giá theo zipcode × diện tích
-# Đây là cách "định giá thủ công" của môi giới. Mô hình phải tốt hơn mốc này mới có giá trị.
+# ## 3. Tinh chỉnh và chọn mô hình trên train
+# Mọi mô hình học trên **log(price)** rồi đổi ngược về USD (`TransformedTargetRegressor`), tiền xử lý nằm trong Pipeline.
+# Ba mô hình lấy từ **một registry** (`bds_valuation.models.MODEL_REGISTRY`) — cùng ánh xạ cho đánh giá, OOF và
+# final fit, nên mô hình nào thắng (kể cả Linear Regression) thì đúng mô hình đó được lưu (F04).
+#
+# ### 3a. Mốc so sánh thô: trung vị đơn giá theo zipcode × diện tích (cách "định giá thủ công")
 
 # %%
 ppsf_tr = (y_tr / X_tr["sqft_living"]).groupby(X_tr["zipcode"]).median()
 naive_pred = X_te["zipcode"].map(ppsf_tr).fillna((y_tr / X_tr["sqft_living"]).median()) * X_te["sqft_living"]
 
 # %% [markdown]
-# ### 3b. Tinh chỉnh XGBoost (RandomizedSearch, 3-fold theo id, chỉ trên train)
+# ### 3b. Tinh chỉnh XGBoost (RandomizedSearch, GroupKFold 3 theo id, chỉ trên train)
 
 # %%
 t0 = time.time()
-search = RandomizedSearchCV(
-    make_xgb(),
-    param_distributions={
-        "regressor__model__max_depth": [4, 5, 6, 7, 8],
-        "regressor__model__learning_rate": [0.02, 0.03, 0.05],
-        "regressor__model__n_estimators": [800, 1200, 1800],
-        "regressor__model__min_child_weight": [1, 3, 5, 10],
-        "regressor__model__subsample": [0.7, 0.8, 0.9],
-        "regressor__model__colsample_bytree": [0.5, 0.7, 0.9],
-        "regressor__model__reg_lambda": [0.5, 1.0, 3.0, 10.0],
-    },
-    n_iter=20, cv=GroupKFold(n_splits=3), scoring="neg_mean_absolute_percentage_error",
-    random_state=SEED, n_jobs=1, refit=False,
-)
-search.fit(X_tr, y_tr, groups=g_tr)
-BEST_XGB = {k.replace("regressor__model__", ""): v for k, v in search.best_params_.items()}
+inner_tr = list(GroupKFold(n_splits=3, shuffle=True, random_state=SEED).split(X_tr, y_tr, g_tr))
+BEST_XGB, search = tune_xgb(X_tr, y_tr, cv=inner_tr, n_iter=N_ITER, seed=SEED)
+TUNED = {XGB_NAME: BEST_XGB}
 print(f"Tinh chỉnh xong sau {time.time()-t0:.0f}s — CV MAPE tốt nhất = {-100*search.best_score_:.2f}%")
 print("Tham số tốt nhất:", BEST_XGB)
 pd.DataFrame(search.cv_results_).sort_values("rank_test_score")[
@@ -198,36 +143,44 @@ pd.DataFrame(search.cv_results_).sort_values("rank_test_score")[
 ].assign(mean_test_MAPE_pct=lambda d: -100 * d["mean_test_score"]).to_csv(OUT_T / "xgb_tuning_results.csv", index=False)
 
 # %% [markdown]
-# ### 3c. Huấn luyện và đánh giá trên tập test
+# ### 3c. Chọn mô hình bằng CV trên train (không nhìn tập test)
+# Dùng lại 3 fold theo id ở trên. Điểm CV của XGBoost hơi lạc quan vì chính các fold này đã dùng để tinh chỉnh;
+# nested CV ở mục 3g đo cả bước tinh chỉnh + chọn mô hình một cách nghiêm ngặt.
 
 # %%
-models = {"Linear Regression (baseline)": make_linear(),
-          "Random Forest": make_rf(),
-          "XGBoost (tuned)": make_xgb(BEST_XGB)}
-preds = {"Mốc thô: đơn giá zipcode × diện tích": naive_pred.values}
-fit_time = {}
-for name, m in models.items():
-    t0 = time.time()
-    m.fit(X_tr, y_tr)
-    fit_time[name] = time.time() - t0
-    preds[name] = m.predict(X_te)
-
-metric_rows = [{"Thi_truong": "King County", "Mo_hinh": n, **metrics(y_te, p),
-                "Thoi_gian_fit_s": fit_time.get(n, 0.0)} for n, p in preds.items()]
-metrics_king = pd.DataFrame(metric_rows)
-print(metrics_king.round(3).to_string(index=False))
-
-BEST_NAME = metrics_king.iloc[1:].sort_values("MAPE_%").iloc[0]["Mo_hinh"]
-best_model = models[BEST_NAME]
-print("\nMô hình tốt nhất theo MAPE:", BEST_NAME)
+BEST_NAME, cv_scores = select_by_cv(X_tr, y_tr, inner_tr, TUNED, seed=SEED)
+cv_table = pd.DataFrame({"Mo_hinh": list(cv_scores), "CV_MAPE_train_%": list(cv_scores.values())})
+cv_table["Duoc_chon"] = cv_table["Mo_hinh"].eq(BEST_NAME)
+cv_table.to_csv(OUT_T / "model_selection_cv_train.csv", index=False)
+print(cv_table.round(3).to_string(index=False))
+print("\nMô hình được chọn (trước khi xem test):", BEST_NAME)
 
 # %% [markdown]
-# ### 3d. MAPE theo phân khúc giá (mô hình tốt nhất có kém ở phân khúc nào không?)
+# ### 3d. Đánh giá cuối trên tập test
+
+# %%
+models, preds, fit_time = {}, {"Mốc thô: đơn giá zipcode × diện tích": naive_pred.values}, {}
+for name in MODEL_NAMES:
+    t0 = time.time()
+    models[name] = build_model(name, seed=SEED, params=TUNED.get(name)).fit(X_tr, y_tr)
+    fit_time[name] = time.time() - t0
+    preds[name] = models[name].predict(X_te)
+metrics_king = pd.DataFrame([{"Thi_truong": "King County", "Mo_hinh": n, **metrics(y_te, p),
+                              "Thoi_gian_fit_s": fit_time.get(n, 0.0),
+                              "Chon_bang_CV_train": n == BEST_NAME} for n, p in preds.items()])
+print(metrics_king.drop(columns=["Thi_truong"]).round(3).to_string(index=False))
+best_model = models[BEST_NAME]
+test_best = metrics_king.set_index("Mo_hinh")["MAPE_%"].drop("Mốc thô: đơn giá zipcode × diện tích").idxmin()
+print(f"\nMô hình chọn bằng CV: {BEST_NAME} | mô hình có MAPE test thấp nhất: {test_best} "
+      f"({'trùng' if test_best == BEST_NAME else 'KHÁC — báo cáo theo mô hình đã chọn trước'})")
+
+# %% [markdown]
+# ### 3e. MAPE theo phân khúc giá
 
 # %%
 seg = pd.qcut(y_te, 5, labels=["Q1 rẻ nhất", "Q2", "Q3", "Q4", "Q5 đắt nhất"])
 seg_rows = []
-for name in ["Linear Regression (baseline)", BEST_NAME]:
+for name in dict.fromkeys([LR_NAME, BEST_NAME]):
     ape = np.abs(preds[name] - y_te.values) / y_te.values
     for s in seg.cat.categories:
         msk = (seg == s).values
@@ -239,25 +192,39 @@ mape_segment.to_csv(OUT_T / "mape_by_price_segment.csv", index=False)
 print(mape_segment.round(2).to_string(index=False))
 
 # %% [markdown]
-# ### 3e. Kiểm tra theo thời gian: train trước 01/02/2015, test từ 01/02/2015
-# Mô phỏng tình huống thật: học quá khứ, định giá giao dịch tương lai.
+# ### 3f. Backtest theo thời gian độc lập (F02)
+# Tách **tương lai trước** (giao dịch từ 01/02/2015, chỉ tài sản chưa xuất hiện trong quá khứ). Trong quá khứ:
+# fit khi tinh chỉnh = giao dịch trước 01/11/2014, validation = 3 tháng cuối quá khứ. Tinh chỉnh XGBoost và chọn
+# mô hình chỉ trên quá khứ, **khóa cấu hình**, fit lại trên toàn bộ quá khứ rồi chấm tương lai đúng một lần.
 
 # %%
-cut = pd.Timestamp("2015-02-01")
-past, future = king["date"] < cut, king["date"] >= cut
-future &= ~king["id"].isin(king.loc[past, "id"])     # bỏ căn đã xuất hiện trong quá khứ
-time_rows = []
-for name, maker in [("Linear Regression (baseline)", make_linear),
-                    ("XGBoost (tuned)", lambda: make_xgb(BEST_XGB))]:
-    m = maker().fit(X[past], y[past])
-    time_rows.append({"Thi_truong": "King County (chia theo thời gian)", "Mo_hinh": name,
-                      **metrics(y[future], m.predict(X[future])), "Thoi_gian_fit_s": np.nan})
-metrics_time = pd.DataFrame(time_rows)
-print(f"Train {past.sum():,} giao dịch trước {cut.date()}, test {future.sum():,} giao dịch sau")
-print(metrics_time[["Mo_hinh", "MAPE_%", "RMSE", "R2"]].round(3).to_string(index=False))
+t0 = time.time()
+metrics_time, temporal_info = run_temporal_backtest(X, y, king["date"], groups, cutoff="2015-02-01",
+                                                    n_iter=N_ITER, seed=SEED)
+(OUT_T / "temporal_backtest.json").write_text(json.dumps(temporal_info, ensure_ascii=False, indent=2, default=float),
+                                              encoding="utf-8")
+print(json.dumps({k: temporal_info[k] for k in ("cutoff", "validation_start", "past_rows", "inner_train_rows",
+                                                 "inner_validation_rows", "future_rows", "locked_model")},
+                 ensure_ascii=False, default=float))
+print(metrics_time[["Mo_hinh", "MAPE_%", "RMSE", "R2", "Chon_truoc_khi_xem_tuong_lai"]].round(3).to_string(index=False))
+print(f"({time.time()-t0:.0f}s)")
 
 # %% [markdown]
-# ### 3f. Biểu đồ: so sánh mô hình, thực tế vs dự báo
+# ### 3g. Nested CV — ước lượng hiệu năng nghiêm ngặt (F03)
+# Outer: GroupKFold 5 theo id trên toàn bộ giao dịch. Trong **mỗi outer-train**: tinh chỉnh XGBoost
+# (GroupKFold 3 theo id) và chọn giữa LR/RF/XGBoost; sau đó mới dự báo outer-test. Không tài sản nào của
+# outer-test tham gia fit, tinh chỉnh hay chọn mô hình cho chính nó.
+
+# %%
+t0 = time.time()
+oof_nested, nested_folds = nested_cv_oof(X, y, groups, outer_splits=5, inner_splits=3, n_iter=N_ITER_NESTED, seed=SEED)
+nested_folds.to_csv(OUT_T / "nested_cv_folds.csv", index=False)
+nested_metrics = {"Thi_truong": "King County (nested CV 5×3, OOF)", "Mo_hinh": "Quy trình: tinh chỉnh + chọn mô hình trong từng fold",
+                  **metrics(y, oof_nested), "Thoi_gian_fit_s": time.time() - t0}
+print(f"Nested CV MAPE = {nested_metrics['MAPE_%']:.2f}% ({time.time()-t0:.0f}s)")
+
+# %% [markdown]
+# ### 3h. Biểu đồ: so sánh mô hình, thực tế vs dự báo
 
 # %%
 fig, ax = plt.subplots(figsize=(7.5, 3.4))
@@ -268,12 +235,12 @@ ax.invert_yaxis()
 for b, v in zip(bars, mk["MAPE_%"]):
     ax.text(v + 0.3, b.get_y() + b.get_height() / 2, f"{v:.1f}%", va="center", color=INK, fontsize=10)
 ax.set_xlabel("MAPE trên tập test (%) — càng thấp càng tốt")
-ax.set_title("King County: sai số phần trăm tuyệt đối trung bình theo mô hình", loc="left")
+ax.set_title("King County: MAPE theo mô hình (xanh = mô hình chọn bằng CV trên train)", loc="left")
 ax.grid(axis="y", visible=False)
 savefig(fig, "king_model_comparison_mape")
 
 fig, axes = plt.subplots(1, 2, figsize=(10, 4.4), sharex=True, sharey=True)
-for ax, name in zip(axes, ["Linear Regression (baseline)", BEST_NAME]):
+for ax, name in zip(axes, [LR_NAME, BEST_NAME]):
     p = preds[name]
     ax.scatter(y_te / 1e6, p / 1e6, s=6, alpha=0.35, color=BLUE, linewidths=0)
     lim = [0.05, 5]
@@ -290,31 +257,29 @@ fig.suptitle("Thực tế và dự báo trên tập test — điểm càng sát 
 savefig(fig, "king_actual_vs_predicted")
 
 # %% [markdown]
-# ## 4. Residual out-of-fold cho toàn bộ giao dịch
-# Nếu tính residual trên chính dữ liệu đã train, mô hình đã "học thuộc" giá căn đó nên residual bị thu nhỏ.
-# Vì vậy mỗi giao dịch được định giá bởi mô hình **chưa từng thấy tài sản đó** (GroupKFold 5 phần theo id).
+# ## 4. Residual out-of-fold cho sàng lọc
+# Mỗi giao dịch được dự báo bởi mô hình **chưa fit trên tài sản đó** (GroupKFold 5 theo id).
+# **Giới hạn (F03):** cấu hình XGBoost ở đây là bộ tham số đã chọn ở mục 3b từ train, nên một số tài sản được dự
+# báo OOF đã gián tiếp tham gia chọn siêu tham số. "Chưa thấy tài sản" chỉ đúng ở bước fit. OOF này dùng để **sàng
+# lọc**; ước lượng hiệu năng nghiêm ngặt là nested CV ở mục 3g.
 #
-# `residual = giá thực − giá mô hình`; `residual_pct = giá thực / giá mô hình − 1`.
-# Căn có residual_pct ≤ −20% được coi là **bị định giá thấp** (ứng viên).
+# `residual = giá giao dịch − giá dự báo`; `residual_pct = giá giao dịch / giá dự báo − 1`.
+# residual_pct ≤ −20% nghĩa là **giá giao dịch thấp hơn dự báo ít nhất 20%** — chưa chứng minh bị định giá thấp:
+# chênh lệch có thể do mô hình dự báo cao, thiếu đặc điểm quan trọng, giao dịch đặc biệt, lỗi dữ liệu, hoặc cơ hội thật.
 
 # %%
-def oof_predict(maker, seed=SEED, n_splits=5):
-    oof = np.zeros(len(X))
-    for k, (a, b) in enumerate(GroupKFold(n_splits=n_splits, shuffle=True, random_state=seed).split(X, y, groups)):
-        oof[b] = maker(seed).fit(X.iloc[a], y.iloc[a]).predict(X.iloc[b])
-    return oof
-
-# Mô hình chính: trung bình 4 lần OOF với 4 seed chia fold khác nhau (giảm nhiễu do cách chia fold).
 SEEDS = [42, 1, 7, 2024]
-best_maker = (lambda s: make_xgb(BEST_XGB, seed=s)) if BEST_NAME.startswith("XGB") else (lambda s: make_rf(seed=s))
 t0 = time.time()
-oof_seeds = {s: oof_predict(best_maker, seed=s) for s in SEEDS}
-oof_best = np.mean(list(oof_seeds.values()), axis=0)
-oof_rf = oof_predict(lambda s: make_rf(seed=s))
-oof_lr = oof_predict(lambda s: make_linear())
+oof = {n: oof_predict(n, X, y, groups, seed=SEED, params=TUNED.get(n)) for n in MODEL_NAMES}
+oof_seeds = {SEED: oof[BEST_NAME]}
+oof_seeds.update({s: oof_predict(BEST_NAME, X, y, groups, seed=s, params=TUNED.get(BEST_NAME))
+                  for s in SEEDS if s != SEED})
+oof_best = np.mean([oof_seeds[s] for s in SEEDS], axis=0)       # mô hình chính: TB 4 seed chia fold
+others = [n for n in MODEL_NAMES if n != BEST_NAME]
 print(f"OOF xong sau {time.time()-t0:.0f}s")
-print("OOF MAPE — mô hình chính: %.2f%% | RF: %.2f%% | LR: %.2f%%" % tuple(
-    100 * mean_absolute_percentage_error(y, o) for o in (oof_best, oof_rf, oof_lr)))
+print(f"OOF MAPE — {BEST_NAME} (TB 4 seed): {100*mean_absolute_percentage_error(y, oof_best):.2f}% | " +
+      " | ".join(f"{n}: {100*mean_absolute_percentage_error(y, oof[n]):.2f}%" for n in others) +
+      f" | nested CV: {nested_metrics['MAPE_%']:.2f}%")
 
 val = king[["source_row_id", "id", "date", "price", "zipcode", "lat", "long", "bedrooms", "bathrooms",
             "sqft_living", "sqft_lot", "grade", "condition", "view", "waterfront", "house_age",
@@ -322,118 +287,83 @@ val = king[["source_row_id", "id", "date", "price", "zipcode", "lat", "long", "b
 val["predicted_price"] = oof_best.round(0)
 val["residual"] = (val["price"] - val["predicted_price"]).round(0)
 val["residual_pct"] = val["price"] / val["predicted_price"] - 1
-val["residual_pct_rf"] = val["price"] / oof_rf - 1
-val["residual_pct_lr"] = val["price"] / oof_lr - 1
-# Mức giảm thận trọng: residual "ít âm nhất" trong 3 mô hình — căn chỉ xếp cao khi CẢ 3 cùng thấy rẻ.
-val["residual_pct_conservative"] = val[["residual_pct", "residual_pct_rf", "residual_pct_lr"]].max(axis=1)
-val["undervalued_20pct"] = (val["residual_pct"] <= UNDERVALUE_THRESHOLD).astype(int)
-val["models_agree_undervalued"] = ((val[["residual_pct", "residual_pct_rf", "residual_pct_lr"]]
-                                    <= UNDERVALUE_THRESHOLD).sum(axis=1))
+SHORT = {LR_NAME: "lr", RF_NAME: "rf", XGB_NAME: "xgb"}
+OTHER_COL = {n: f"residual_pct_{SHORT[n]}" for n in others}     # mô hình chính XGBoost -> residual_pct_lr, residual_pct_rf
+for n, c in OTHER_COL.items():
+    val[c] = val["price"] / oof[n] - 1
+RCOLS = ["residual_pct", *OTHER_COL.values()]
+val["residual_pct_nested"] = val["price"] / oof_nested - 1
+val["residual_pct_conservative"] = val[RCOLS].max(axis=1)     # căn chỉ xếp cao khi cả 3 mô hình cùng thấy thấp
+val["below_prediction_20pct"] = (val["residual_pct"] <= S.BELOW_THRESHOLD).astype(int)
+val["models_agree_below_20pct"] = (val[RCOLS] <= S.BELOW_THRESHOLD).sum(axis=1)
 val["is_latest_sale"] = (val["date"] == val.groupby("id")["date"].transform("max")).astype(int)
 val.to_csv(OUT_T / "king_oof_predictions.csv", index=False, date_format="%Y-%m-%d")
-print(f"Tỷ lệ giao dịch bị định giá thấp ≥20%: {100*val['undervalued_20pct'].mean():.2f}% "
-      f"({val['undervalued_20pct'].sum():,} giao dịch)")
+print(f"Giao dịch có giá thấp hơn dự báo ≥20%: {100*val['below_prediction_20pct'].mean():.2f}% "
+      f"({val['below_prediction_20pct'].sum():,} giao dịch)")
 
 # %% [markdown]
-# ## 5. Danh sách 20 căn ứng viên
-# Quy tắc chọn (ghi rõ để Giám đốc đầu tư kiểm tra):
-# 1. Chỉ xét **giao dịch gần nhất** của mỗi tài sản (không chọn trùng một căn).
-# 2. Loại căn có cờ `zero_room_flag` (0 phòng ngủ/tắm — nghi dữ liệu lỗi) và căn `condition ≤ 2`
-#    (giá thấp do hư hỏng là có lý do, không phải "định giá sai").
-# 3. Xếp theo `residual_pct` tăng dần (âm nhất trước). Dùng % thay vì USD để không thiên vị nhà đắt.
-#
-# **Danh sách thô** = 20 căn đầu theo quy tắc trên (đúng định nghĩa "residual âm lớn nhất").
-# Tuy nhiên đuôi cực trị (giảm > 50%, xa hơn rất nhiều so với sai số điển hình ~7–11% của mô hình)
-# thường là giao dịch không theo thị trường (bán cho người thân, thừa kế, bán tháo, bán khi nhà
-# chưa xây xong) hoặc lỗi nhập liệu — không phải cơ hội mua được. Vì vậy **danh sách khuyến nghị** thêm:
-# 4. Mức giảm trong khoảng 20%–50% (căn giảm > 50% chuyển sang file "cần xác minh").
-# 5. Cả 3 mô hình (XGBoost, RF, LR) cùng cho residual ≤ −20% (đồng thuận, giảm rủi ro sai do một mô hình).
-# 6. Loại nhà tuổi 0 (bán khi đang/vừa xây, giá có thể là giá đất/giá đặt cọc).
-# 7. Xếp theo **mức giảm thận trọng** = mức giảm nhỏ nhất trong 3 mô hình (ổn định hơn xếp theo 1 mô hình).
+# ## 5. Danh sách 20 ứng viên cần xác minh
+# **Mục tiêu của quy tắc** (do nhóm đặt): ưu tiên chênh lệch *tương đối* so với giá dự báo, ổn định qua ba mô hình,
+# loại trường hợp nhiều khả năng là giao dịch đặc biệt/lỗi dữ liệu. Ngưỡng −20%, trần −50%, lọc tuổi nhà là
+# **quy tắc lựa chọn của nhóm, chưa được hiệu chỉnh bằng kết quả thẩm định thực tế**. Danh sách không phải tối ưu
+# đầu tư; các giao dịch là lịch sử 2014–2015, không xác nhận hiện có thể mua ở giá đó.
 
 # %%
-ANOMALY_CAP = -0.50
-pool = val[(val["is_latest_sale"] == 1) & (val["zero_room_flag"] == 0) & (val["condition"] >= 3)]
-pool_rec = pool[(pool["residual_pct"] >= ANOMALY_CAP) & (pool["models_agree_undervalued"] == 3)
-                & (pool["house_age"] > 0)]
-cols20 = ["Hang", "id", "date", "zipcode", "price", "predicted_price", "upside_usd", "discount_pct",
-          "discount_conservative_pct", "residual", "models_agree_undervalued", "sqft_living", "bedrooms",
-          "bathrooms", "grade", "condition", "view", "waterfront", "house_age", "distance_to_center_km",
-          "lat", "long"]
+rules = pd.DataFrame(S.RULES, columns=["Ma", "Quy_tac", "Ly_do"])
+rules.to_csv(OUT_T / "selection_rules.csv", index=False)
+print(rules[["Ma", "Quy_tac"]].to_string(index=False))
 
-def make_list(frame, n=N_CANDIDATES, key="residual_pct"):
-    t = frame.sort_values(key).head(n).copy()
-    t.insert(0, "Hang", range(1, len(t) + 1))
-    t["discount_pct"] = (-100 * t["residual_pct"]).round(1)
-    t["discount_conservative_pct"] = (-100 * t["residual_pct_conservative"]).round(1)
-    t["upside_usd"] = (t["predicted_price"] - t["price"]).round(0)
-    return t[cols20]
-
-top20_raw = make_list(pool)
-top20 = make_list(pool_rec, key="residual_pct_conservative")
-top20["cumulative_cost_usd"] = top20["price"].cumsum()
-needs_check = make_list(pool[pool["residual_pct"] < ANOMALY_CAP], n=10_000)
-top20.to_csv(OUT_T / "top20_undervalued_king.csv", index=False, date_format="%Y-%m-%d")
-top20_raw.to_csv(OUT_T / "top20_raw_largest_negative_residual_king.csv", index=False, date_format="%Y-%m-%d")
-needs_check.to_csv(OUT_T / "candidates_need_verification_king.csv", index=False, date_format="%Y-%m-%d")
-print(f"Pool sau lọc cơ bản: {len(pool):,} căn | đạt điều kiện khuyến nghị: {len(pool_rec):,} | "
-      f"giảm >50% cần xác minh: {len(needs_check)}")
-print(f"Danh sách thô trùng với danh sách khuyến nghị: {len(set(top20_raw['id']) & set(top20['id']))}/20")
-print(f"Tổng vốn mua 20 căn: {top20['price'].sum():,.0f} USD | "
-      f"Giá trị mô hình: {top20['predicted_price'].sum():,.0f} USD | "
-      f"Chênh lệch kỳ vọng: {top20['upside_usd'].sum():,.0f} USD")
-print(f"Số căn cả 3 mô hình cùng đồng ý: {(top20['models_agree_undervalued'] == 3).sum()} / 20")
-top20[["Hang", "id", "zipcode", "price", "predicted_price", "discount_pct", "models_agree_undervalued",
-       "sqft_living", "grade", "condition"]]
+pool = S.base_pool(val)
+others_cols = tuple(OTHER_COL.values())
+pool_rec = pool[S.recommended_mask(pool, others=others_cols)]
+top20 = S.rank_candidates(pool_rec)
+top20["cumulative_price_usd"] = top20["price"].cumsum()
+top20_raw = S.rank_candidates(pool, key="residual_pct")
+needs_check = S.rank_candidates(pool[pool["residual_pct"] < S.ANOMALY_CAP], n=10_000, key="residual_pct")
+cols20 = ["Hang", "id", "date", "zipcode", "price", "predicted_price", "gap_to_prediction_usd", "below_prediction_pct",
+          "below_prediction_conservative_pct", "residual", "models_agree_below_20pct", "sqft_living", "bedrooms",
+          "bathrooms", "grade", "condition", "view", "waterfront", "house_age", "distance_to_center_km", "lat", "long"]
+top20[cols20 + ["cumulative_price_usd"]].to_csv(OUT_T / "top20_candidates_below_prediction_king.csv", index=False, date_format="%Y-%m-%d")
+top20_raw[cols20].to_csv(OUT_T / "top20_raw_largest_negative_residual_king.csv", index=False, date_format="%Y-%m-%d")
+needs_check[cols20].to_csv(OUT_T / "candidates_need_verification_king.csv", index=False, date_format="%Y-%m-%d")
+print(f"Pool sau R1–R3: {len(pool):,} căn | đạt R4–R6: {len(pool_rec):,} | thấp hơn >50% cần xác minh: {len(needs_check)}")
+print(f"Tổng giá giao dịch lịch sử 20 căn: {top20['price'].sum():,.0f} USD | tổng giá dự báo: "
+      f"{top20['predicted_price'].sum():,.0f} USD | chênh lệch so với giá dự báo: {top20['gap_to_prediction_usd'].sum():,.0f} USD")
+print("(Chênh lệch so với dự báo KHÔNG phải lợi nhuận có thể đạt được.)")
+top20[["Hang", "id", "zipcode", "price", "predicted_price", "below_prediction_pct",
+       "below_prediction_conservative_pct", "sqft_living", "grade", "condition"]]
 
 # %%
 fig, axes = plt.subplots(1, 2, figsize=(11, 4.3), gridspec_kw={"width_ratios": [1.15, 1]})
 ax = axes[0]
 ax.hist(100 * val["residual_pct"].clip(-0.8, 0.8), bins=80, color=BLUE, alpha=0.85)
-ax.axvline(100 * UNDERVALUE_THRESHOLD, color=ORANGE, lw=2)
-ax.annotate(f"ngưỡng −20%:\n{100*val['undervalued_20pct'].mean():.1f}% giao dịch\nnằm bên trái",
-            xy=(100 * UNDERVALUE_THRESHOLD, ax.get_ylim()[1] * 0.75), xytext=(-75, ax.get_ylim()[1] * 0.75),
-            ha="left", va="center", color=INK, fontsize=9,
-            arrowprops=dict(arrowstyle="-", color=MUTED, lw=0.8))
-ax.set_xlabel("Residual (%) = giá thực / giá mô hình − 1 (cắt ở ±80%)")
+ax.axvline(100 * S.BELOW_THRESHOLD, color=ORANGE, lw=2)
+ax.annotate(f"ngưỡng −20%:\n{100*val['below_prediction_20pct'].mean():.1f}% giao dịch\nnằm bên trái",
+            xy=(100 * S.BELOW_THRESHOLD, ax.get_ylim()[1] * 0.75), xytext=(-75, ax.get_ylim()[1] * 0.75),
+            ha="left", va="center", color=INK, fontsize=9, arrowprops=dict(arrowstyle="-", color=MUTED, lw=0.8))
+ax.set_xlabel("Residual (%) = giá giao dịch / giá dự báo − 1 (cắt ở ±80%)")
 ax.set_ylabel("Số giao dịch")
 ax.set_title("Phân phối residual out-of-fold", loc="left")
 ax = axes[1]
 ax.scatter(val["long"], val["lat"], s=2, color=GRAY, alpha=0.35, linewidths=0, label="Toàn bộ giao dịch")
 ax.scatter(top20["long"], top20["lat"], s=60, color=ORANGE, edgecolor="#fcfcfb", linewidth=1.5,
-           label="20 căn ứng viên", zorder=3)
+           label="20 ứng viên cần xác minh", zorder=3)
 ax.set_xlabel("Kinh độ"); ax.set_ylabel("Vĩ độ")
-ax.set_title("Vị trí 20 căn bị định giá thấp", loc="left")
+ax.set_title("Vị trí 20 căn có giá thấp hơn dự báo", loc="left")
 leg = ax.legend(loc="lower left", frameon=False, fontsize=9)
 leg.legend_handles[0].set_sizes([25]); leg.legend_handles[0].set_alpha(0.8)
 savefig(fig, "king_residuals_and_candidates_map")
 
 # %% [markdown]
 # ## 6. Phân tích độ nhạy
-# ### 6a. What-if: thay đổi một đặc điểm, giá dự báo thay đổi bao nhiêu %?
-# Áp lên toàn bộ tập test, giữ nguyên các biến khác; báo trung vị % thay đổi giá dự báo.
+# ### 6a. What-if: phản ứng của mô hình khi thay một đặc điểm
+# Áp lên tập test, giữ nguyên các biến khác, báo trung vị % thay đổi giá dự báo. Kịch bản diện tích giữ đúng
+# `sqft_living = sqft_above + sqft_basement` (F06); cột cuối cho biết tỷ lệ dòng ra ngoài miền dữ liệu huấn luyện.
+# **Đây là phản ứng của mô hình, không phải tác động nhân quả của cải tạo**; chưa có chi phí, khả năng thực hiện hay
+# lợi nhuận ròng, nên chỉ dùng để đặt giả thuyết khảo sát (F07).
 
 # %%
-base_pred = best_model.predict(X_te)
-scenarios = {
-    "Diện tích ở +10%": lambda d: d.assign(sqft_living=d.sqft_living * 1.1, sqft_above=d.sqft_above * 1.1),
-    "Grade (chất lượng xây) +1": lambda d: d.assign(grade=(d.grade + 1).clip(upper=13)),
-    "Condition (tình trạng) +1": lambda d: d.assign(condition=(d.condition + 1).clip(upper=5)),
-    "View +1 bậc": lambda d: d.assign(view=(d.view + 1).clip(upper=4)),
-    "Thêm 1 phòng tắm": lambda d: d.assign(bathrooms=d.bathrooms + 1),
-    "Thêm 1 phòng ngủ (cùng diện tích)": lambda d: d.assign(bedrooms=d.bedrooms + 1),
-    "Tuổi nhà +10 năm": lambda d: d.assign(house_age=d.house_age + 10, years_since_update=d.years_since_update + 10),
-    "Cải tạo mới (years_since_update = 0)": lambda d: d.assign(is_renovated=1, years_since_update=0),
-    "Thời điểm bán +6 tháng": lambda d: d.assign(month_index=d.month_index + 6),
-    "Diện tích đất +20%": lambda d: d.assign(sqft_lot=d.sqft_lot * 1.2),
-}
-sens_rows = []
-for sc, f in scenarios.items():
-    chg = best_model.predict(f(X_te.copy())) / base_pred - 1
-    sens_rows.append({"Kich_ban": sc, "Trung_vi_thay_doi_%": 100 * np.median(chg),
-                      "Trung_binh_thay_doi_%": 100 * chg.mean(),
-                      "P10_%": 100 * np.percentile(chg, 10), "P90_%": 100 * np.percentile(chg, 90)})
-sens_whatif = pd.DataFrame(sens_rows).sort_values("Trung_vi_thay_doi_%", ascending=False)
+sens_whatif = run_whatif(best_model, X_te, X_tr)
 sens_whatif.to_csv(OUT_T / "sensitivity_whatif.csv", index=False)
 print(sens_whatif.round(2).to_string(index=False))
 
@@ -448,8 +378,8 @@ perm = pd.DataFrame({"Bien": FEATURES, "MAPE_tang_diem_%": 100 * pi.importances_
 perm.to_csv(OUT_T / "permutation_importance.csv", index=False)
 print(perm.round(2).head(12).to_string(index=False))
 
-fig, axes = plt.subplots(1, 2, figsize=(14, 4.8))
-fig.subplots_adjust(wspace=0.75)
+fig, axes = plt.subplots(1, 2, figsize=(14, 5.2))
+fig.subplots_adjust(wspace=0.95)
 ax = axes[0]
 pt = perm.head(12).iloc[::-1]
 ax.barh(pt["Bien"], pt["MAPE_tang_diem_%"], color=BLUE, height=0.6)
@@ -463,149 +393,167 @@ ax.axvline(0, color=INK, lw=0.8)
 for i, v in enumerate(sw["Trung_vi_thay_doi_%"]):
     ax.text(v + (0.3 if v >= 0 else -0.3), i, f"{v:+.1f}%", va="center", ha="left" if v >= 0 else "right",
             fontsize=9, color=INK)
-ax.set_xlabel("Trung vị % thay đổi giá dự báo")
+ax.set_xlabel("Trung vị % thay đổi giá dự báo (phản ứng của mô hình)")
 ax.set_title("What-if: độ nhạy của giá dự báo", loc="left"); ax.grid(axis="y", visible=False)
 ax.set_xlim(min(sw["Trung_vi_thay_doi_%"].min() * 3, -4), sw["Trung_vi_thay_doi_%"].max() * 1.35)
 savefig(fig, "king_sensitivity")
 
 # %% [markdown]
-# ### 6c. Độ nhạy theo ngưỡng undervalued (dữ liệu cho thanh trượt What-if trên Dashboard)
+# ### 6c. Độ nhạy theo ngưỡng (dữ liệu cho thanh trượt What-if trên Dashboard)
 
 # %%
 thr_rows = []
-RCOLS = ["residual_pct", "residual_pct_rf", "residual_pct_lr"]
-for t in [0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40]:
+for t in [0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50]:
     sel = pool[pool["residual_pct"] <= -t]
-    thr_rows.append({"Nguong_%": int(100 * t), "So_can_ung_vien": len(sel),
+    thr_rows.append({"Nguong_%": int(round(100 * t)), "So_can_ung_vien": len(sel),
                      "Ty_le_ung_vien_%": 100 * len(sel) / len(pool),
                      "Ca_3_mo_hinh_dong_y": int((sel[RCOLS] <= -t).all(axis=1).sum()),
-                     "Trong_do_giam_qua_50%": int((sel["residual_pct"] < ANOMALY_CAP).sum()),
+                     "Trong_do_thap_hon_qua_50%": int((sel["residual_pct"] < S.ANOMALY_CAP).sum()),
                      "Gia_trung_vi_USD": sel["price"].median() if len(sel) else np.nan,
-                     "Du_20_can": len(sel) >= N_CANDIDATES})
+                     "Du_20_can": len(sel) >= S.N_CANDIDATES})
 sens_thr = pd.DataFrame(thr_rows)
 sens_thr.to_csv(OUT_T / "sensitivity_threshold.csv", index=False)
 print(sens_thr.round(2).to_string(index=False))
 
 # %% [markdown]
-# ### 6d. Độ ổn định top 20: đổi seed chia fold / đổi mô hình thì danh sách giữ được bao nhiêu căn?
+# ### 6d. Độ ổn định & tần suất xuất hiện top 20 (F08)
+# Mỗi biến thể chạy lại đúng R4–R7, chỉ thay nguồn residual của mô hình chính hoặc cách xếp hạng. Ngoài số căn trùng
+# với danh sách chính, lưu **tần suất xuất hiện từng tài sản** qua các biến thể seed để nói về "nhóm lõi".
 
 # %%
-# Mỗi biến thể chạy lại đúng quy tắc chọn khuyến nghị, chỉ thay nguồn residual của mô hình chính.
-def rec_ids(main_resid, rank="conservative", n=N_CANDIDATES):
-    r = pd.DataFrame({"m": np.asarray(main_resid), "rf": val["residual_pct_rf"], "lr": val["residual_pct_lr"]},
-                     index=val.index).loc[pool.index]
-    ok = (r["m"] >= ANOMALY_CAP) & (r[["m", "rf", "lr"]] <= UNDERVALUE_THRESHOLD).all(axis=1) & (pool["house_age"] > 0)
-    key = r[["m", "rf", "lr"]].max(axis=1) if rank == "conservative" else r["m"]
-    return set(val.loc[key[ok].sort_values().head(n).index, "id"])
+resid_other = {"o1": val[RCOLS[1]], "o2": val[RCOLS[2]]}
+def ids_for(main_resid, rank="conservative"):
+    return S.candidate_ids({"m": main_resid, **resid_other}, pool.index, val["house_age"], val["id"], rank=rank)
 
-base_ids = set(top20["id"])
-stab_rows = [{"Bien_the": "Danh sách chính (XGBoost TB 4 seed, xếp theo mức giảm thận trọng)", "Trung_voi_ds_chinh": 20}]
+base_ids = list(top20["id"])
+variants = {"Danh sách chính (TB 4 seed, xếp thận trọng)": base_ids}
 for s in SEEDS:
-    stab_rows.append({"Bien_the": f"Chỉ dùng XGBoost 1 seed chia fold = {s}",
-                      "Trung_voi_ds_chinh": len(base_ids & rec_ids(val["price"] / oof_seeds[s] - 1))})
-stab_rows.append({"Bien_the": "Xếp theo residual của riêng XGBoost (không thận trọng)",
-                  "Trung_voi_ds_chinh": len(base_ids & rec_ids(val["residual_pct"], rank="main"))})
-for s in [1, 7]:
-    stab_rows.append({"Bien_the": f"XGBoost 1 seed {s} + xếp theo riêng XGBoost",
-                      "Trung_voi_ds_chinh": len(base_ids & rec_ids(val["price"] / oof_seeds[s] - 1, rank="main"))})
-stab_rows.append({"Bien_the": "Xếp theo residual USD thay vì %",
-                  "Trung_voi_ds_chinh": len(base_ids & set(pool_rec.sort_values("residual").head(20)["id"]))})
-stab_rows.append({"Bien_the": "Danh sách thô (không lọc bất thường)",
-                  "Trung_voi_ds_chinh": len(base_ids & set(top20_raw["id"]))})
+    variants[f"1 seed chia fold = {s}, xếp thận trọng"] = ids_for(val["price"] / oof_seeds[s] - 1)
+for s in SEEDS:
+    variants[f"1 seed chia fold = {s}, xếp theo riêng mô hình chính"] = ids_for(val["price"] / oof_seeds[s] - 1, rank="main")
+variants["Residual từ nested CV, xếp thận trọng"] = ids_for(val["residual_pct_nested"])
+seed_variant_names = [k for k in variants if k.startswith("1 seed")]
+stab_rows = [{"Bien_the": k, "Trung_voi_ds_chinh": len(set(base_ids) & set(v))} for k, v in variants.items()]
+stab_rows.append({"Bien_the": "Xếp theo chênh lệch USD thay vì %",
+                  "Trung_voi_ds_chinh": len(set(base_ids) & set(pool_rec.sort_values("residual").head(20)["id"]))})
+stab_rows.append({"Bien_the": "Danh sách thô (không lọc R4–R6)", "Trung_voi_ds_chinh": len(set(base_ids) & set(top20_raw["id"]))})
 stability = pd.DataFrame(stab_rows)
-stability["Ty_le_%"] = 100 * stability["Trung_voi_ds_chinh"] / N_CANDIDATES
+stability["Ty_le_%"] = 100 * stability["Trung_voi_ds_chinh"] / S.N_CANDIDATES
 stability.to_csv(OUT_T / "sensitivity_top20_stability.csv", index=False)
 print(stability.to_string(index=False))
 
+freq = S.membership_frequency({k: variants[k] for k in seed_variant_names}, base_ids)
+freq.to_csv(OUT_T / "top20_membership_frequency.csv", index=False)
+core = freq[freq["Nhom_loi_moi_bien_the"] == 1]
+print(f"\nTần suất qua {len(seed_variant_names)} biến thể seed/xếp hạng: {len(freq)} tài sản từng vào top 20; "
+      f"{len(core)} căn xuất hiện ở MỌI biến thể; {int(freq.loc[freq.Trong_danh_sach_chinh == 1, 'So_lan_xuat_hien'].ge(len(seed_variant_names) / 2).sum())}/20 "
+      f"căn của danh sách chính xuất hiện ở ≥ một nửa biến thể.")
+
 # %% [markdown]
-# ## 7. Kiểm chứng phụ trên Ames (Iowa)
-# Không gộp với King County (khác thị trường, khác định nghĩa diện tích). Chỉ dùng để xem
-# quy trình có cho kết quả tương tự ở thị trường khác không. Loại `sale_type`, `sale_condition`
-# (chỉ biết sau khi giao dịch), cờ `*_imputed`, mã truy vết và các biến chứa giá.
+# ## 7. Kiểm chứng phụ trên Ames (Iowa) — điền thiếu học trong Pipeline (F01)
+# Không gộp với King County. Loại `sale_type`, `sale_condition` (chỉ biết sau giao dịch), cờ `*_imputed`, mã truy vết
+# và biến chứa giá. **Sửa F01:** các ô Ames đã điền trung vị theo neighborhood trong ETL (học trên toàn bộ dữ liệu)
+# được trả lại NaN theo `metadata/imputation_audit.csv`; `GroupMedianImputer` học trung vị **chỉ trên train** rồi
+# transform test. Điền cấu trúc cố định (NA = không có tiện ích, gara không tồn tại) được giữ vì không học từ dữ liệu.
+# Để minh bạch, chạy cả cách cũ (dùng CSV đã điền trước khi chia) và ghi chênh lệch.
 
 # %%
-ames = pd.read_csv(DATA / "ames_clean.csv", keep_default_na=False, na_values=[""],
-                   dtype={"pid": "string", "ms_subclass": "string"})
-drop = {"source_row_id", "order", "pid", "sale_price", "price", "price_per_sqft", "price_iqr_outlier",
-        "sale_type", "sale_condition", "distance_to_center_km", "distance_available", "raw_house_age",
-        "has_any_imputation", "has_true_imputation", "sqft_living"} | {c for c in ames if c.endswith("_imputed")}
-A_FEAT = [c for c in ames.columns if c not in drop]
-A_CAT = [c for c in A_FEAT if not pd.api.types.is_numeric_dtype(ames[c])]
-A_NUM = [c for c in A_FEAT if c not in A_CAT]
+ames, restored_cols = A.load_ames_for_modeling(DATA / "ames_clean.csv", P["metadata"] / "imputation_audit.csv")
+A_FEAT, A_NUM, A_CAT = A.ames_feature_lists(ames)
 XA, yA = ames[A_FEAT], ames["price"]
-XA_tr, XA_te, yA_tr, yA_te = (lambda i: (XA.iloc[i[0]], XA.iloc[i[1]], yA.iloc[i[0]], yA.iloc[i[1]]))(
-    next(GroupShuffleSplit(n_splits=1, test_size=0.2, random_state=SEED).split(XA, yA, ames["pid"])))
+a_tr, a_te = next(GroupShuffleSplit(n_splits=1, test_size=0.2, random_state=SEED).split(XA, yA, ames["pid"]))
+XA_tr, XA_te, yA_tr, yA_te = XA.iloc[a_tr], XA.iloc[a_te], yA.iloc[a_tr], yA.iloc[a_te]
+print(f"Ames: {len(A_FEAT)} biến ({len(A_NUM)} số, {len(A_CAT)} phân loại); trả NaN ở {int(XA[restored_cols].isna().sum().sum())} ô "
+      f"của {len(restored_cols)} cột: {restored_cols}")
+print(f"NaN trong train: {int(XA_tr[restored_cols].isna().sum().sum())} | trong test: {int(XA_te[restored_cols].isna().sum().sum())}")
 
-def ames_model(kind):
-    if kind == "lr":
-        pre = ColumnTransformer([("num", StandardScaler(), A_NUM),
-                                 ("cat", OneHotEncoder(handle_unknown="ignore", min_frequency=10), A_CAT)])
-        reg = LinearRegression()
-    else:
-        pre = ColumnTransformer([("num", "passthrough", A_NUM),
-                                 ("cat", OrdinalEncoder(handle_unknown="use_encoded_value", unknown_value=-1), A_CAT)])
-        reg = (RandomForestRegressor(n_estimators=300, min_samples_leaf=2, max_features=0.5, n_jobs=-1, random_state=SEED)
-               if kind == "rf" else
-               XGBRegressor(n_estimators=1200, learning_rate=0.03, max_depth=4, min_child_weight=3, subsample=0.8,
-                            colsample_bytree=0.5, tree_method="hist", n_jobs=-1, random_state=SEED))
-    return TransformedTargetRegressor(Pipeline([("pre", pre), ("model", reg)]), func=np.log, inverse_func=np.exp)
+ames_old = pd.read_csv(DATA / "ames_clean.csv", keep_default_na=False, na_values=[""],
+                       dtype={"pid": "string", "ms_subclass": "string"})
+XA_old = ames_old[A_FEAT]
 
 ames_rows = [{"Thi_truong": "Ames", "Mo_hinh": "Mốc thô: đơn giá neighborhood × diện tích",
               **metrics(yA_te, XA_te["neighborhood"].map((yA_tr / XA_tr["gr_liv_area"]).groupby(XA_tr["neighborhood"]).median())
                         .fillna((yA_tr / XA_tr["gr_liv_area"]).median()) * XA_te["gr_liv_area"]), "Thoi_gian_fit_s": 0.0}]
-for kind, name in [("lr", "Linear Regression (baseline)"), ("rf", "Random Forest"), ("xgb", "XGBoost")]:
-    t0 = time.time(); m = ames_model(kind).fit(XA_tr, yA_tr)
-    ames_rows.append({"Thi_truong": "Ames", "Mo_hinh": name, **metrics(yA_te, m.predict(XA_te)),
-                      "Thoi_gian_fit_s": time.time() - t0})
+ames_compare = []
+for kind, name in [("lr", LR_NAME), ("rf", RF_NAME), ("xgb", "XGBoost")]:
+    t0 = time.time(); m = A.make_ames_model(kind, A_NUM, A_CAT, seed=SEED).fit(XA_tr, yA_tr)
+    new = metrics(yA_te, m.predict(XA_te))
+    ames_rows.append({"Thi_truong": "Ames", "Mo_hinh": name, **new, "Thoi_gian_fit_s": time.time() - t0})
+    m_old = A.make_ames_model(kind, A_NUM, A_CAT, seed=SEED).fit(XA_old.iloc[a_tr], yA_tr)
+    old = metrics(yA_te, m_old.predict(XA_old.iloc[a_te]))
+    ames_compare.append({"Mo_hinh": name, "MAPE_cu_dien_truoc_khi_chia_%": old["MAPE_%"],
+                         "MAPE_moi_dien_trong_pipeline_%": new["MAPE_%"],
+                         "Chenh_lech_diem_%": new["MAPE_%"] - old["MAPE_%"],
+                         "RMSE_cu": old["RMSE"], "RMSE_moi": new["RMSE"]})
 metrics_ames = pd.DataFrame(ames_rows)
-print(f"Ames: {len(A_FEAT)} biến ({len(A_NUM)} số, {len(A_CAT)} phân loại)")
+ames_compare = pd.DataFrame(ames_compare)
+ames_compare.to_csv(OUT_T / "ames_imputation_fix_comparison.csv", index=False)
+# Kiểm tra: đổi tập test không làm đổi trung vị học trên train.
+imp = A.make_ames_model("lr", A_NUM, A_CAT).fit(XA_tr, yA_tr).regressor_.named_steps["imp"]
+imp2 = A.GroupMedianImputer("neighborhood", A_NUM).fit(XA_tr)
+assert imp.group_medians_.equals(imp2.group_medians_)
 print(metrics_ames[["Mo_hinh", "MAPE_%", "RMSE", "R2"]].round(3).to_string(index=False))
+print(ames_compare.round(3).to_string(index=False))
 
 # %% [markdown]
 # ## 8. Lưu mô hình & bảng MAPE tổng hợp
-# `models/model.pkl` = mô hình tốt nhất King County, **đã fit lại trên toàn bộ dữ liệu** để dùng định giá căn mới.
-# Đọc lại: `bundle = joblib.load('models/model.pkl'); bundle['model'].predict(df[bundle['features']])`.
-# (Cần tạo trước 3 biến `is_renovated`, `years_since_update`, `month_index` như mục 1.)
+# `models/model.pkl` = mô hình **được chọn bằng CV trên train** (`BEST_NAME`), lấy từ cùng registry, fit lại trên toàn
+# bộ dữ liệu King County. Dự báo căn mới qua luồng chính thức (tạo biến + kiểm tra schema):
+# `from bds_valuation.predict import load_bundle, predict_prices; predict_prices(df_raw, load_bundle())`.
 
 # %%
-all_metrics = pd.concat([metrics_king, metrics_time, metrics_ames], ignore_index=True)
+all_metrics = pd.concat([metrics_king, metrics_time, pd.DataFrame([nested_metrics]), metrics_ames], ignore_index=True)
 all_metrics.to_csv(OUT_T / "model_metrics_mape_report.csv", index=False)
 
-final_model = (make_xgb(BEST_XGB) if BEST_NAME.startswith("XGB") else make_rf()).fit(X, y)
+final_model = build_model(BEST_NAME, seed=SEED, params=TUNED.get(BEST_NAME)).fit(X, y)
 bundle = {
-    "model": final_model, "model_name": BEST_NAME, "features": FEATURES,
-    "numeric_features": NUM_FEATURES, "categorical_features": CAT_FEATURES,
-    "target": "price (USD), mô hình học log(price)", "xgb_params": BEST_XGB,
-    "test_metrics": metrics_king.set_index("Mo_hinh").loc[BEST_NAME].to_dict(),
-    "undervalue_threshold": UNDERVALUE_THRESHOLD,
-    "engineered_features": {
-        "is_renovated": "1 nếu yr_renovated > 0",
-        "years_since_update": "sale_year - max(yr_built, yr_renovated), chặn dưới 0",
-        "month_index": "(năm bán - 2014)*12 + tháng bán - 5",
-    },
-    "versions": {"python_sklearn": sklearn.__version__, "xgboost": xgboost.__version__, "pandas": pd.__version__},
-    "trained_on_rows": len(X),
+    "model": final_model, "model_name": BEST_NAME, "metrics_model_name": BEST_NAME,
+    "features": FEATURES, "numeric_features": NUM_FEATURES, "categorical_features": CAT_FEATURES,
+    "target": "price (USD), mô hình học log(price)", "params": TUNED.get(BEST_NAME),
+    "selected_by": "MAPE CV GroupKFold 3 theo id trên train (không dùng tập test)",
+    "cv_train_mape": cv_scores, "test_metrics": metrics_king.set_index("Mo_hinh").loc[BEST_NAME].to_dict(),
+    "nested_cv_mape_pct": nested_metrics["MAPE_%"],
+    "below_prediction_threshold": S.BELOW_THRESHOLD,
+    "predict_api": "bds_valuation.predict.predict_prices(df_raw, bundle)",
+    "feature_engineering": "bds_valuation.features.engineer_king_features",
+    "training_period": [str(king["date"].min().date()), str(king["date"].max().date())],
+    "versions": {"python": sys.version.split()[0], "sklearn": sklearn.__version__, "xgboost": xgboost.__version__,
+                 "pandas": pd.__version__, "numpy": np.__version__, "joblib": joblib.__version__},
+    "trained_on_rows": len(X), "seed": SEED,
 }
+check_bundle_consistency(bundle)
 joblib.dump(bundle, OUT_M / "model.pkl", compress=3)
 chk = joblib.load(OUT_M / "model.pkl")
+check_bundle_consistency(chk)
 assert np.allclose(chk["model"].predict(X.head(50)), final_model.predict(X.head(50)))
 
 summary = {
-    "best_model": BEST_NAME, "xgb_best_params": BEST_XGB,
+    "version": "2 (sửa theo feedback F01–F12)", "fast_mode": FAST,
+    "best_model": BEST_NAME, "selected_by": bundle["selected_by"], "cv_train_mape_pct": cv_scores,
+    "xgb_best_params": BEST_XGB,
     "test_split": {"train_rows": len(X_tr), "test_rows": len(X_te), "split": "GroupShuffleSplit theo id, 80/20, seed 42"},
     "king_test_metrics": metrics_king.set_index("Mo_hinh")[["MAPE_%", "RMSE", "R2"]].round(4).to_dict("index"),
-    "king_time_split_metrics": metrics_time.set_index("Mo_hinh")[["MAPE_%", "RMSE", "R2"]].round(4).to_dict("index"),
+    "king_temporal_backtest": {**metrics_time.set_index("Mo_hinh")[["MAPE_%", "RMSE", "R2"]].round(4).to_dict("index"),
+                               "info": temporal_info},
+    "king_nested_cv": {"MAPE_%": round(nested_metrics["MAPE_%"], 4), "RMSE": round(nested_metrics["RMSE"], 1),
+                       "R2": round(nested_metrics["R2"], 4),
+                       "chosen_per_fold": nested_folds["chosen_model"].tolist()},
     "ames_test_metrics": metrics_ames.set_index("Mo_hinh")[["MAPE_%", "RMSE", "R2"]].round(4).to_dict("index"),
-    "oof_mape_pct": round(100 * mean_absolute_percentage_error(y, oof_best), 3),
-    "undervalued_rate_pct_all_transactions": round(100 * val["undervalued_20pct"].mean(), 3),
-    "candidate_pool_size": len(pool),
-    "recommended_pool_size": len(pool_rec),
-    "needs_verification_count": len(needs_check),
-    "anomaly_cap_pct": 100 * ANOMALY_CAP,
+    "ames_imputation_fix": ames_compare.round(4).to_dict("records"),
+    "oof_screening_mape_pct": round(100 * mean_absolute_percentage_error(y, oof_best), 3),
+    "below_prediction_rate_pct_all_transactions": round(100 * val["below_prediction_20pct"].mean(), 3),
+    "candidate_pool_size": len(pool), "recommended_pool_size": len(pool_rec),
+    "needs_verification_count": len(needs_check), "anomaly_cap_pct": 100 * S.ANOMALY_CAP,
     "top20_raw_total_price_usd": float(top20_raw["price"].sum()),
-    "top20_total_price_usd": float(top20["price"].sum()),
+    "top20_total_historical_price_usd": float(top20["price"].sum()),
     "top20_total_predicted_usd": float(top20["predicted_price"].sum()),
-    "top20_all_three_models_agree": int((top20["models_agree_undervalued"] == 3).sum()),
+    "top20_gap_to_prediction_usd": float(top20["gap_to_prediction_usd"].sum()),
+    "top20_gap_note": "Chênh lệch so với giá dự báo trên giao dịch lịch sử; không phải lợi nhuận có thể đạt được.",
+    "top20_all_three_models_agree": int((top20["models_agree_below_20pct"] == 3).sum()),
+    "top20_core_all_seed_variants": int(len(core)),
+    "seed_variants_counted": len(seed_variant_names),
 }
 (OUT_T / "task4_summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2, default=float), encoding="utf-8")
-print(json.dumps(summary, ensure_ascii=False, indent=2, default=float))
+print(json.dumps({k: summary[k] for k in ("best_model", "cv_train_mape_pct", "king_nested_cv", "oof_screening_mape_pct",
+                                          "top20_total_historical_price_usd", "top20_total_predicted_usd")},
+                 ensure_ascii=False, indent=2, default=float))

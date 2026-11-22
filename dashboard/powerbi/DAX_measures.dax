@@ -1,0 +1,50 @@
+-- Tham số What-if (Modeling > New parameter > Numeric range): Nguong_pct, 5..50, bước 1, mặc định 20
+-- Power BI tự tạo bảng 'Nguong_pct' và measure [Nguong_pct Value]. Nếu tạo thủ công từ param_nguong.csv:
+Nguong Value = SELECTEDVALUE ( param_nguong[Nguong_pct], 20 )
+
+-- Cột tính (Calculated column) trên fact_ung_vien_king: đủ điều kiện R4–R6 ở ngưỡng đang chọn được tính trong measure.
+So can ung vien =
+VAR t = - [Nguong Value] / 100
+RETURN CALCULATE ( COUNTROWS ( fact_ung_vien_king ), fact_ung_vien_king[residual_pct] <= t )
+
+Ty le ung vien % =
+DIVIDE ( [So can ung vien], COUNTROWS ( ALL ( fact_ung_vien_king ) ) ) * 100
+
+So can dat R4-R6 =
+VAR t = - [Nguong Value] / 100
+RETURN CALCULATE (
+    COUNTROWS ( fact_ung_vien_king ),
+    fact_ung_vien_king[residual_pct] <= t,
+    fact_ung_vien_king[residual_pct] >= -0.5,
+    fact_ung_vien_king[residual_pct_model2] <= t,
+    fact_ung_vien_king[residual_pct_model3] <= t,
+    fact_ung_vien_king[house_age] > 0
+)
+
+Gia trung vi ung vien =
+VAR t = - [Nguong Value] / 100
+RETURN CALCULATE ( MEDIAN ( fact_ung_vien_king[price] ), fact_ung_vien_king[residual_pct] <= t )
+
+-- Cờ dùng làm bộ lọc visual (Filter on this visual: = 1)
+La ung vien (theo nguong) =
+VAR t = - [Nguong Value] / 100
+RETURN IF ( MAX ( fact_ung_vien_king[residual_pct] ) <= t, 1, 0 )
+
+La ung vien R4-R6 =
+VAR t = - [Nguong Value] / 100
+RETURN IF (
+    MAX ( fact_ung_vien_king[residual_pct] ) <= t
+        && MAX ( fact_ung_vien_king[residual_pct] ) >= -0.5
+        && MAX ( fact_ung_vien_king[residual_pct_model2] ) <= t
+        && MAX ( fact_ung_vien_king[residual_pct_model3] ) <= t
+        && MAX ( fact_ung_vien_king[house_age] ) > 0,
+    1, 0 )
+
+-- Xếp hạng danh sách thẩm định (Top N theo mức thấp hơn dự báo thận trọng)
+Hang than trong =
+RANKX ( FILTER ( ALLSELECTED ( fact_ung_vien_king ), [La ung vien R4-R6] = 1 ),
+        CALCULATE ( MAX ( fact_ung_vien_king[residual_pct_conservative] ) ), , ASC, DENSE )
+
+Tong gia lich su top N =
+SUMX ( FILTER ( fact_ung_vien_king, [La ung vien R4-R6] = 1 && [Hang than trong] <= 20 ), fact_ung_vien_king[price] )
+-- Lưu ý: chênh lệch so với giá dự báo KHÔNG phải lợi nhuận; không đặt nhãn "lợi nhuận" cho measure nào.
