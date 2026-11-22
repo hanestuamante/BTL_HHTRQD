@@ -22,7 +22,7 @@ và diễn đạt. Người phụ trách từng phần chịu trách nhiệm duy
 | A cấp 1–2 (Nhiệm vụ 3) | 02/11/2026 | Trợ lý AI lập trình | Hỗ trợ viết `scripts/analyze.py`, biểu đồ, báo cáo NV2–3 | Kiểm định tính lại độc lập (`docs/kiem_tra_doc_lap.txt`) |
 | A cấp 3–4 (Nhiệm vụ 4) | 10/11/2026 | Trợ lý AI lập trình | Hỗ trợ viết `scripts/task4_modeling.py` | Notebook đã chạy; feedback độc lập 21/11/2026 |
 | Sửa theo feedback F01–F13 | 23/11/2026 | Claude (Claude Code) | Tách package `bds_valuation`, sửa leakage Ames, backtest thời gian, nested CV, registry mô hình, what-if, diễn giải, test tự động, README | `pytest` (thư mục `tests/`), chạy lại toàn bộ NV4, số liệu mới đọc từ `outputs/task4/tables/*` |
-| Nhiệm vụ 5 | 23/11/2026 | Claude | Chuẩn bị dữ liệu dashboard, bản HTML tương tác có thanh trượt What-if, hướng dẫn và công thức DAX cho Power BI | Số trên dashboard đối chiếu với `sensitivity_threshold.csv` (có test đối chiếu) |
+| Nhiệm vụ 5 | 23/11/2026 | Claude | Cập nhật script dữ liệu/PBIP/Phần 6 của TV5 theo NV4 mới và F05; sinh văn bản Phần 6 từ dữ liệu; thêm bản web HTML | `validate_pbip.py`; script tự đối chiếu số căn theo ngưỡng và top 20 với output NV4 |
 | Nhiệm vụ 6 | 23/11/2026 | Claude | Soạn Phần 6, Phần 7, ghép báo cáo 7 phần, tạo slide, kịch bản video | Nhóm duyệt nội dung, quay video thật (AI không quay video thay nhóm) |
 
 ## 3. Giới hạn đã ghi nhận

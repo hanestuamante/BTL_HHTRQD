@@ -355,15 +355,16 @@ notes(s, "TV4 (45 giây): đọc ba con số; kết luận: ưu tiên căn có t
 
 # 12 ---------------------------------------------------------------- dashboard
 s = prs.slides.add_slide(BLANK); bg(s, WHITE)
-title(s, "Dashboard: kéo ngưỡng What-if, thấy ngay đánh đổi")
-pic = picture(s, SHOT, 0.6, 1.4, h=5.6, alt="Ảnh chụp dashboard ở ngưỡng 20%")
+title(s, "Dashboard: kéo ngưỡng What-if, thấy ngay đánh đổi", "Power BI 6 trang (TV5) · ảnh: bản web cùng dữ liệu")
+pic = picture(s, SHOT, 0.6, 1.8, h=5.2, alt="Ảnh chụp dashboard ở ngưỡng 20%")
 xr = 0.6 + (pic.width / 914400 if pic else 6) + 0.4
 r20, r10, r30 = THR.loc[20], THR.loc[10], THR.loc[30]
-bullets(s, xr, 1.5, 12.73 - xr, 5.4, [("Tham số What-if: ", "ngưỡng thấp hơn dự báo 5–50%."),
+bullets(s, xr, 1.9, 12.73 - xr, 5.1, [("Tham số What-if: ", "ngưỡng thấp hơn dự báo 5–50%."),
                                       ("Ngưỡng 10%: ", f"{vn(r10['So_can_ung_vien'])} căn"), ("Ngưỡng 20%: ", f"{vn(r20['So_can_ung_vien'])} căn ({pct(r20['Ty_le_ung_vien_%'])})"),
                                       ("Ngưỡng 30%: ", f"{vn(r30['So_can_ung_vien'])} căn"),
-                                      ("Gồm: ", "KPI, đường số căn theo ngưỡng, bản đồ, phân phối residual, danh sách top 20."),
-                                      ("File: ", "HTML tương tác + gói dữ liệu & DAX cho Power BI.")], size=14)
+                                      ("What-if 2: ", "ngân sách thẩm định 0,5–10 triệu USD (cùng quy tắc R1–R7)."),
+                                      ("Power BI: ", "6 trang, điều hướng, bookmark nhà đầu tư / học thuật."),
+                                      ("Bản web: ", "một file HTML cho người không có Power BI.")], size=14)
 presenter(s, "TV5")
 notes(s, "TV5 (75 giây): demo kéo thanh trượt 20% → 10% → 30%, đổi chế độ R4–R6/Chỉ ngưỡng, lọc zipcode.")
 

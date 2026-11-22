@@ -59,3 +59,17 @@ def test_summary_bundle_agree(root, t4):
     assert bundle["test_metrics"]["MAPE_%"] == pytest.approx(row["MAPE_%"])
     tb = json.loads((t4 / "temporal_backtest.json").read_text(encoding="utf-8"))
     assert tb["past_date_range"][1] < tb["cutoff"] <= tb["future_date_range"][0]
+
+
+def test_powerbi_data_matches_task4(root, val, t4):
+    """NV5: dữ liệu Power BI phải sinh từ đúng output NV4 hiện tại (cùng ứng viên, cùng top 20)."""
+    d = root / "dashboard" / "data"
+    if not (d / "fact_king.csv").exists():
+        pytest.skip("Chưa chạy scripts/prepare_dashboard_data.py")
+    fk = pd.read_csv(d / "fact_king.csv", dtype={"id": "string"})
+    assert np.allclose(fk["residual_pct"], val["residual_pct"])
+    assert (fk["undervalued_20pct"] == val["below_prediction_20pct"]).all()
+    top = pd.read_csv(t4 / "top20_candidates_below_prediction_king.csv", dtype={"id": "string"})
+    plan = pd.read_csv(d / "budget_plan.csv")
+    assert np.allclose(plan["price"].head(20), top["price"])          # danh sách ngân sách dùng cùng quy tắc R1–R7
+    assert list(pd.read_csv(d / "top20.csv", dtype={"id": "string"})["id"]) == list(top["id"])

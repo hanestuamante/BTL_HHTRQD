@@ -1,0 +1,57 @@
+table Sensitivity
+	lineageTag: ac6bb8c3-6a66-4589-aff1-b3f28841e5a6
+
+	column 'Ngưỡng (%)'
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: threshold_pct
+		lineageTag: e7e33eb0-9bc6-45d6-ac34-64e9f0efe871
+	column 'Số ứng viên'
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: candidates
+		lineageTag: d7633c13-e113-4f22-8ce2-2f897ac7e3b5
+	column 'Tỷ lệ (%)'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: share_pct
+		lineageTag: a1fffb73-ca02-431f-8582-a4200a5786f5
+	column 'all3'
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: all3
+		lineageTag: 04d5168e-2947-45f8-b470-474940f14e2b
+	column 'over_50pct'
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: over_50pct
+		lineageTag: f1cf5424-b53e-4b0a-a5e6-7087a521db15
+	column 'Giá trung vị (USD)'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: median_price
+		lineageTag: 70556f72-2d11-4c51-b2c3-0d10ecc846c6
+	column 'enough_20'
+		dataType: boolean
+		sourceColumn: enough_20
+		lineageTag: 52e68b97-d371-412f-a196-9f42b4250e19
+
+	partition Sensitivity = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\sensitivity.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted,
+					{
+					{"threshold_pct", Int64.Type},
+					{"candidates", Int64.Type},
+					{"share_pct", type number},
+					{"all3", Int64.Type},
+					{"over_50pct", Int64.Type},
+					{"median_price", type number},
+					{"enough_20", type logical}
+					}),
+				Result = Typed
+			in
+				Result

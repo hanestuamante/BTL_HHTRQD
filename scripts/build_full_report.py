@@ -166,7 +166,7 @@ def front_and_parts_1_3():
         ["2", "Dữ liệu, ETL 4 bước, từ điển — Phần 4", "data/processed/, dictionaries/, docs/nhat_ky_etl_4_buoc.txt", ""],
         ["3", "EDA, chẩn đoán — Phần 5 cấp 1, 2", "notebooks/02_03_ETL_EDA.ipynb, outputs/figures/", ""],
         ["4", "Mô hình, MAPE, 20 ứng viên — Phần 5 cấp 3, 4", "models/model.pkl, notebooks/04_Modeling.ipynb, outputs/task4/", ""],
-        ["5", "Dashboard What-if — Phần 6", "dashboard/ (HTML tương tác + gói Power BI)", ""],
+        ["5", "Dashboard What-if — Phần 6", "dashboard/BTL_NhiemVu5.pbip/.pbix (Power BI), reports/Bao_cao_Nhiem_vu_5.docx", ""],
         ["6", "Phần 7, tổng hợp báo cáo, slide, video", "reports/, slides/, docs/nv6/", ""],
     ], widths=[1, 6, 7, 3], fs=9.5, caption="Phân công và sản phẩm bàn giao (cột Họ tên do nhóm điền)")
     w.p("Nguyên tắc số liệu: mọi con số trong báo cáo được sinh ra từ mã nguồn chạy trên dữ liệu gốc và đọc lại từ các file "
@@ -229,22 +229,31 @@ def front_and_parts_1_3():
 
 
 # ---------------------------------------------------------------- Phần 6, 7, AI, tài liệu tham khảo
-def parts_6_7():
+def part6_intro():
     doc = Document(); setup(doc); w = W(doc)
     w.h("Phần 6. Kết quả và Dashboard ra quyết định").paragraph_format.page_break_before = True
-    w.p("Dashboard được xây cho Giám đốc đầu tư, có tham số What-if là thanh trượt ngưỡng 'giá giao dịch thấp hơn dự báo ít "
-        "nhất x%' (5–50%). Khi kéo thanh trượt, số căn ứng viên, tỷ lệ ứng viên, giá trung vị, bản đồ, phân phối residual và "
-        "danh sách thẩm định ưu tiên cập nhật ngay. Có hai chế độ: 'R4–R6 (khuyến nghị)' áp đủ quy tắc chọn, 'Chỉ ngưỡng' chỉ lọc "
-        "theo residual của mô hình chính; bộ lọc zipcode để xem từng khu vực.")
-    w.b("dashboard/Dashboard_Chu_de_14.html — bản tương tác chạy trên mọi trình duyệt, không cần cài đặt; số liệu nhúng từ "
-        "outputs/task4/tables và được script đối chiếu với sensitivity_threshold.csv.", "Bản tương tác: ")
-    w.b("dashboard/powerbi/ — bảng dữ liệu, bảng tham số, công thức DAX và hướng dẫn dựng file .pbix (What-if parameter). "
-        "File .pbix/.twbx phải được dựng trong Power BI Desktop/Tableau; xem dashboard/powerbi/HUONG_DAN_POWER_BI.md.",
-        "Gói Power BI/Tableau: ")
-    w.img(SHOTS / "dashboard_nguong_20.png", "Hình 6.1. Dashboard ở ngưỡng 20% (chế độ R4–R6)", 16)
-    w.img(SHOTS / "dashboard_nguong_10.png", "Hình 6.2. Ngưỡng 10%: số ứng viên tăng mạnh; top 20 (xếp từ căn thấp hơn dự báo nhiều nhất) không đổi", 16)
+    w.p("Dashboard chính là Power BI do Thành viên 5 xây dựng (6 trang, 2 tham số What-if: ngưỡng và ngân sách thẩm định). "
+        "Mục 6.1–6.8 dưới đây là báo cáo của Nhiệm vụ 5 (reports/Bao_cao_Nhiem_vu_5.docx), số liệu được sinh lại từ kết quả "
+        "Nhiệm vụ 4 sau khi sửa theo feedback. Mục 6.9 đối chiếu KPI đặt ở Phần 3.")
+    w.b("dashboard/BTL_NhiemVu5.pbip (project nguồn, sinh bằng scripts/build_task5_pbip.py), dashboard/BTL_NhiemVu5.pbix "
+        "(bản đóng gói), dashboard/BTL_NhiemVu5.pdf; dữ liệu nguồn dashboard/data/.", "Power BI: ")
+    w.b("dashboard/Dashboard_Chu_de_14.html — một file HTML mở bằng trình duyệt, cùng dữ liệu và định nghĩa, có thanh trượt "
+        "ngưỡng 5–50%, bản đồ, phân phối residual và danh sách 20 ứng viên; dùng khi người xem không có Power BI.",
+        "Bản web xem nhanh: ")
+    return doc
 
-    w.h("6.1. Đối chiếu KPI", 2)
+
+def demote_headings(d):
+    """Báo cáo Nhiệm vụ 5 dùng Heading 1 cho 6.x; trong báo cáo tổng hợp 6.x là mục con của Phần 6."""
+    for para in d.paragraphs:
+        if para.style.name == "Heading 1":
+            para.style = d.styles["Heading 2"]
+    return d
+
+
+def parts_6_7():
+    doc = Document(); setup(doc); w = W(doc)
+    w.h("6.9. Đối chiếu KPI", 2)
     k1 = MAPE_TEST <= KPI_MAPE_MAX and MAPE_TEST < MAPE_LR < MAPE_NAIVE
     k2 = KPI_RATE_RANGE[0] <= RATE20 <= KPI_RATE_RANGE[1]
     k3 = STAB_MIN >= KPI_STAB_MIN
@@ -258,7 +267,7 @@ def parts_6_7():
         ["KPI3 — Độ ổn định", f"≥ {KPI_STAB_MIN}/20 ở mọi seed", f"{STAB_MIN}–{STAB_MAX}/20 qua 4 seed; "
          f"{S4['top20_core_all_seed_variants']} căn có mặt ở cả {S4['seed_variants_counted']} biến thể seed × cách xếp",
          "Đạt" if k3 else "Chưa đạt"],
-    ], widths=[3, 3.8, 8.2, 2], fs=9, caption="Bảng 6.1. KPI: mục tiêu và kết quả (nguồn: outputs/task4/tables)")
+    ], widths=[3, 3.8, 8.2, 2], fs=9, caption="Bảng 6.9. KPI: mục tiêu và kết quả (nguồn: outputs/task4/tables)")
     if not k1 and MAPE_TEST > KPI_MAPE_MAX:
         w.p(f"KPI1 chưa đạt ngưỡng {KPI_MAPE_MAX:.0f}% do nhóm đặt; vẫn tốt hơn baseline và mốc thủ công. Cần thận trọng hơn ở "
             "phân khúc giá thấp nơi sai số lớn nhất.")
@@ -266,7 +275,7 @@ def parts_6_7():
         w.p(f"Khi dự báo giao dịch tương lai (backtest thời gian), MAPE là {pct(MAPE_TIME)}, cao hơn trên tập test ngẫu nhiên; "
             "đây là mức sai số nên dùng khi áp dụng cho giao dịch mới.")
 
-    w.h("6.2. Câu trả lời cho câu hỏi quyết định", 2)
+    w.h("6.10. Câu trả lời cho câu hỏi quyết định", 2)
     w.p(f"Quy trình đề xuất 20 ứng viên có giá giao dịch thấp hơn dự báo, cần xác minh (Bảng 5.10.2 và file "
         f"outputs/task4/Top20_ung_vien_can_xac_minh.xlsx). Tổng giá giao dịch lịch sử của 20 căn là "
         f"{fmt(S4['top20_total_historical_price_usd'])} USD, tổng giá dự báo {fmt(S4['top20_total_predicted_usd'])} USD. "
@@ -302,7 +311,7 @@ def parts_6_7():
               "what-if, quy tắc chọn và API dự báo.",
               "Feedback độc lập ngày 21/11/2026 (13 mục F01–F13) đã được xử lý; các câu diễn đạt vượt bằng chứng do AI viết ở bản trước "
               "('bị định giá thấp', 'chênh lệch kỳ vọng', 'cận trên', 'cải tạo là đòn bẩy') đã được sửa.",
-              "AI không quay video và không dựng file .pbix thay nhóm; các phần này do thành viên thực hiện."]:
+              "AI không quay video thay nhóm; file .pbix phải mở trong Power BI Desktop để Refresh và lưu lại sau khi dữ liệu đổi."]:
         w.b(t)
 
     w.h("Tài liệu tham khảo")
@@ -321,7 +330,7 @@ def parts_6_7():
         ["Notebook", "notebooks/02_03_ETL_EDA.ipynb, notebooks/04_Modeling.ipynb"],
         ["Mô hình", "models/model.pkl (dự báo qua bds_valuation.predict)"],
         ["Ứng viên, MAPE", "outputs/task4/Top20_ung_vien_can_xac_minh.xlsx, outputs/task4/tables/model_metrics_mape_report.csv"],
-        ["Dashboard", "dashboard/Dashboard_Chu_de_14.html, dashboard/powerbi/"],
+        ["Dashboard (NV5)", "dashboard/BTL_NhiemVu5.pbip/.pbix/.pdf (Power BI), dashboard/Dashboard_Chu_de_14.html (bản web)"],
         ["Slide, kịch bản video", "slides/Chu_de_14_thuyet_trinh.pptx, docs/nv6/kich_ban_video.md"],
         ["Kiểm thử", "tests/ (python -m pytest)"],
     ], widths=[5, 12], fs=9.5)
@@ -383,6 +392,11 @@ def main(argv=None):
     nv4 = trimmed(REP / "Bao_cao_Nhiem_vu_4.docx", "5.9.", "Phụ lục — Sản phẩm bàn giao")
     nv4.paragraphs[0].paragraph_format.page_break_before = True
     comp.append(nv4)
+    comp.append(part6_intro())
+    comp.append(demote_headings(trimmed(REP / "Bao_cao_Nhiem_vu_5.docx", "6.1.")))
+    w_html = Document(); setup(w_html); hw = W(w_html)
+    hw.img(SHOTS / "dashboard_nguong_20.png", "Hình 6.8. Bản web xem nhanh ở ngưỡng 20% (chế độ R4–R6), cùng dữ liệu với Power BI", 15)
+    comp.append(w_html)
     comp.append(parts_6_7())
     master.core_properties.title = "Chủ đề 14 — Mô hình định giá bất động sản tự động"
     master.core_properties.subject = "Báo cáo tổng hợp 7 phần"

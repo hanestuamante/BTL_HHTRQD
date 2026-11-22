@@ -1,8 +1,11 @@
-"""Nhiệm vụ 5: sinh dữ liệu Dashboard (Power BI/Tableau) và bản dashboard HTML tương tác có tham số What-if.
+"""Nhiệm vụ 5 (bổ sung): bản dashboard web (HTML một file) có tham số What-if, xem được không cần Power BI.
+
+Dashboard chính của Nhiệm vụ 5 là Power BI (dashboard/BTL_NhiemVu5.pbip/.pbix, sinh bởi
+scripts/prepare_dashboard_data.py + scripts/build_task5_pbip.py). Bản HTML dùng cùng output Nhiệm vụ 4 và cùng định nghĩa.
 
 Chạy sau scripts/task4_modeling.py:
-    python scripts/build_dashboard.py            # tạo dashboard/ (HTML + gói dữ liệu Power BI)
-    python scripts/build_dashboard.py --screens  # thêm ảnh chụp dashboard cho báo cáo (cần Google Chrome)
+    python scripts/build_dashboard.py            # tạo dashboard/Dashboard_Chu_de_14.html
+    python scripts/build_dashboard.py --screens  # thêm ảnh chụp cho báo cáo/slide (cần Google Chrome)
 
 Mọi số trên dashboard được tính từ outputs/task4/tables/*; script tự đối chiếu số căn theo ngưỡng với
 sensitivity_threshold.csv và dừng nếu lệch.
@@ -25,7 +28,6 @@ from bds_valuation import selection as S  # noqa: E402
 
 T = ROOT / "outputs" / "task4" / "tables"
 OUT = ROOT / "dashboard"
-PBI = OUT / "powerbi"
 
 
 def load():
@@ -59,75 +61,6 @@ def verify(pool, thr):
     for _, r in thr.iterrows():
         got = count_at(pool, r["Nguong_%"] / 100)
         assert got == r["So_can_ung_vien"], f"Ngưỡng {r['Nguong_%']}%: dashboard {got} != bảng {r['So_can_ung_vien']}"
-
-
-def write_powerbi(pool, met, thr, summary):
-    PBI.mkdir(parents=True, exist_ok=True)
-    cols = ["id", "date", "zipcode", "lat", "long", "price", "predicted_price", "residual", "residual_pct",
-            "resid_o1", "resid_o2", "residual_pct_conservative", "residual_pct_nested", "sqft_living", "bedrooms",
-            "bathrooms", "grade", "condition", "view", "waterfront", "house_age", "distance_to_center_km"]
-    f = pool[cols].rename(columns={"resid_o1": "residual_pct_model2", "resid_o2": "residual_pct_model3"})
-    f["below_prediction_pct"] = -100 * f["residual_pct"]
-    f["below_prediction_conservative_pct"] = -100 * f["residual_pct_conservative"]
-    f.to_csv(PBI / "fact_ung_vien_king.csv", index=False)
-    pd.DataFrame({"Nguong_pct": np.arange(5, 51)}).to_csv(PBI / "param_nguong.csv", index=False)
-    met.to_csv(PBI / "model_metrics.csv", index=False)
-    thr.to_csv(PBI / "sensitivity_threshold.csv", index=False)
-    shutil.copy(T / "top20_candidates_below_prediction_king.csv", PBI / "top20_candidates.csv")
-    (PBI / "DAX_measures.dax").write_text(DAX, encoding="utf-8")
-
-
-DAX = """-- Tham số What-if (Modeling > New parameter > Numeric range): Nguong_pct, 5..50, bước 1, mặc định 20
--- Power BI tự tạo bảng 'Nguong_pct' và measure [Nguong_pct Value]. Nếu tạo thủ công từ param_nguong.csv:
-Nguong Value = SELECTEDVALUE ( param_nguong[Nguong_pct], 20 )
-
--- Cột tính (Calculated column) trên fact_ung_vien_king: đủ điều kiện R4–R6 ở ngưỡng đang chọn được tính trong measure.
-So can ung vien =
-VAR t = - [Nguong Value] / 100
-RETURN CALCULATE ( COUNTROWS ( fact_ung_vien_king ), fact_ung_vien_king[residual_pct] <= t )
-
-Ty le ung vien % =
-DIVIDE ( [So can ung vien], COUNTROWS ( ALL ( fact_ung_vien_king ) ) ) * 100
-
-So can dat R4-R6 =
-VAR t = - [Nguong Value] / 100
-RETURN CALCULATE (
-    COUNTROWS ( fact_ung_vien_king ),
-    fact_ung_vien_king[residual_pct] <= t,
-    fact_ung_vien_king[residual_pct] >= -0.5,
-    fact_ung_vien_king[residual_pct_model2] <= t,
-    fact_ung_vien_king[residual_pct_model3] <= t,
-    fact_ung_vien_king[house_age] > 0
-)
-
-Gia trung vi ung vien =
-VAR t = - [Nguong Value] / 100
-RETURN CALCULATE ( MEDIAN ( fact_ung_vien_king[price] ), fact_ung_vien_king[residual_pct] <= t )
-
--- Cờ dùng làm bộ lọc visual (Filter on this visual: = 1)
-La ung vien (theo nguong) =
-VAR t = - [Nguong Value] / 100
-RETURN IF ( MAX ( fact_ung_vien_king[residual_pct] ) <= t, 1, 0 )
-
-La ung vien R4-R6 =
-VAR t = - [Nguong Value] / 100
-RETURN IF (
-    MAX ( fact_ung_vien_king[residual_pct] ) <= t
-        && MAX ( fact_ung_vien_king[residual_pct] ) >= -0.5
-        && MAX ( fact_ung_vien_king[residual_pct_model2] ) <= t
-        && MAX ( fact_ung_vien_king[residual_pct_model3] ) <= t
-        && MAX ( fact_ung_vien_king[house_age] ) > 0,
-    1, 0 )
-
--- Xếp hạng danh sách thẩm định (Top N theo mức thấp hơn dự báo thận trọng)
-Hang than trong =
-RANKX ( FILTER ( ALLSELECTED ( fact_ung_vien_king ), [La ung vien R4-R6] = 1 ),
-        CALCULATE ( MAX ( fact_ung_vien_king[residual_pct_conservative] ) ), , ASC, DENSE )
-
-Tong gia lich su top N =
-SUMX ( FILTER ( fact_ung_vien_king, [La ung vien R4-R6] = 1 && [Hang than trong] <= 20 ), fact_ung_vien_king[price] )
--- Lưu ý: chênh lệch so với giá dự báo KHÔNG phải lợi nhuận; không đặt nhãn "lợi nhuận" cho measure nào.
-"""
 
 
 def write_html(pool, summary, met, thr):
@@ -188,7 +121,6 @@ def main(argv=None):
     val, summary, met, thr = load()
     pool = pool_frame(val)
     verify(pool, thr)
-    write_powerbi(pool, met, thr, summary)
     write_html(pool, summary, met, thr)
     rec20 = count_at(pool, 0.20, "rec")
     t = 0.20

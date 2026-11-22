@@ -19,7 +19,7 @@ của lần chạy đầy đủ (notebook `notebooks/04_Modeling.ipynb`).
 | F11 | Đường dẫn phụ thuộc thư mục chạy | Script dùng `__file__`, notebook dùng cwd, đi ngược lên tìm thư mục gốc; hoặc `BDS_PROJECT_ROOT`; lỗi rõ khi không tìm thấy | `bds_valuation/paths.py`; `tests/test_paths.py`; đã chạy script từ `/tmp` và notebook với cwd `notebooks/` |
 | F12 | Chưa đóng gói luồng dự báo | Package `bds_valuation` (import không huấn luyện); `predict_prices` tạo biến + kiểm schema; CLI `python -m bds_valuation.predict` | `tests/test_features_and_predict.py`, `test_import_does_not_train_and_cli_runs_from_outside` |
 | F13 | README chưa bao quát | `README.md` mới: mục tiêu, trạng thái 6 nhiệm vụ, cấu trúc, cài đặt, thứ tự chạy, sản phẩm, giới hạn; `README.txt` bỏ | `README.md` |
-| NV5–6 | Phạm vi | Dashboard HTML + gói Power BI; báo cáo 7 phần, slide, kịch bản video. Ghi rõ phần nhóm phải tự làm: file `.pbix`/`.twbx`, video mp4, thư mục Drive | `README.md` mục Trạng thái |
+| NV5–6 | Phạm vi | NV5 Power BI đã có từ 14–19/11 (PR #2 merge vào nhánh `nhiem-vu-4`, chưa vào `main` nên người đánh giá không thấy) — nay gộp vào main, sinh lại dữ liệu + `.pbip` theo NV4 mới, đổi nhãn theo F05 (bỏ "ROI", "chênh lệch kỳ vọng", "undervalued"), danh sách ngân sách dùng cùng quy tắc R1–R7, sửa measure MAPE OOF (trước tính trung bình \|residual_pct\|). Thêm bản web HTML. NV6: báo cáo 7 phần, slide, kịch bản video. Nhóm tự làm: Refresh/lưu `.pbix` + xuất PDF/ảnh, quay video, thư mục Drive | `README.md`, `dashboard/README.md`, `docs/huong_dan_nhiem_vu_5.txt` |
 | Notebook | Build không execute ghi đè output | `build_task4_notebook.py` mặc định execute bằng nbclient và dừng nếu có error output | `notebooks/04_Modeling.ipynb` |
 
 ## Kết quả trước / sau

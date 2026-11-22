@@ -1,0 +1,14 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/1.3.0/schema.json",
+  "displayName": "Chế độ học thuật: mô hình và độ nhạy",
+  "name": "che_do_hoc_thuat",
+  "explorationState": {
+    "version": "1.3",
+    "activeSection": "mo_hinh",
+    "sections": {
+      "mo_hinh": {
+        "visualContainers": {}
+      }
+    }
+  }
+}

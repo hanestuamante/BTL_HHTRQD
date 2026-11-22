@@ -1,0 +1,14 @@
+table Nguong
+	lineageTag: 10daa7b7-092c-443c-a04f-61b497c799dc
+
+	column Value
+		dataType: int64
+		formatString: 0"%"
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Value]
+		lineageTag: fe7df96d-77da-47fb-a92c-3fe9d8a7fb9a
+
+	partition Nguong = calculated
+		mode: import
+		source = GENERATESERIES(5, 50, 1)

@@ -1,0 +1,57 @@
+table WhatIfScenarios
+	lineageTag: 6b75647f-2f23-48ab-b116-2a46453bbdf2
+
+	column 'Kịch bản'
+		dataType: string
+		sourceColumn: scenario
+		lineageTag: 9f5a67e8-f5d8-4c9f-8f68-629339b57a1a
+	column 'Thay đổi (%)'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: median_change_pct
+		lineageTag: 82fa52c0-109e-4ee8-a82e-c4cad196c073
+	column 'mean_change_pct'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: mean_change_pct
+		lineageTag: 97ce3710-3fed-4a9e-ad3e-adfa856498cc
+	column 'p10'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: p10
+		lineageTag: efcee4dc-2b90-489e-9a5e-bd848358895a
+	column 'p90'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: p90
+		lineageTag: cf8e56cb-2598-4aa2-a79f-84dc8952e0e5
+	column 'Ty_le_dong_bi_thay_doi_%'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: Ty_le_dong_bi_thay_doi_%
+		lineageTag: 58e69f9a-73f3-4d6d-9cf4-e24b33a68402
+	column 'Ty_le_ngoai_mien_huan_luyen_%'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: Ty_le_ngoai_mien_huan_luyen_%
+		lineageTag: 2dcea58e-b755-46fa-8bfd-23f354001eb2
+
+	partition WhatIfScenarios = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\whatif_scenarios.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted,
+					{
+					{"scenario", type text},
+					{"median_change_pct", type number},
+					{"mean_change_pct", type number},
+					{"p10", type number},
+					{"p90", type number},
+					{"Ty_le_dong_bi_thay_doi_%", type number},
+					{"Ty_le_ngoai_mien_huan_luyen_%", type number}
+					}),
+				Result = Typed
+			in
+				Result

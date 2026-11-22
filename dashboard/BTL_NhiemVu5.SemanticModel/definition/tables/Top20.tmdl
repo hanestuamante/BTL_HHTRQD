@@ -1,0 +1,157 @@
+table Top20
+	lineageTag: 06437d66-8322-4e91-8682-d14c36ad9f38
+
+	column 'Hạng'
+		dataType: int64
+		summarizeBy: none
+		isHidden
+		sourceColumn: Hang
+		lineageTag: 1f9e6b64-0b58-42b5-a5ca-50132b22aedc
+	column 'Mã căn'
+		dataType: string
+		sourceColumn: id
+		lineageTag: e0601126-edcd-44fa-8855-b4a818f45d44
+	column 'date'
+		dataType: dateTime
+		sourceColumn: date
+		lineageTag: 6c9bd823-8d58-4e75-9323-0639323cea17
+	column 'ZIP'
+		dataType: string
+		sourceColumn: zipcode
+		lineageTag: 31b205ad-4a00-4a3e-8f47-4e68841e4eb2
+	column 'Giá giao dịch'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: price
+		lineageTag: ddde9e24-a849-46f2-ace3-75f89b080f4b
+	column 'Giá dự báo'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: predicted_price
+		lineageTag: 9b0246c2-8dd5-454a-b6e1-a49cf9954991
+	column 'Chênh lệch so với dự báo (USD)'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: upside_usd
+		lineageTag: dc8889e0-a434-45e6-bfc9-b3b0cf02d7a2
+	column 'Thấp hơn dự báo (%)'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: discount_pct
+		lineageTag: f32c8abe-9bca-48f9-8b7c-79adcf82df2c
+	column 'discount_conservative_pct'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: discount_conservative_pct
+		lineageTag: afe3d63c-6572-4214-89f6-b530f92a6130
+	column 'residual'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: residual
+		lineageTag: 9b7b502d-a883-4bdb-833e-49716718337f
+	column 'Số mô hình cùng thấy thấp hơn'
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: models_agree_undervalued
+		lineageTag: a1829485-bf93-4367-b1ba-80534b05d0fe
+	column 'Diện tích (sqft)'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: sqft_living
+		lineageTag: b5175f4e-773a-4d18-a916-c65dfb5b597c
+	column 'Phòng ngủ'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: bedrooms
+		lineageTag: 32e5b602-07ee-4565-909d-8474cbda9058
+	column 'bathrooms'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: bathrooms
+		lineageTag: b5cc1d68-d8e5-4fbe-8923-d8ee0ef48345
+	column 'Hạng chất lượng'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: grade
+		lineageTag: 0f8b11fc-f825-441a-abdb-1306f440a5a5
+	column 'Tình trạng'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: condition
+		lineageTag: 48ceb61b-3d2f-4295-bd5c-131fb0ff948f
+	column 'Hướng nhìn'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: view
+		lineageTag: f5e46e2f-751a-4a83-ba66-da36e931dab1
+	column 'Giáp nước'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: waterfront
+		lineageTag: 6ef15ec2-dd20-46f3-aa12-5620736a4538
+	column 'Tuổi nhà'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: house_age
+		lineageTag: dde40416-2552-4379-a7e1-668b0d95f610
+	column 'Cách trung tâm (km)'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: distance_to_center_km
+		lineageTag: 537754cc-6e92-4557-911f-d730b09634f6
+	column 'Vĩ độ'
+		dataType: double
+		summarizeBy: none
+		sourceColumn: lat
+		lineageTag: f9d4f8d6-dca1-42ff-9ae5-734474f40ca9
+	column 'Kinh độ'
+		dataType: double
+		summarizeBy: none
+		sourceColumn: long
+		lineageTag: d9178a49-e6e6-441c-b77a-386c1f8deaca
+	column 'cumulative_cost_usd'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: cumulative_cost_usd
+		lineageTag: 5f7e4aba-0d8b-4fd3-9a48-89928e97d154
+	column 'Khúc giá'
+		dataType: string
+		sourceColumn: price_band
+		lineageTag: 5c5d9007-e59f-4329-9229-7b7e40e54ca6
+
+	partition Top20 = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\top20.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted,
+					{
+					{"Hang", Int64.Type},
+					{"id", type text},
+					{"date", type date},
+					{"zipcode", type text},
+					{"price", type number},
+					{"predicted_price", type number},
+					{"upside_usd", type number},
+					{"discount_pct", type number},
+					{"discount_conservative_pct", type number},
+					{"residual", type number},
+					{"models_agree_undervalued", Int64.Type},
+					{"sqft_living", type number},
+					{"bedrooms", type number},
+					{"bathrooms", type number},
+					{"grade", type number},
+					{"condition", type number},
+					{"view", type number},
+					{"waterfront", type number},
+					{"house_age", type number},
+					{"distance_to_center_km", type number},
+					{"lat", type number},
+					{"long", type number},
+					{"cumulative_cost_usd", type number},
+					{"price_band", type text}
+					}),
+				Result = Typed
+			in
+				Result

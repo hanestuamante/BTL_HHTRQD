@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "BTL_NhiemVu5.SemanticModel"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "dc4178cb-997e-4c59-a0e5-3f8d4b9ab750"
+  }
+}
