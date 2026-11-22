@@ -1,0 +1,221 @@
+table KingSales
+	lineageTag: 1f92cc45-51e9-4792-b0e4-c9fc1005f4dc
+
+	column 'source_row_id'
+		dataType: int64
+		summarizeBy: none
+		isHidden
+		sourceColumn: source_row_id
+		lineageTag: b2b51909-5779-4225-bae4-9629c2c7682b
+	column 'Mã căn'
+		dataType: string
+		sourceColumn: id
+		lineageTag: 0cc6de13-2243-4c4d-8688-be200315b27f
+	column 'date'
+		dataType: dateTime
+		sourceColumn: date
+		lineageTag: 0f7841de-06e4-483d-b123-9fa6246a934d
+	column 'Giá giao dịch'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: price
+		lineageTag: c6dc657c-4ece-473b-ac1f-9b8790983794
+	column 'ZIP'
+		dataType: string
+		sourceColumn: zipcode
+		lineageTag: dd7f9994-0d68-4de7-91d0-93ba5c0077ca
+	column 'Vĩ độ'
+		dataType: double
+		summarizeBy: none
+		sourceColumn: lat
+		lineageTag: 7c06a95c-360e-4ee1-bed8-4e2cfbced4c6
+	column 'Kinh độ'
+		dataType: double
+		summarizeBy: none
+		sourceColumn: long
+		lineageTag: 3d8789ad-57c1-4811-aa82-d5d7d6980ce7
+	column 'Phòng ngủ'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: bedrooms
+		lineageTag: 83c66c94-eac4-4f82-9097-0255dcc95be2
+	column 'bathrooms'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: bathrooms
+		lineageTag: 9a83cd61-c906-45bd-bd90-77d256b4346a
+	column 'Diện tích (sqft)'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: sqft_living
+		lineageTag: 25deb331-e45c-4a17-8895-f0f079ff6e20
+	column 'sqft_lot'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: sqft_lot
+		lineageTag: 06324c73-fd60-4a63-9bdb-6ebc57735f45
+	column 'Hạng chất lượng'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: grade
+		lineageTag: d2c69f27-7731-4fb9-b54e-a4010970f5cc
+	column 'Tình trạng'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: condition
+		lineageTag: e84e98ac-8250-45d0-ac1b-47d70c204e6b
+	column 'Hướng nhìn'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: view
+		lineageTag: 3e05d16d-7fa5-4ba1-891b-92b82fc2b6b6
+	column 'Giáp nước'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: waterfront
+		lineageTag: f40d3b8a-77f1-44e1-a5a8-e1febf39aa55
+	column 'Tuổi nhà'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: house_age
+		lineageTag: 451eca58-7e34-4f98-9bfe-e3929a213f98
+	column 'Đã cải tạo'
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: is_renovated
+		lineageTag: f358eebe-5f9d-499d-8374-8f393483ccc3
+	column 'Cách trung tâm (km)'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: distance_to_center_km
+		lineageTag: 4019dae3-d302-42a6-8892-87eb9d88fd7f
+	column 'Thiếu phòng'
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: zero_room_flag
+		lineageTag: 33e97c82-69ac-45ab-9a51-ba44ac6a6f7e
+	column 'Giá dự báo'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: predicted_price
+		lineageTag: 89505f32-5559-4436-93d3-945645f647ea
+	column 'residual'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: residual
+		lineageTag: 18aa9898-2c67-43d5-ba9f-d1ea27f491d5
+	column 'Residual (%)'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: residual_pct
+		lineageTag: 87dfe338-b03e-42e8-bfef-70eb2a9f4b17
+	column 'residual_pct_lr'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: residual_pct_lr
+		lineageTag: 3e69878b-a917-4381-9dd8-7054afef3baa
+	column 'residual_pct_rf'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: residual_pct_rf
+		lineageTag: 9ed0c9fd-b51b-468b-a427-037357d820f3
+	column 'residual_pct_conservative'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: residual_pct_conservative
+		lineageTag: dcc26aeb-c140-43b1-8541-5690d9a9e554
+	column 'Giao dịch mới nhất'
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: is_latest_sale
+		lineageTag: b3c5c9ff-099f-4162-9ebc-ef2fa5c89584
+	column 'sale_year'
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: sale_year
+		lineageTag: 00c8c3f8-7384-44d4-b55a-872756a17eec
+	column 'sale_month'
+		dataType: string
+		sourceColumn: sale_month
+		lineageTag: 363b8562-9b47-42f4-8f8c-284b3832cbc7
+	column 'Khúc giá'
+		dataType: string
+		sourceColumn: price_band
+		lineageTag: fb11aa28-c6e1-4194-b9ed-3c77142cc7e7
+	column 'Thấp hơn dự báo (%)'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: discount_pct
+		lineageTag: 69f3e46d-b897-4500-9c2f-6381fcbc4d81
+	column 'discount_conservative_pct'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: discount_conservative_pct
+		lineageTag: c293fef4-8837-4e47-91dc-1798b6412965
+	column 'Chênh lệch so với dự báo (USD)'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: upside_usd
+		lineageTag: 852218ef-5a5d-41a6-b084-edc998714494
+	column 'undervalued_20pct'
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: undervalued_20pct
+		lineageTag: b90d66ec-113a-4b51-ac00-37fe3dd6074c
+	column 'Số mô hình cùng thấy thấp hơn'
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: models_agree_undervalued
+		lineageTag: bb22dfb0-dcb9-4c90-adfe-b1c909a8b51e
+	column 'Mã ZIP'
+		dataType: string
+		sourceColumn: zip_top
+		lineageTag: 7e655684-b36b-4b0d-891f-66dd525f4836
+
+	partition KingSales = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\fact_king.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted,
+					{
+					{"source_row_id", Int64.Type},
+					{"id", type text},
+					{"date", type date},
+					{"price", type number},
+					{"zipcode", type text},
+					{"lat", type number},
+					{"long", type number},
+					{"bedrooms", type number},
+					{"bathrooms", type number},
+					{"sqft_living", type number},
+					{"sqft_lot", type number},
+					{"grade", type number},
+					{"condition", type number},
+					{"view", type number},
+					{"waterfront", type number},
+					{"house_age", type number},
+					{"is_renovated", Int64.Type},
+					{"distance_to_center_km", type number},
+					{"zero_room_flag", Int64.Type},
+					{"predicted_price", type number},
+					{"residual", type number},
+					{"residual_pct", type number},
+					{"residual_pct_lr", type number},
+					{"residual_pct_rf", type number},
+					{"residual_pct_conservative", type number},
+					{"is_latest_sale", Int64.Type},
+					{"sale_year", Int64.Type},
+					{"sale_month", type text},
+					{"price_band", type text},
+					{"discount_pct", type number},
+					{"discount_conservative_pct", type number},
+					{"upside_usd", type number},
+					{"undervalued_20pct", Int64.Type},
+					{"models_agree_undervalued", Int64.Type},
+					{"zip_top", type text}
+					}),
+				Result = Typed
+			in
+				Result

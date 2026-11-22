@@ -1,0 +1,4 @@
+model,mape_ames,mape_king,mape_nested,mape_time,r2_ames,r2_king,r2_nested,r2_time,rmse_ames,rmse_king,rmse_nested,rmse_time
+Linear Regression,7.9646,13.3442,,13.8528,0.9341,0.8839,,0.8552,19610.5206,126925.7952,,138273.7566
+Random Forest,8.1588,12.3833,,,0.9231,0.8803,,,21177.7609,128898.3284,,
+XGBoost,7.5387,11.2508,,12.4278,0.9362,0.9176,,0.8909,19297.5195,106961.0885,,120048.9582

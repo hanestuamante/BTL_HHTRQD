@@ -1,0 +1,40 @@
+table BudgetPlan
+	lineageTag: d2524284-e617-4905-9dcf-c246107e2f3d
+
+	column 'Hạng'
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: rank
+		lineageTag: e0dbad8e-f2b9-4ee5-9846-727ad56edcfd
+	column 'Giá giao dịch'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: price
+		lineageTag: 77a6ecad-1550-4182-a7e8-e125e882c53f
+	column 'Lũy kế (USD)'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: cum_price
+		lineageTag: f7a90aa3-5d28-4555-b48f-779af3bfb52c
+	column 'Chênh lệch so với dự báo (USD)'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: upside_usd
+		lineageTag: 9bef7cd6-fc57-4e08-b3a0-d4be4ac965fb
+
+	partition BudgetPlan = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\budget_plan.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted,
+					{
+					{"rank", Int64.Type},
+					{"price", type number},
+					{"cum_price", type number},
+					{"upside_usd", type number}
+					}),
+				Result = Typed
+			in
+				Result

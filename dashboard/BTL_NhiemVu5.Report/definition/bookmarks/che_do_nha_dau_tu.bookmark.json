@@ -1,0 +1,14 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/1.3.0/schema.json",
+  "displayName": "Chế độ nhà đầu tư: ngân sách và danh mục",
+  "name": "che_do_nha_dau_tu",
+  "explorationState": {
+    "version": "1.3",
+    "activeSection": "ngan_sach",
+    "sections": {
+      "ngan_sach": {
+        "visualContainers": {}
+      }
+    }
+  }
+}

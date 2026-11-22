@@ -1,0 +1,13 @@
+variant,overlap_20,share_pct
+"Danh sách chính (TB 4 seed, xếp thận trọng)",20,100.0
+"1 seed chia fold = 42, xếp thận trọng",18,90.0
+"1 seed chia fold = 1, xếp thận trọng",18,90.0
+"1 seed chia fold = 7, xếp thận trọng",16,80.0
+"1 seed chia fold = 2024, xếp thận trọng",16,80.0
+"1 seed chia fold = 42, xếp theo riêng mô hình chính",11,55.0
+"1 seed chia fold = 1, xếp theo riêng mô hình chính",11,55.0
+"1 seed chia fold = 7, xếp theo riêng mô hình chính",11,55.0
+"1 seed chia fold = 2024, xếp theo riêng mô hình chính",9,45.0
+"Residual từ nested CV, xếp thận trọng",18,90.0
+Xếp theo chênh lệch USD thay vì %,1,5.0
+Danh sách thô (không lọc R4–R6),0,0.0

@@ -1,0 +1,14 @@
+table NganSach
+	lineageTag: 08f34f91-90df-4a2d-956f-1f6e4657d09d
+
+	column Value
+		dataType: double
+		formatString: #,0
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Value]
+		lineageTag: 375a237e-afcc-48fe-b1ad-8d6e1ee45b7b
+
+	partition NganSach = calculated
+		mode: import
+		source = GENERATESERIES(500000, 10000000, 250000)

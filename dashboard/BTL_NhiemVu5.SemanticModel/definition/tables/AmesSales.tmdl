@@ -1,0 +1,126 @@
+table AmesSales
+	lineageTag: a5c1069a-31ea-4875-a7ca-5d359c74ce34
+
+	column 'pid'
+		dataType: string
+		sourceColumn: pid
+		lineageTag: 7e1bfae2-c824-42c6-946c-15abd33b3f29
+	column 'Khu dân cư'
+		dataType: string
+		sourceColumn: neighborhood
+		lineageTag: b33b7f44-c09a-44de-9290-7f2662cb4c68
+	column 'Giá giao dịch'
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: price
+		lineageTag: ea928bcd-8e20-43ca-8eeb-cee98e7704e0
+	column 'gr_liv_area'
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: gr_liv_area
+		lineageTag: 33f78f66-a0f7-43d7-bb6f-0663b651b71c
+	column 'overall_qual'
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: overall_qual
+		lineageTag: f332ebbb-b441-465c-afa4-fb0fbfc9c5b6
+	column 'year_built'
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: year_built
+		lineageTag: a9278b0e-fd10-48ae-808f-4bd97e249760
+	column 'Tuổi nhà'
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: house_age
+		lineageTag: fed5077d-be16-4e90-9153-9b757c83f8e3
+	column 'bedroom_abvgr'
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: bedroom_abvgr
+		lineageTag: 85648670-3f91-41ca-a495-3f11b8a65caf
+	column 'garage_cars'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: garage_cars
+		lineageTag: ca13dc20-0eff-4971-a692-ddbf82cbaa4d
+	column 'lot_area'
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: lot_area
+		lineageTag: f784677a-d6b3-4bc4-baaa-428abb2ceae3
+	column 'yr_sold'
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: yr_sold
+		lineageTag: afe59c80-75e0-4741-a0d4-ac8562de7612
+	column 'bathrooms_total'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: bathrooms_total
+		lineageTag: 9b5fd64d-3042-4690-ad8d-b42b3571cbe3
+	column 'Giá dự báo'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: predicted_price
+		lineageTag: 9ddc504f-3d2a-4fa7-9a6b-303774377e39
+	column 'Residual (%)'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: residual_pct
+		lineageTag: fac2b188-398c-48f4-b146-53f9f7528702
+	column 'Thấp hơn dự báo (%)'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: discount_pct
+		lineageTag: 70c110bd-31b5-47fd-ab17-57d2383bc92a
+	column 'Chênh lệch so với dự báo (USD)'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: upside_usd
+		lineageTag: 226a6574-4b79-4d3a-8ecf-b524cb7a4d35
+	column 'Khúc giá'
+		dataType: string
+		sourceColumn: price_band
+		lineageTag: 854a10d1-9f24-4c87-bd30-54c83b31d877
+	column 'is_undervalued_20pct'
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: is_undervalued_20pct
+		lineageTag: 69ae0b9e-7dd6-4abf-9cba-a0ec9aaa8ea8
+	column 'Khu dân cư tiêu biểu'
+		dataType: string
+		sourceColumn: neighborhood_top
+		lineageTag: cf0eec5f-f8ae-4bd3-bf4c-e8d2f8ae3716
+
+	partition AmesSales = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(DataFolder & "\fact_ames.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted,
+					{
+					{"pid", type text},
+					{"neighborhood", type text},
+					{"price", Int64.Type},
+					{"gr_liv_area", Int64.Type},
+					{"overall_qual", Int64.Type},
+					{"year_built", Int64.Type},
+					{"house_age", Int64.Type},
+					{"bedroom_abvgr", Int64.Type},
+					{"garage_cars", type number},
+					{"lot_area", Int64.Type},
+					{"yr_sold", Int64.Type},
+					{"bathrooms_total", type number},
+					{"predicted_price", type number},
+					{"residual_pct", type number},
+					{"discount_pct", type number},
+					{"upside_usd", type number},
+					{"price_band", type text},
+					{"is_undervalued_20pct", Int64.Type},
+					{"neighborhood_top", type text}
+					}),
+				Result = Typed
+			in
+				Result
